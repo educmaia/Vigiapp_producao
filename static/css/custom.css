@@ -52,39 +52,64 @@ body {
     color: var(--primary-black);
 }
 
+.btn {
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn:hover, .btn:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
+}
+
 .btn-primary {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
 }
 
 .btn-primary:hover, .btn-primary:focus {
     background-color: #248735;
     border-color: #248735;
+    color: white;
 }
 
 .btn-success {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
 }
 
 .btn-success:hover, .btn-success:focus {
     background-color: #248735;
     border-color: #248735;
+    color: white;
 }
 
 .btn-danger {
-    background-color: var(--primary-red);
-    border-color: var(--primary-red);
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
 }
 
 .btn-danger:hover, .btn-danger:focus {
-    background-color: #b71419;
-    border-color: #b71419;
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
 }
 
 .btn-warning {
-    background-color: #ffc107;
-    color: var(--primary-black);
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
 }
 
 .form-control {
