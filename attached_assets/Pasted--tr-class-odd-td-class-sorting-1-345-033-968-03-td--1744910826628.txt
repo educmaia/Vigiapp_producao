@@ -1,0 +1,38 @@
+<tr class="odd">
+                        <td class="sorting_1">345.033.968-03</td>
+                        <td>Eduardo Camargo Maia</td>
+                        <td>(19) 99126-0742</td>
+                        <td>IFSP - Capivari</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="/pessoas/editar/345.033.968-03" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" aria-label="Editar" data-bs-original-title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal34503396803" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal34503396803" tabindex="-1" aria-labelledby="deleteModalLabel34503396803" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel34503396803">Confirmar Exclusão</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja excluir <strong>Eduardo Camargo Maia</strong> (CPF: 345.033.968-03)?</p>
+                                            <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Esta ação não pode ser desfeita!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="/pessoas/excluir/345.033.968-03" method="post">
+                                                <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
