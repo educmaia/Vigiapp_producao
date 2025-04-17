@@ -89,14 +89,14 @@ body {
 }
 
 .btn-danger {
-    background-color: #2f9e41;
-    border-color: #2f9e41;
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
     color: white;
 }
 
 .btn-danger:hover, .btn-danger:focus {
-    background-color: #248735;
-    border-color: #248735;
+    background-color: #b1161a;
+    border-color: #b1161a;
     color: white;
 }
 
@@ -274,4 +274,32 @@ body {
     margin-top: 0.25rem;
     font-size: 0.875em;
     color: #464646 !important;
+}
+
+/* Modal styles */
+.modal-content {
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+    border-radius: 8px;
+    border: 1px solid var(--primary-green);
+}
+
+.modal-header {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: none;
+}
+
+.modal-body {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+}
+
+.modal-footer {
+    background-color: var(--primary-white);
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
