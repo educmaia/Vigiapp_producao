@@ -101,6 +101,11 @@ def novo():
         form.hora_registro.data = current_time.strftime('%H:%M')
         form.data_envio.data = current_time.strftime('%d/%m/%Y')
         form.hora_envio.data = current_time.strftime('%H:%M')
+        
+        # Pre-fill CNPJ if provided in URL params
+        cnpj_param = request.args.get('cnpj')
+        if cnpj_param:
+            form.cnpj.data = cnpj_param
     
     if form.validate_on_submit():
         cnpj = re.sub(r'[^0-9]', '', form.cnpj.data)

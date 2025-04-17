@@ -28,6 +28,11 @@ def novo():
         today = get_brasil_datetime()
         form.data.data = today.strftime('%d/%m/%Y')
         form.entrada.data = today.strftime('%H:%M')
+        
+        # Pre-fill CPF if provided in URL params
+        cpf_param = request.args.get('cpf')
+        if cpf_param:
+            form.cpf.data = cpf_param
     
     if form.validate_on_submit():
         cpf = re.sub(r'[^0-9]', '', form.cpf.data)
