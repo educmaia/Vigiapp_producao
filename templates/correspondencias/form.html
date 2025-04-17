@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}VigiAPP - {{ title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0"><i class="fas fa-envelope me-2"></i>{{ title }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="remetente" class="form-label">{{ form.remetente.label }} <span class="text-danger">*</span></label>
+                    {{ form.remetente(class="form-control", id="remetente", placeholder="Nome do remetente", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe o remetente.
+                    </div>
+                    {% for error in form.remetente.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="destinatario" class="form-label">{{ form.destinatario.label }} <span class="text-danger">*</span></label>
+                    {{ form.destinatario(class="form-control", id="destinatario", placeholder="Nome do destinatário", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe o destinatário.
+                    </div>
+                    {% for error in form.destinatario.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="data_recebimento" class="form-label">{{ form.data_recebimento.label }} <span class="text-danger">*</span></label>
+                    {{ form.data_recebimento(class="form-control", id="data_recebimento", type="date", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe a data de recebimento.
+                    </div>
+                    {% for error in form.data_recebimento.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="hora_recebimento" class="form-label">{{ form.hora_recebimento.label }} <span class="text-danger">*</span></label>
+                    {{ form.hora_recebimento(class="form-control", id="hora_recebimento", type="time", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe a hora de recebimento.
+                    </div>
+                    {% for error in form.hora_recebimento.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="data_destinacao" class="form-label">{{ form.data_destinacao.label }}</label>
+                    {{ form.data_destinacao(class="form-control", id="data_destinacao", type="date") }}
+                    <div class="invalid-feedback">
+                        Por favor, informe uma data válida.
+                    </div>
+                    {% for error in form.data_destinacao.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="hora_destinacao" class="form-label">{{ form.hora_destinacao.label }}</label>
+                    {{ form.hora_destinacao(class="form-control", id="hora_destinacao", type="time") }}
+                    <div class="invalid-feedback">
+                        Por favor, informe uma hora válida.
+                    </div>
+                    {% for error in form.hora_destinacao.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="tipo" class="form-label">{{ form.tipo.label }} <span class="text-danger">*</span></label>
+                    {{ form.tipo(class="form-select", id="tipo", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, selecione o tipo de correspondência.
+                    </div>
+                    {% for error in form.tipo.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="setor_encomenda" class="form-label">{{ form.setor_encomenda.label }} <span class="text-danger">*</span></label>
+                    {{ form.setor_encomenda(class="form-control", id="setor_encomenda", placeholder="Setor de destino", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe o setor de destino.
+                    </div>
+                    {% for error in form.setor_encomenda.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="observacoes" class="form-label">{{ form.observacoes.label }}</label>
+                {{ form.observacoes(class="form-control", id="observacoes", rows="3", placeholder="Observações adicionais") }}
+                {% for error in form.observacoes.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('correspondencias.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

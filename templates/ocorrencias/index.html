@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}VigiAPP - Ocorrências{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Registro de Ocorrências</h4>
+        <a href="{{ url_for('ocorrencias.novo') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Nova Ocorrência
+        </a>
+    </div>
+    <div class="card-body">
+        {% if ocorrencias %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Vigilante</th>
+                        <th>Envolvidos</th>
+                        <th>Gravidade</th>
+                        <th>Ocorrência</th>
+                        <th class="no-sort text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ocorrencia in ocorrencias %}
+                    <tr>
+                        <td>{{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ ocorrencia.hora_registro.strftime('%H:%M') }}</td>
+                        <td>{{ ocorrencia.vigilante }}</td>
+                        <td>{{ ocorrencia.envolvidos }}</td>
+                        <td>
+                            {% if ocorrencia.gravidade == 'baixa' %}
+                                <span class="severity-baixa">Baixa</span>
+                            {% elif ocorrencia.gravidade == 'media' %}
+                                <span class="severity-media">Média</span>
+                            {% elif ocorrencia.gravidade == 'alta' %}
+                                <span class="severity-alta">Alta</span>
+                            {% elif ocorrencia.gravidade == 'critica' %}
+                                <span class="severity-critica">Crítica</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ocorrencia.ocorrencia|truncate(50) }}</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('ocorrencias.editar', id=ocorrencia.id_ocorrencia) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <button type="button" class="btn btn-sm btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ ocorrencia.id_ocorrencia }}" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal{{ ocorrencia.id_ocorrencia }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ ocorrencia.id_ocorrencia }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ ocorrencia.id_ocorrencia }}">Confirmar Exclusão</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Tem certeza que deseja excluir este registro de ocorrência?</p>
+                                            <ul>
+                                                <li><strong>Data:</strong> {{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</li>
+                                                <li><strong>Vigilante:</strong> {{ ocorrencia.vigilante }}</li>
+                                                <li><strong>Gravidade:</strong> {{ ocorrencia.gravidade|capitalize }}</li>
+                                            </ul>
+                                            <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Esta ação não pode ser desfeita!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="{{ url_for('ocorrencias.excluir', id=ocorrencia.id_ocorrencia) }}" method="post">
+                                                <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>Nenhuma ocorrência registrada no sistema.
+        </div>
+        <a href="{{ url_for('ocorrencias.novo') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> Registrar Nova Ocorrência
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
