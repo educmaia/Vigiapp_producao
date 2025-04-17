@@ -52,8 +52,12 @@ def novo():
         
         flash('Empresa cadastrada com sucesso!', 'success')
         
-        # Adicionar parâmetro para mostrar o modal de oferta de cadastro de entrega
-        return redirect(url_for('empresas.index', mostrar_oferta_entrega=True, cnpj=formatted_cnpj, nome_empresa=form.nome_empresa.data))
+        # Usar session para armazenar as informações necessárias para o modal
+        session['mostrar_oferta_entrega'] = True
+        session['empresa_cnpj'] = formatted_cnpj
+        session['empresa_nome'] = form.nome_empresa.data
+        
+        return redirect(url_for('empresas.index'))
     
     return render_template('empresas/form.html', form=form, title='Nova Empresa')
 
@@ -130,3 +134,16 @@ def buscar_por_cnpj(cnpj):
         })
     
     return jsonify({}), 404
+
+@empresas_bp.route('/limpar-session', methods=['POST'])
+@login_required
+def limpar_session():
+    # Limpar as variáveis de sessão usadas para o modal
+    if 'mostrar_oferta_entrega' in session:
+        session.pop('mostrar_oferta_entrega', None)
+    if 'empresa_cnpj' in session:
+        session.pop('empresa_cnpj', None)
+    if 'empresa_nome' in session:
+        session.pop('empresa_nome', None)
+    
+    return jsonify({"status": "success"})

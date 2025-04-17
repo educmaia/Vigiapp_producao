@@ -140,3 +140,16 @@ def buscar_por_cpf(cpf):
         })
     
     return jsonify({}), 404
+
+@pessoas_bp.route('/limpar-session', methods=['POST'])
+@login_required
+def limpar_session():
+    # Limpar as variáveis de sessão usadas para o modal
+    if 'mostrar_oferta_ingresso' in session:
+        session.pop('mostrar_oferta_ingresso', None)
+    if 'pessoa_cpf' in session:
+        session.pop('pessoa_cpf', None)
+    if 'pessoa_nome' in session:
+        session.pop('pessoa_nome', None)
+    
+    return jsonify({"status": "success"})
