@@ -195,12 +195,15 @@ def novo():
                 
                 if success:
                     current_app.logger.info(f"Email enviado com sucesso para entrega ID {nova_entrega.id}")
+                    flash_message = "Entrega registrada com sucesso! Um e-mail de notificação foi enviado."
                 else:
                     current_app.logger.warning(f"Falha ao enviar email para entrega ID {nova_entrega.id}: {response}")
+                    flash_message = "Entrega registrada com sucesso! Nota: Não foi possível enviar o e-mail de notificação."
             except Exception as e:
                 current_app.logger.error(f"Erro ao enviar email: {str(e)}")
+                flash_message = "Entrega registrada com sucesso! Nota: Houve um erro ao tentar enviar o e-mail de notificação."
         
-        flash('Entrega registrada com sucesso!', 'success')
+        flash(flash_message, 'success')
         return redirect(url_for('entregas.index'))
     
     return render_template('entregas/form.html', form=form, title='Nova Entrega')
