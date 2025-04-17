@@ -95,12 +95,22 @@
                     {% if request.path.startswith('/entregas/editar/') and entrega and entrega.imagens %}
                     <div class="mt-3">
                         <p><strong>Imagens atuais:</strong></p>
-                        <div class="d-flex flex-wrap gap-2">
+                        <div class="d-flex flex-wrap gap-3">
                             {% for imagem in entrega.imagens %}
-                            <a href="{{ url_for('entregas.imagem', filename=imagem.filename) }}" target="_blank" class="position-relative">
-                                <img src="{{ url_for('entregas.imagem', filename=imagem.filename) }}" 
-                                     class="img-thumbnail" style="max-height: 150px; max-width: 150px;" alt="Imagem da entrega">
-                            </a>
+                            <div class="position-relative">
+                                <a href="{{ url_for('entregas.imagem', filename=imagem.filename) }}" target="_blank">
+                                    <img src="{{ url_for('entregas.imagem', filename=imagem.filename) }}" 
+                                         class="img-thumbnail" style="max-height: 150px; max-width: 150px;" alt="Imagem da entrega">
+                                </a>
+                                {% if current_user.role == 'admin' %}
+                                <form action="{{ url_for('entregas.excluir_imagem', id=imagem.id) }}" method="post" class="position-absolute" style="top: 5px; right: 5px;"
+                                      onsubmit="return confirm('Tem certeza que deseja excluir esta imagem?');">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Excluir imagem">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
                             {% endfor %}
                         </div>
                         <div class="form-text mt-2">Enviar novas imagens manterá as imagens existentes a menos que você escolha excluí-las.</div>

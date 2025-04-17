@@ -4,7 +4,7 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from app import db
-from models import Entrega, Empresa
+from models import Entrega, Empresa, EntregaImagem
 from forms import EntregaForm
 from datetime import datetime
 from utils import format_cnpj
@@ -188,27 +188,31 @@ def editar(id):
         
         db.session.commit()
         
-        # Processar upload de imagem se fornecido
-        if form.imagem.data:
-            imagem = form.imagem.data
-            if imagem and allowed_file(imagem.filename):
-                # Remover imagem anterior se existir
-                if entrega.imagem_filename and os.path.exists(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename)):
-                    try:
-                        os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
-                    except:
-                        pass
-                
-                # Usar ID da entrega e timestamp para criar um nome único
-                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-                filename = secure_filename(f"{entrega.id}_{timestamp}_{imagem.filename}")
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
-                
-                imagem.save(filepath)
-                
-                # Atualizar a entrega com o nome do arquivo
-                entrega.imagem_filename = filename
-                db.session.commit()
+        # Processar upload de múltiplas imagens
+        if form.imagens.data and form.imagens.data[0]:
+            for i, imagem in enumerate(form.imagens.data):
+                if imagem and allowed_file(imagem.filename):
+                    # Usar ID da entrega, índice e timestamp para criar um nome único
+                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    filename = secure_filename(f"{entrega.id}_{timestamp}_{i}_{imagem.filename}")
+                    filepath = os.path.join(UPLOAD_FOLDER, filename)
+                    
+                    # Redimensionar e salvar a imagem
+                    imagem.seek(0)  # Garantir que estamos no início do arquivo
+                    img_io = resize_image(imagem)
+                    
+                    with open(filepath, 'wb') as f:
+                        f.write(img_io.getbuffer())
+                    
+                    # Criar registro de imagem para esta entrega
+                    nova_imagem = EntregaImagem(
+                        entrega_id=entrega.id,
+                        filename=filename
+                    )
+                    db.session.add(nova_imagem)
+            
+            # Commit todas as imagens de uma vez
+            db.session.commit()
         
         flash('Entrega atualizada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))
@@ -241,10 +245,20 @@ def excluir(id):
     
     entrega = Entrega.query.get_or_404(id)
     
-    # Excluir imagem se existir
+    # Excluir todas as imagens associadas
+    for imagem in entrega.imagens:
+        try:
+            if os.path.exists(os.path.join(UPLOAD_FOLDER, imagem.filename)):
+                os.remove(os.path.join(UPLOAD_FOLDER, imagem.filename))
+        except Exception as e:
+            flash(f'Erro ao excluir imagem: {str(e)}', 'warning')
+            pass
+    
+    # Excluir imagem antiga se existir (para compatibilidade)
     if entrega.imagem_filename:
         try:
-            os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
+            if os.path.exists(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename)):
+                os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
         except:
             pass
     
@@ -258,3 +272,28 @@ def excluir(id):
 @login_required
 def imagem(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+@entregas_bp.route('/excluir-imagem/<int:id>', methods=['POST'])
+@login_required
+def excluir_imagem(id):
+    # Only admins can delete images
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir imagens.', 'danger')
+        return redirect(url_for('entregas.index'))
+    
+    imagem = EntregaImagem.query.get_or_404(id)
+    entrega_id = imagem.entrega_id
+    
+    # Excluir o arquivo de imagem
+    if os.path.exists(os.path.join(UPLOAD_FOLDER, imagem.filename)):
+        try:
+            os.remove(os.path.join(UPLOAD_FOLDER, imagem.filename))
+        except Exception as e:
+            flash(f'Erro ao excluir arquivo de imagem: {str(e)}', 'warning')
+    
+    # Excluir o registro da imagem
+    db.session.delete(imagem)
+    db.session.commit()
+    
+    flash('Imagem excluída com sucesso!', 'success')
+    return redirect(url_for('entregas.editar', id=entrega_id))

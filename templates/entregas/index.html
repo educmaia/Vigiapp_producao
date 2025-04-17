@@ -50,7 +50,19 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            {% if entrega.imagem_filename %}
+                            {% if entrega.imagens %}
+                                <div class="d-flex flex-wrap justify-content-center">
+                                    {% for imagem in entrega.imagens[:3] %} <!-- Mostrar primeiras 3 imagens -->
+                                        <a href="{{ url_for('entregas.imagem', filename=imagem.filename) }}" target="_blank" class="position-relative mx-1" data-bs-toggle="tooltip" title="Ver Imagem">
+                                            <img src="{{ url_for('entregas.imagem', filename=imagem.filename) }}" 
+                                                class="img-thumbnail" style="max-height: 40px; max-width: 40px;" alt="Imagem da entrega">
+                                        </a>
+                                    {% endfor %}
+                                    {% if entrega.imagens|length > 3 %}
+                                        <span class="badge bg-secondary align-self-center">+{{ entrega.imagens|length - 3 }}</span>
+                                    {% endif %}
+                                </div>
+                            {% elif entrega.imagem_filename %}
                                 <a href="{{ url_for('entregas.imagem', filename=entrega.imagem_filename) }}" target="_blank" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Ver Imagem">
                                     <i class="fas fa-image"></i>
                                 </a>
