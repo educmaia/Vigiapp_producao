@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from app import db
 from models import Entrega, Empresa, EntregaImagem
 from forms import EntregaForm
-from datetime import datetime
+from utils import get_brasil_datetime
 from utils import format_cnpj
 from email_sender import EmailSender
 import re
@@ -96,8 +96,7 @@ def novo():
     
     # Pre-fill date and time if not submitted
     if request.method == 'GET':
-        current_time = datetime.now()
-        current_time = current_time.replace(hour=(current_time.hour - 3) % 24)
+        current_time = get_brasil_datetime()
         form.data_registro.data = current_time.strftime('%d/%m/%Y')
         form.hora_registro.data = current_time.strftime('%H:%M')
         form.data_envio.data = current_time.strftime('%d/%m/%Y')
@@ -113,9 +112,8 @@ def novo():
             flash('CNPJ não cadastrado. Cadastre a empresa primeiro.', 'danger')
             return render_template('entregas/form.html', form=form, title='Nova Entrega')
         
-        # Get current time in UTC-3 (Brazil timezone)
-        current_time = datetime.now()
-        current_time = current_time.replace(hour=(current_time.hour - 3) % 24)
+        # Get current time in Brazil timezone using our helper function
+        current_time = get_brasil_datetime()
         
         # Format current date and time
         data_atual = current_time.strftime('%d/%m/%Y')
@@ -141,7 +139,7 @@ def novo():
             for i, imagem in enumerate(form.imagens.data):
                 if imagem and allowed_file(imagem.filename):
                     # Usar ID da entrega, índice e timestamp para criar um nome único
-                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    timestamp = get_brasil_datetime().strftime('%Y%m%d%H%M%S')
                     filename = secure_filename(f"{nova_entrega.id}_{timestamp}_{i}_{imagem.filename}")
                     filepath = os.path.join(UPLOAD_FOLDER, filename)
                     
@@ -239,7 +237,7 @@ def editar(id):
             for i, imagem in enumerate(form.imagens.data):
                 if imagem and allowed_file(imagem.filename):
                     # Usar ID da entrega, índice e timestamp para criar um nome único
-                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    timestamp = get_brasil_datetime().strftime('%Y%m%d%H%M%S')
                     filename = secure_filename(f"{entrega.id}_{timestamp}_{i}_{imagem.filename}")
                     filepath = os.path.join(UPLOAD_FOLDER, filename)
                     
@@ -273,7 +271,7 @@ def registrar_envio(id):
     if entrega.data_envio and entrega.hora_envio:
         flash('Envio já registrado para esta entrega.', 'warning')
     else:
-        now = datetime.now()
+        now = get_brasil_datetime()
         entrega.data_envio = now.strftime('%d/%m/%Y')
         entrega.hora_envio = now.strftime('%H:%M')
         db.session.commit()
