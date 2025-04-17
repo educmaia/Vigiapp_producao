@@ -118,6 +118,19 @@ body {
     border-color: #ced4da;
 }
 
+.form-control::placeholder {
+    color: #464646 !important;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #464646 !important;
+}
+
+.form-control::-ms-input-placeholder {
+    color: #464646 !important;
+}
+
 .form-control:focus {
     border-color: var(--primary-green);
     box-shadow: 0 0 0 0.25rem rgba(47, 158, 65, 0.25);
