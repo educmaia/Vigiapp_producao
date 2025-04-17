@@ -158,6 +158,16 @@ body {
     font-weight: bold;
 }
 
+.table tbody tr {
+    background-color: white !important;
+    color: var(--primary-black) !important;
+}
+
+.table tbody tr td {
+    background-color: white !important;
+    color: var(--primary-black) !important;
+}
+
 .alert {
     border-radius: 8px;
 }
