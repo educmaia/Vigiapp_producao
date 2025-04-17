@@ -120,7 +120,7 @@ class EmpresaForm(FlaskForm):
     cnpj = StringField('CNPJ', validators=[DataRequired(), validate_cnpj])
     nome_empresa = StringField('Nome da Empresa', validators=[DataRequired(), Length(max=100)])
     telefone_empresa = StringField('Telefone da Empresa', validators=[Optional(), validate_telefone])
-    coringa = StringField('Coringa', validators=[Optional(), Length(max=100)])
+    coringa = StringField('Observação', validators=[Optional(), Length(max=100)])
     nome_func = StringField('Nome do Funcionário', validators=[Optional(), Length(max=100)])
     telefone_func = StringField('Telefone do Funcionário', validators=[Optional(), validate_telefone])
     submit = SubmitField('Salvar')
