@@ -56,20 +56,17 @@ def novo():
         # Send email notification
         try:
             email_sender = EmailSender()
-            success, response = email_sender.enviar_email_pessoa(
-                pessoa.cpf, 
-                pessoa.nome, 
-                pessoa.telefone, 
-                pessoa.empresa, 
-                form.motivo.data, 
-                form.pessoa_setor.data, 
-                form.observacoes.data
+            
+            # Enviar email usando o novo método específico para ingressos
+            success, response = email_sender.enviar_email_ingresso(
+                ingresso=novo_ingresso,
+                pessoa=pessoa
             )
             
             if success:
-                current_app.logger.info("Email enviado com sucesso")
+                current_app.logger.info(f"Email enviado com sucesso para ingresso ID {novo_ingresso.id}")
             else:
-                current_app.logger.warning(f"Falha ao enviar email: {response}")
+                current_app.logger.warning(f"Falha ao enviar email para ingresso ID {novo_ingresso.id}: {response}")
                 
         except Exception as e:
             current_app.logger.error(f"Erro ao enviar email: {str(e)}")

@@ -150,6 +150,41 @@ def novo():
             
             # Commit todas as imagens de uma vez
             db.session.commit()
+            
+            # Enviar email com anexos
+            try:
+                # Buscar empresa relacionada a esta entrega
+                empresa = Empresa.query.filter_by(cnpj=nova_entrega.cnpj).first()
+                
+                # Preparar informações de anexos para o email
+                email_imagens = []
+                for imagem in nova_entrega.imagens:
+                    imagem_path = os.path.join(UPLOAD_FOLDER, imagem.filename)
+                    if os.path.exists(imagem_path):
+                        mime_type = "image/jpeg"  # Default MIME type
+                        if imagem.filename.lower().endswith('.png'):
+                            mime_type = "image/png"
+                        
+                        email_imagens.append({
+                            'filepath': imagem_path,
+                            'filename': imagem.filename,
+                            'type': mime_type
+                        })
+                
+                # Enviar email
+                email_sender = EmailSender()
+                success, response = email_sender.enviar_email_entrega(
+                    entrega=nova_entrega, 
+                    empresa=empresa, 
+                    imagens_paths=email_imagens
+                )
+                
+                if success:
+                    current_app.logger.info(f"Email enviado com sucesso para entrega ID {nova_entrega.id}")
+                else:
+                    current_app.logger.warning(f"Falha ao enviar email para entrega ID {nova_entrega.id}: {response}")
+            except Exception as e:
+                current_app.logger.error(f"Erro ao enviar email: {str(e)}")
         
         flash('Entrega registrada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))
