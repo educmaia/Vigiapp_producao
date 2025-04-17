@@ -135,6 +135,23 @@ body {
     color: var(--primary-black);
 }
 
+.pagination .page-item .page-link {
+    background-color: white;
+    color: var(--primary-black);
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: white;
+    color: var(--primary-black);
+    border-color: var(--primary-green);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: white;
+    color: #6c757d;
+}
+
 .table thead th {
     background-color: var(--primary-green);
     color: var(--primary-white);
