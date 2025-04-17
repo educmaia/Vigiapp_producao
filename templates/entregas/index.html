@@ -22,7 +22,8 @@
                         <th>CNPJ</th>
                         <th>Nota Fiscal</th>
                         <th>Status</th>
-                        <th>Data/Hora Envio</th>
+                        <th>Data/Hora Entrega</th>
+                        <th>Imagem</th>
                         <th class="no-sort text-center">Ações</th>
                     </tr>
                 </thead>
@@ -46,6 +47,15 @@
                                 {{ entrega.data_envio }} {{ entrega.hora_envio }}
                             {% else %}
                                 -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if entrega.imagem_filename %}
+                                <a href="{{ url_for('entregas.imagem', filename=entrega.imagem_filename) }}" target="_blank" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Ver Imagem">
+                                    <i class="fas fa-image"></i>
+                                </a>
+                            {% else %}
+                                <span class="text-muted">-</span>
                             {% endif %}
                         </td>
                         <td class="text-center">

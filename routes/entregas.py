@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, render_template, redirect, url_for, flash, request, current_app
+    Blueprint, render_template, redirect, url_for, flash, request, current_app,
+    send_from_directory
 )
 from flask_login import login_required, current_user
 from app import db
@@ -105,7 +106,7 @@ def editar(id):
         empresa = Empresa.query.filter_by(cnpj=formatted_cnpj).first()
         if not empresa:
             flash('CNPJ não cadastrado. Cadastre a empresa primeiro.', 'danger')
-            return render_template('entregas/form.html', form=form, title='Editar Entrega')
+            return render_template('entregas/form.html', form=form, title='Editar Entrega', entrega=entrega)
         
         # Update entrega
         entrega.cnpj = formatted_cnpj
@@ -143,7 +144,7 @@ def editar(id):
         flash('Entrega atualizada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))
     
-    return render_template('entregas/form.html', form=form, title='Editar Entrega')
+    return render_template('entregas/form.html', form=form, title='Editar Entrega', entrega=entrega)
 
 @entregas_bp.route('/registrar-envio/<int:id>', methods=['POST'])
 @login_required
