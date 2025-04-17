@@ -48,6 +48,7 @@ class Entrega(db.Model):
     data_envio = db.Column(db.String(10))
     hora_envio = db.Column(db.String(10))
     nota_fiscal = db.Column(db.String(50))
+    imagem_filename = db.Column(db.String(255))
     observacoes = db.Column(db.Text)
 
 class Sugestao(db.Model):

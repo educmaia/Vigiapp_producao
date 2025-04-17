@@ -9,8 +9,20 @@ from datetime import datetime
 from utils import format_cnpj
 from email_sender import EmailSender
 import re
+import os
+from werkzeug.utils import secure_filename
 
-entregas_bp = Blueprint('entregas', __name__, url_prefix='/entregas')
+entregas_bp = Blueprint('entregas', __name__, url_prefix='/entregas', static_folder='static')
+
+# Configuração para upload de imagens
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/uploads/entregas')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# Criar diretório de uploads se não existir
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @entregas_bp.route('/')
 @login_required
@@ -47,11 +59,27 @@ def novo():
             data_envio=form.data_envio.data,
             hora_envio=form.hora_envio.data,
             nota_fiscal=form.nota_fiscal.data,
-            observacoes=form.observacoes.data
+            observacoes=form.observacoes.data,
+            imagem_filename=None
         )
         
         db.session.add(nova_entrega)
         db.session.commit()
+        
+        # Processar upload de imagem se fornecido
+        if form.imagem.data:
+            imagem = form.imagem.data
+            if imagem and allowed_file(imagem.filename):
+                # Usar ID da entrega e timestamp para criar um nome único
+                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                filename = secure_filename(f"{nova_entrega.id}_{timestamp}_{imagem.filename}")
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                
+                imagem.save(filepath)
+                
+                # Atualizar a entrega com o nome do arquivo
+                nova_entrega.imagem_filename = filename
+                db.session.commit()
         
         flash('Entrega registrada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))
@@ -89,6 +117,29 @@ def editar(id):
         entrega.observacoes = form.observacoes.data
         
         db.session.commit()
+        
+        # Processar upload de imagem se fornecido
+        if form.imagem.data:
+            imagem = form.imagem.data
+            if imagem and allowed_file(imagem.filename):
+                # Remover imagem anterior se existir
+                if entrega.imagem_filename and os.path.exists(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename)):
+                    try:
+                        os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
+                    except:
+                        pass
+                
+                # Usar ID da entrega e timestamp para criar um nome único
+                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                filename = secure_filename(f"{entrega.id}_{timestamp}_{imagem.filename}")
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                
+                imagem.save(filepath)
+                
+                # Atualizar a entrega com o nome do arquivo
+                entrega.imagem_filename = filename
+                db.session.commit()
+        
         flash('Entrega atualizada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))
     
@@ -120,8 +171,20 @@ def excluir(id):
     
     entrega = Entrega.query.get_or_404(id)
     
+    # Excluir imagem se existir
+    if entrega.imagem_filename:
+        try:
+            os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
+        except:
+            pass
+    
     db.session.delete(entrega)
     db.session.commit()
     
     flash('Entrega excluída com sucesso!', 'success')
     return redirect(url_for('entregas.index'))
+
+@entregas_bp.route('/imagem/<filename>')
+@login_required
+def imagem(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)

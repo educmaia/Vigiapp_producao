@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import (
     StringField, PasswordField, SubmitField, TextAreaField, SelectField,
     DateField, TimeField, HiddenField
@@ -129,9 +130,10 @@ class EntregaForm(FlaskForm):
     cnpj = StringField('CNPJ', validators=[DataRequired(), validate_cnpj])
     data_registro = StringField('Data de Registro', validators=[DataRequired()])
     hora_registro = StringField('Hora de Registro', validators=[DataRequired()])
-    data_envio = StringField('Data de Envio', validators=[Optional()])
-    hora_envio = StringField('Hora de Envio', validators=[Optional()])
+    data_envio = StringField('Data da Entrega', validators=[Optional()])
+    hora_envio = StringField('Hora da Entrega', validators=[Optional()])
     nota_fiscal = StringField('Nota Fiscal', validators=[Optional(), Length(max=50)])
+    imagem = FileField('Imagem da Entrega', validators=[Optional()])
     observacoes = TextAreaField('Observações', validators=[Optional()])
     submit = SubmitField('Registrar')
 
