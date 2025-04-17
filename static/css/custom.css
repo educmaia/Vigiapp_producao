@@ -251,8 +251,14 @@ body {
     .dashboard-icon {
         font-size: 2rem;
     }
-    
+
     .card-header {
         font-size: 1rem;
     }
+}
+
+.form-text {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #464646 !important;
 }
