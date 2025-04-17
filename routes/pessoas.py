@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app
+    Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app, session
 )
 from flask_login import login_required, current_user
 from app import db
@@ -49,8 +49,25 @@ def novo():
         
         flash('Pessoa cadastrada com sucesso!', 'success')
         
-        # Adicionar parâmetro para mostrar o modal de oferta de cadastro de ingresso
-        return redirect(url_for('pessoas.index', mostrar_oferta_ingresso=True, cpf=formatted_cpf, nome=form.nome.data))
+        # Usar session para armazenar as informações necessárias para o modal
+        session['mostrar_oferta_ingresso'] = True
+        session['pessoa_cpf'] = formatted_cpf
+        session['pessoa_nome'] = form.nome.data
+        
+        # Enviar email de notificação
+        from email_sender import EmailSender
+        email_sender = EmailSender()
+        email_sender.enviar_email_pessoa(
+            cpf=formatted_cpf,
+            nome=form.nome.data,
+            telefone=telefone,
+            empresa=form.empresa.data,
+            motivo="",
+            pessoa_setor="",
+            observacoes=""
+        )
+        
+        return redirect(url_for('pessoas.index'))
     
     return render_template('pessoas/form.html', form=form, title='Novo Cadastro')
 
