@@ -48,7 +48,9 @@ def novo():
         db.session.commit()
         
         flash('Pessoa cadastrada com sucesso!', 'success')
-        return redirect(url_for('pessoas.index'))
+        
+        # Adicionar parâmetro para mostrar o modal de oferta de cadastro de ingresso
+        return redirect(url_for('pessoas.index', mostrar_oferta_ingresso=True, cpf=formatted_cpf, nome=form.nome.data))
     
     return render_template('pessoas/form.html', form=form, title='Novo Cadastro')
 

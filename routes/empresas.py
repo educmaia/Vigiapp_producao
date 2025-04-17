@@ -51,7 +51,9 @@ def novo():
         db.session.commit()
         
         flash('Empresa cadastrada com sucesso!', 'success')
-        return redirect(url_for('empresas.index'))
+        
+        # Adicionar parâmetro para mostrar o modal de oferta de cadastro de entrega
+        return redirect(url_for('empresas.index', mostrar_oferta_entrega=True, cnpj=formatted_cnpj, nome_empresa=form.nome_empresa.data))
     
     return render_template('empresas/form.html', form=form, title='Nova Empresa')
 

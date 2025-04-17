@@ -10,7 +10,18 @@
                 <h4 class="mb-0">Dashboard</h4>
             </div>
             <div class="card-body">
+                <!-- Primeira linha: Pessoas, Ingressos, Correspondências -->
                 <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-users dashboard-icon text-success"></i>
+                                <h5 class="card-title">Pessoas</h5>
+                                <p class="card-text">Gerencie cadastros de pessoas e visitantes</p>
+                                <a href="{{ url_for('pessoas.index') }}" class="btn btn-success">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card dashboard-card">
                             <div class="card-body">
@@ -24,13 +35,17 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card dashboard-card">
                             <div class="card-body">
-                                <i class="fas fa-users dashboard-icon text-success"></i>
-                                <h5 class="card-title">Pessoas</h5>
-                                <p class="card-text">Gerencie cadastros de pessoas e visitantes</p>
-                                <a href="{{ url_for('pessoas.index') }}" class="btn btn-success">Acessar</a>
+                                <i class="fas fa-envelope dashboard-icon text-secondary"></i>
+                                <h5 class="card-title">Correspondências</h5>
+                                <p class="card-text">Registre e controle correspondências recebidas</p>
+                                <a href="{{ url_for('correspondencias.index') }}" class="btn btn-secondary">Acessar</a>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Segunda linha: Empresas, Entregas, Ocorrências -->
+                <div class="row">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card dashboard-card">
                             <div class="card-body">
@@ -48,16 +63,6 @@
                                 <h5 class="card-title">Entregas</h5>
                                 <p class="card-text">Registre e acompanhe entregas de materiais</p>
                                 <a href="{{ url_for('entregas.index') }}" class="btn btn-warning">Acessar</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card dashboard-card">
-                            <div class="card-body">
-                                <i class="fas fa-envelope dashboard-icon text-secondary"></i>
-                                <h5 class="card-title">Correspondências</h5>
-                                <p class="card-text">Registre e controle correspondências recebidas</p>
-                                <a href="{{ url_for('correspondencias.index') }}" class="btn btn-secondary">Acessar</a>
                             </div>
                         </div>
                     </div>
