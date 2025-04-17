@@ -96,9 +96,12 @@ def novo():
     
     # Pre-fill date and time if not submitted
     if request.method == 'GET':
-        today = datetime.now()
-        form.data_registro.data = today.strftime('%d/%m/%Y')
-        form.hora_registro.data = today.strftime('%H:%M')
+        current_time = datetime.now()
+        current_time = current_time.replace(hour=(current_time.hour - 3) % 24)
+        form.data_registro.data = current_time.strftime('%d/%m/%Y')
+        form.hora_registro.data = current_time.strftime('%H:%M')
+        form.data_envio.data = current_time.strftime('%d/%m/%Y')
+        form.hora_envio.data = current_time.strftime('%H:%M')
     
     if form.validate_on_submit():
         cnpj = re.sub(r'[^0-9]', '', form.cnpj.data)
@@ -110,13 +113,21 @@ def novo():
             flash('CNPJ não cadastrado. Cadastre a empresa primeiro.', 'danger')
             return render_template('entregas/form.html', form=form, title='Nova Entrega')
         
+        # Get current time in UTC-3 (Brazil timezone)
+        current_time = datetime.now()
+        current_time = current_time.replace(hour=(current_time.hour - 3) % 24)
+        
+        # Format current date and time
+        data_atual = current_time.strftime('%d/%m/%Y')
+        hora_atual = current_time.strftime('%H:%M')
+        
         # Create new entrega
         nova_entrega = Entrega(
             cnpj=formatted_cnpj,
-            data_registro=form.data_registro.data,
-            hora_registro=form.hora_registro.data,
-            data_envio=form.data_envio.data,
-            hora_envio=form.hora_envio.data,
+            data_registro=data_atual,
+            hora_registro=hora_atual,
+            data_envio=data_atual,  # Set delivery date same as registration
+            hora_envio=hora_atual,  # Set delivery time same as registration
             nota_fiscal=form.nota_fiscal.data,
             observacoes=form.observacoes.data,
             imagem_filename=None
