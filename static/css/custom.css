@@ -1,8 +1,16 @@
 /* Custom styles for VigiAPP */
 
+:root {
+    --primary-green: #2f9e41;
+    --primary-red: #cd191e;
+    --primary-black: #000000;
+    --primary-white: #ffffff;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
+    background-color: var(--primary-white);
+    color: var(--primary-black);
 }
 
 .navbar-brand {
@@ -10,49 +18,81 @@ body {
     font-size: 1.5rem;
 }
 
+.navbar {
+    background-color: var(--primary-green) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--primary-white);
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: var(--primary-white);
+}
+
 .card {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 1.5rem;
+    border-color: var(--primary-green);
 }
 
 .card-header {
-    background-color: #343a40;
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--primary-white);
     font-weight: bold;
     border-top-left-radius: 8px !important;
     border-top-right-radius: 8px !important;
 }
 
 .btn-primary {
-    background-color: #0d6efd;
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #248735;
+    border-color: #248735;
 }
 
 .btn-success {
-    background-color: #198754;
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: #248735;
+    border-color: #248735;
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background-color: #b71419;
+    border-color: #b71419;
 }
 
 .btn-warning {
     background-color: #ffc107;
-    color: #212529;
+    color: var(--primary-black);
 }
 
 .form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(47, 158, 65, 0.25);
 }
 
 .form-label {
     font-weight: 500;
+    color: var(--primary-black);
 }
 
 .table thead th {
-    background-color: #343a40;
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--primary-white);
     font-weight: bold;
 }
 
@@ -63,6 +103,7 @@ body {
 .dashboard-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    color: var(--primary-green);
 }
 
 .dashboard-card {
@@ -77,14 +118,14 @@ body {
 .footer {
     padding: 1rem 0;
     text-align: center;
-    background-color: #343a40;
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--primary-white);
 }
 
 /* Severity colors for ocorrências */
 .severity-baixa {
-    background-color: #d1e7dd;
-    color: #0f5132;
+    background-color: #d8f0dd;
+    color: var(--primary-green);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
 }
@@ -97,14 +138,14 @@ body {
 }
 
 .severity-alta {
-    background-color: #f8d7da;
-    color: #842029;
+    background-color: #f8d7d8;
+    color: var(--primary-red);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
 }
 
 .severity-critica {
-    background-color: #dc3545;
+    background-color: var(--primary-red);
     color: white;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -114,16 +155,23 @@ body {
 /* Status colors */
 .status-pendente {
     background-color: #fff3cd;
-    color: #664d03;
+    color: var(--primary-black);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
 }
 
 .status-enviado, .status-entregue {
-    background-color: #d1e7dd;
-    color: #0f5132;
+    background-color: #d8f0dd;
+    color: var(--primary-green);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
+}
+
+/* Back button */
+.btn-back-home {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    margin-bottom: 1rem;
 }
 
 /* Responsive adjustments */
