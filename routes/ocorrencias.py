@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from app import db
 from models import Ocorrencia
 from forms import OcorrenciaForm
-from datetime import datetime
+from utils import get_brasil_datetime
 from email_sender import EmailSender
 
 ocorrencias_bp = Blueprint('ocorrencias', __name__, url_prefix='/ocorrencias')
@@ -21,9 +21,9 @@ def index():
 def novo():
     form = OcorrenciaForm()
     
-    # Pre-fill date, time and vigilante if not submitted
+    # Pre-fill date, time and vigilante if not submitted with Brazil timezone
     if request.method == 'GET':
-        today = datetime.now()
+        today = get_brasil_datetime()
         form.data_registro.data = today.date()
         form.hora_registro.data = today.time()
         form.vigilante.data = current_user.username

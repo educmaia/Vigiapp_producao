@@ -106,7 +106,7 @@ def registrar_destinacao(id):
     if correspondencia.data_destinacao and correspondencia.hora_destinacao:
         flash('Destinação já registrada para esta correspondência.', 'warning')
     else:
-        now = datetime.now()
+        now = get_brasil_datetime()
         correspondencia.data_destinacao = now.date()
         correspondencia.hora_destinacao = now.time()
         db.session.commit()

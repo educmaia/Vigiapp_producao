@@ -6,8 +6,8 @@ from flask_login import login_required, current_user
 from app import db
 from models import Pessoa, Ingresso, Empresa, Entrega, Correspondencia, Ocorrencia
 from forms import RelatorioForm
-from datetime import datetime, timedelta
-from utils import generate_pdf_report
+from datetime import timedelta
+from utils import generate_pdf_report, get_brasil_datetime
 import os
 import tempfile
 
@@ -18,9 +18,9 @@ relatorios_bp = Blueprint('relatorios', __name__, url_prefix='/relatorios')
 def index():
     form = RelatorioForm()
     
-    # Pre-fill date range with current month if not submitted
+    # Pre-fill date range with current month if not submitted with Brazil timezone
     if request.method == 'GET':
-        today = datetime.now()
+        today = get_brasil_datetime()
         form.data_fim.data = today.date()
         form.data_inicio.data = today.replace(day=1).date()
     
