@@ -124,6 +124,9 @@ def novo():
         data_atual = current_time.strftime('%d/%m/%Y')
         hora_atual = current_time.strftime('%H:%M')
         
+        # Mensagem padrão
+        flash_message = "Entrega registrada com sucesso!"
+        
         # Create new entrega
         nova_entrega = Entrega(
             cnpj=formatted_cnpj,
@@ -202,6 +205,9 @@ def novo():
             except Exception as e:
                 current_app.logger.error(f"Erro ao enviar email: {str(e)}")
                 flash_message = "Entrega registrada com sucesso! Nota: Houve um erro ao tentar enviar o e-mail de notificação."
+        else:
+            # Se não há imagens, não tenta enviar e-mail
+            flash_message = "Entrega registrada com sucesso!"
         
         flash(flash_message, 'success')
         return redirect(url_for('entregas.index'))
