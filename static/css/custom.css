@@ -35,6 +35,8 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 1.5rem;
     border-color: var(--primary-green);
+    background-color: var(--primary-white);
+    color: var(--primary-black);
 }
 
 .card-header {
@@ -43,6 +45,11 @@ body {
     font-weight: bold;
     border-top-left-radius: 8px !important;
     border-top-right-radius: 8px !important;
+}
+
+.card-body {
+    background-color: var(--primary-white);
+    color: var(--primary-black);
 }
 
 .btn-primary {
@@ -80,9 +87,22 @@ body {
     color: var(--primary-black);
 }
 
+.form-control {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+    border-color: #ced4da;
+}
+
 .form-control:focus {
     border-color: var(--primary-green);
     box-shadow: 0 0 0 0.25rem rgba(47, 158, 65, 0.25);
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+}
+
+.form-select {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
 }
 
 .form-label {
