@@ -1,6 +1,6 @@
 import re
 from unidecode import unidecode
-from datetime import datetime
+from datetime import datetime, timedelta
 from reportlab.lib.pagesizes import landscape, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
@@ -44,6 +44,15 @@ def format_telefone(telefone):
 def normalize_string(text):
     """Remove accents and special characters from a string"""
     return unidecode(str(text))
+
+def get_brasil_datetime():
+    """
+    Retorna o horário atual ajustado para o fuso horário de Brasília (UTC-3)
+    
+    Returns:
+        datetime: Objeto datetime com o horário de Brasília
+    """
+    return datetime.now() - timedelta(hours=3)
 
 def generate_pdf_report(data, title, headers, filename, date_range=None):
     """
@@ -92,7 +101,7 @@ def generate_pdf_report(data, title, headers, filename, date_range=None):
         elements.append(Spacer(1, 0.25 * inch))
     
     # Generation info
-    generation_info = f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}"
+    generation_info = f"Gerado em: {get_brasil_datetime().strftime('%d/%m/%Y %H:%M:%S')}"
     elements.append(Paragraph(generation_info, styles['Normal']))
     elements.append(Spacer(1, 0.25 * inch))
     
