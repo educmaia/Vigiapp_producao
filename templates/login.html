@@ -13,7 +13,7 @@
                 <div class="text-center mb-4">
                     <img src="{{ url_for('static', filename='img/vigiapp.jpg') }}" alt="VigiAPP Logo" width="125" height="125" class="rounded-circle">
                     <h3 class="mt-3">VigiAPP</h3>
-                    <p class="text-muted">Sistema de Controle de Acesso</p>
+                    <p class="text-dark">Sistema de Controle de Acesso</p>
                 </div>
                 
                 <form method="POST" class="needs-validation" novalidate>
@@ -21,7 +21,7 @@
                     
                     <div class="mb-3">
                         <label for="username" class="form-label">{{ form.username.label }}</label>
-                        {{ form.username(class="form-control", id="username", placeholder="Digite seu usuário", required=true) }}
+                        {{ form.username(class="form-control", id="username", placeholder="Digite seu usuário", style="color: #000;", required=true) }}
                         <div class="invalid-feedback">
                             Por favor, informe seu usuário.
                         </div>
@@ -29,7 +29,7 @@
                     
                     <div class="mb-3">
                         <label for="password" class="form-label">{{ form.password.label }}</label>
-                        {{ form.password(class="form-control", id="password", placeholder="Digite sua senha", required=true) }}
+                        {{ form.password(class="form-control", id="password", placeholder="Digite sua senha", style="color: #000;", required=true) }}
                         <div class="invalid-feedback">
                             Por favor, informe sua senha.
                         </div>
