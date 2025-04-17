@@ -5,7 +5,7 @@ from flask_login import login_required, current_user
 from app import db
 from models import Ingresso, Pessoa
 from forms import IngressoForm
-from datetime import datetime
+from utils import get_brasil_datetime
 from utils import format_cpf
 from email_sender import EmailSender
 import re
@@ -23,9 +23,9 @@ def index():
 def novo():
     form = IngressoForm()
     
-    # Pre-fill date and time if not submitted
+    # Pre-fill date and time if not submitted with Brazil timezone
     if request.method == 'GET':
-        today = datetime.now()
+        today = get_brasil_datetime()
         form.data.data = today.strftime('%d/%m/%Y')
         form.entrada.data = today.strftime('%H:%M')
     
@@ -120,7 +120,7 @@ def registrar_saida(id):
     if ingresso.saida:
         flash('Saída já registrada para este ingresso.', 'warning')
     else:
-        now = datetime.now()
+        now = get_brasil_datetime()
         ingresso.saida = now.strftime('%H:%M')
         db.session.commit()
         flash('Saída registrada com sucesso!', 'success')
