@@ -70,7 +70,7 @@ def generate_pdf_report(data, title, headers, filename, date_range=None):
     # Styles for the document
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(
-        name='Title',
+        name='ReportTitle',
         parent=styles['Heading1'],
         fontSize=14,
         alignment=TA_CENTER,
@@ -81,7 +81,7 @@ def generate_pdf_report(data, title, headers, filename, date_range=None):
     elements = []
     
     # Add title
-    elements.append(Paragraph(f"<b>{title}</b>", styles['Title']))
+    elements.append(Paragraph(f"<b>{title}</b>", styles['ReportTitle']))
     elements.append(Spacer(1, 0.25 * inch))
     
     # Add date range if provided
@@ -101,9 +101,12 @@ def generate_pdf_report(data, title, headers, filename, date_range=None):
     
     table = Table(table_data, repeatRows=1)
     
+    # Define cor verde personalizada do VigiAPP
+    verde_vigiapp = colors.HexColor('#2f9e41')
+    
     # Apply table style
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+        ('BACKGROUND', (0, 0), (-1, 0), verde_vigiapp),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
