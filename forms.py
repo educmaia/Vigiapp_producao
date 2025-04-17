@@ -1,5 +1,13 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
+
+# MultipleFileField não está disponível no Flask-WTF, então vamos criar nossa própria
+class MultipleFileField(FileField):
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = valuelist
+        else:
+            self.data = []
 from wtforms import (
     StringField, PasswordField, SubmitField, TextAreaField, SelectField,
     DateField, TimeField, HiddenField
@@ -133,7 +141,7 @@ class EntregaForm(FlaskForm):
     data_envio = StringField('Data da Entrega', validators=[Optional()])
     hora_envio = StringField('Hora da Entrega', validators=[Optional()])
     nota_fiscal = StringField('Nota Fiscal', validators=[Optional(), Length(max=50)])
-    imagem = FileField('Imagem da Entrega', validators=[Optional()])
+    imagens = MultipleFileField('Imagens da Entrega', validators=[Optional()])
     observacoes = TextAreaField('Observações', validators=[Optional()])
     submit = SubmitField('Registrar')
 

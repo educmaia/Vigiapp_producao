@@ -11,7 +11,9 @@ from utils import format_cnpj
 from email_sender import EmailSender
 import re
 import os
+import io
 from werkzeug.utils import secure_filename
+from PIL import Image
 
 entregas_bp = Blueprint('entregas', __name__, url_prefix='/entregas', static_folder='static')
 
@@ -24,6 +26,62 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def resize_image(img_file, target_size=(800, 600)):
+    """
+    Redimensiona a imagem para o tamanho alvo, mantendo a proporção.
+    
+    Args:
+        img_file: O arquivo de imagem como um objeto file-like
+        target_size: Tupla com (largura, altura) desejadas
+        
+    Returns:
+        BytesIO com a imagem redimensionada
+    """
+    img = Image.open(img_file)
+    
+    # Determinar orientação da imagem
+    width, height = img.size
+    if width > height:
+        # Imagem horizontal
+        target_size = (800, 600)
+    else:
+        # Imagem vertical
+        target_size = (600, 800)
+        
+    # Calcular nova proporção mantendo a relação de aspecto
+    img_ratio = width / height
+    target_ratio = target_size[0] / target_size[1]
+    
+    if img_ratio > target_ratio:
+        # Imagem mais larga que o alvo
+        new_width = target_size[0]
+        new_height = int(new_width / img_ratio)
+    else:
+        # Imagem mais alta que o alvo
+        new_height = target_size[1]
+        new_width = int(new_height * img_ratio)
+    
+    # Redimensionar a imagem
+    resized_img = img.resize((new_width, new_height), Image.LANCZOS)
+    
+    # Salvar em um buffer de memória
+    img_io = io.BytesIO()
+    
+    # Determinar formato de saída baseado no formato original
+    if img.format:
+        format = img.format
+    else:
+        format = 'JPEG'  # Padrão para formato desconhecido
+    
+    # Otimizar e salvar
+    if format == 'JPEG':
+        resized_img.save(img_io, format=format, quality=85, optimize=True)
+    else:
+        resized_img.save(img_io, format=format, optimize=True)
+    
+    img_io.seek(0)
+    return img_io
 
 @entregas_bp.route('/')
 @login_required
@@ -67,20 +125,31 @@ def novo():
         db.session.add(nova_entrega)
         db.session.commit()
         
-        # Processar upload de imagem se fornecido
-        if form.imagem.data:
-            imagem = form.imagem.data
-            if imagem and allowed_file(imagem.filename):
-                # Usar ID da entrega e timestamp para criar um nome único
-                timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-                filename = secure_filename(f"{nova_entrega.id}_{timestamp}_{imagem.filename}")
-                filepath = os.path.join(UPLOAD_FOLDER, filename)
-                
-                imagem.save(filepath)
-                
-                # Atualizar a entrega com o nome do arquivo
-                nova_entrega.imagem_filename = filename
-                db.session.commit()
+        # Processar upload de múltiplas imagens
+        if form.imagens.data and form.imagens.data[0]:
+            for i, imagem in enumerate(form.imagens.data):
+                if imagem and allowed_file(imagem.filename):
+                    # Usar ID da entrega, índice e timestamp para criar um nome único
+                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    filename = secure_filename(f"{nova_entrega.id}_{timestamp}_{i}_{imagem.filename}")
+                    filepath = os.path.join(UPLOAD_FOLDER, filename)
+                    
+                    # Redimensionar e salvar a imagem
+                    imagem.seek(0)  # Garantir que estamos no início do arquivo
+                    img_io = resize_image(imagem)
+                    
+                    with open(filepath, 'wb') as f:
+                        f.write(img_io.getbuffer())
+                    
+                    # Criar registro de imagem para esta entrega
+                    nova_imagem = EntregaImagem(
+                        entrega_id=nova_entrega.id,
+                        filename=filename
+                    )
+                    db.session.add(nova_imagem)
+            
+            # Commit todas as imagens de uma vez
+            db.session.commit()
         
         flash('Entrega registrada com sucesso!', 'success')
         return redirect(url_for('entregas.index'))

@@ -39,6 +39,16 @@ class Empresa(db.Model):
     telefone_func = db.Column(db.String(20))
     entregas = db.relationship('Entrega', backref='empresa', lazy=True)
 
+class EntregaImagem(db.Model):
+    __tablename__ = 'entrega_imagens'
+    id = db.Column(db.Integer, primary_key=True)
+    entrega_id = db.Column(db.Integer, db.ForeignKey('entregas.id', ondelete='CASCADE'), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    upload_date = db.Column(db.DateTime, default=datetime.now)
+    
+    # Relacionamento com Entrega
+    entrega = db.relationship('Entrega', back_populates='imagens')
+
 class Entrega(db.Model):
     __tablename__ = 'entregas'
     id = db.Column(db.Integer, primary_key=True)
@@ -48,8 +58,11 @@ class Entrega(db.Model):
     data_envio = db.Column(db.String(10))
     hora_envio = db.Column(db.String(10))
     nota_fiscal = db.Column(db.String(50))
-    imagem_filename = db.Column(db.String(255))
+    imagem_filename = db.Column(db.String(255))  # Campo mantido para compatibilidade
     observacoes = db.Column(db.Text)
+    
+    # Relacionamento com EntregaImagem
+    imagens = db.relationship('EntregaImagem', back_populates='entrega', cascade='all, delete-orphan')
 
 class Sugestao(db.Model):
     __tablename__ = 'sugestoes'

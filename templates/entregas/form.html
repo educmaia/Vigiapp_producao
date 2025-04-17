@@ -85,20 +85,35 @@
             
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label for="imagem" class="form-label">{{ form.imagem.label }}</label>
-                    {{ form.imagem(class="form-control", id="imagem") }}
-                    {% for error in form.imagem.errors %}
+                    <label for="imagens" class="form-label">{{ form.imagens.label }}</label>
+                    {{ form.imagens(class="form-control", id="imagens", multiple=True) }}
+                    {% for error in form.imagens.errors %}
                     <div class="text-danger">{{ error }}</div>
                     {% endfor %}
+                    <div class="form-text">Selecione múltiplas imagens segurando CTRL ou SHIFT durante a seleção.</div>
+                    
+                    {% if request.path.startswith('/entregas/editar/') and entrega and entrega.imagens %}
+                    <div class="mt-3">
+                        <p><strong>Imagens atuais:</strong></p>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for imagem in entrega.imagens %}
+                            <a href="{{ url_for('entregas.imagem', filename=imagem.filename) }}" target="_blank" class="position-relative">
+                                <img src="{{ url_for('entregas.imagem', filename=imagem.filename) }}" 
+                                     class="img-thumbnail" style="max-height: 150px; max-width: 150px;" alt="Imagem da entrega">
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div class="form-text mt-2">Enviar novas imagens manterá as imagens existentes a menos que você escolha excluí-las.</div>
+                    </div>
+                    {% endif %}
                     
                     {% if request.path.startswith('/entregas/editar/') and entrega and entrega.imagem_filename %}
-                    <div class="mt-2">
-                        <p><strong>Imagem atual:</strong></p>
+                    <div class="mt-3">
+                        <p><strong>Imagem anterior (compatibilidade):</strong></p>
                         <a href="{{ url_for('entregas.imagem', filename=entrega.imagem_filename) }}" target="_blank">
                             <img src="{{ url_for('entregas.imagem', filename=entrega.imagem_filename) }}" 
                                  class="img-thumbnail" style="max-height: 150px;" alt="Imagem da entrega">
                         </a>
-                        <div class="form-text">Enviar nova imagem substituirá a imagem atual.</div>
                     </div>
                     {% endif %}
                 </div>
