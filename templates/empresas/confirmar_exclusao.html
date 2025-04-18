@@ -44,7 +44,7 @@
                     <i class="fas fa-times me-2"></i>Cancelar
                 </a>
                 
-                <form action="{{ action_url }}" method="post" class="delete-confirmation-form">
+                <form action="{{ action_url }}" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash me-2"></i>Confirmar Exclusão
