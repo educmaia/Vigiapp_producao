@@ -291,6 +291,26 @@ def registrar_envio(id):
     
     return redirect(url_for('entregas.index'))
 
+@entregas_bp.route('/confirmar-exclusao/<int:id>')
+@login_required
+def confirmar_exclusao(id):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('entregas.index'))
+    
+    entrega = Entrega.query.get_or_404(id)
+    empresa = Empresa.query.get(entrega.cnpj)
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'entregas/confirmar_exclusao.html',
+        entrega=entrega,
+        empresa=empresa,
+        action_url=url_for('entregas.excluir', id=id),
+        cancel_url=url_for('entregas.index')
+    )
+
 @entregas_bp.route('/excluir/<int:id>', methods=['POST'])
 @login_required
 def excluir(id):
@@ -301,27 +321,33 @@ def excluir(id):
     
     entrega = Entrega.query.get_or_404(id)
     
-    # Excluir todas as imagens associadas
-    for imagem in entrega.imagens:
-        try:
-            if os.path.exists(os.path.join(UPLOAD_FOLDER, imagem.filename)):
-                os.remove(os.path.join(UPLOAD_FOLDER, imagem.filename))
-        except Exception as e:
-            flash(f'Erro ao excluir imagem: {str(e)}', 'warning')
-            pass
+    try:
+        # Excluir todas as imagens associadas
+        for imagem in entrega.imagens:
+            try:
+                if os.path.exists(os.path.join(UPLOAD_FOLDER, imagem.filename)):
+                    os.remove(os.path.join(UPLOAD_FOLDER, imagem.filename))
+            except Exception as e:
+                current_app.logger.error(f"Erro ao excluir arquivo de imagem: {str(e)}")
+                flash(f'Erro ao excluir imagem: {str(e)}', 'warning')
+        
+        # Excluir imagem antiga se existir (para compatibilidade)
+        if entrega.imagem_filename:
+            try:
+                if os.path.exists(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename)):
+                    os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
+            except Exception as e:
+                current_app.logger.error(f"Erro ao excluir imagem antiga: {str(e)}")
+                pass
+        
+        db.session.delete(entrega)
+        db.session.commit()
+        flash('Entrega excluída com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Erro ao excluir entrega: {str(e)}")
+        flash(f'Erro ao excluir entrega: {str(e)}', 'danger')
     
-    # Excluir imagem antiga se existir (para compatibilidade)
-    if entrega.imagem_filename:
-        try:
-            if os.path.exists(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename)):
-                os.remove(os.path.join(UPLOAD_FOLDER, entrega.imagem_filename))
-        except:
-            pass
-    
-    db.session.delete(entrega)
-    db.session.commit()
-    
-    flash('Entrega excluída com sucesso!', 'success')
     return redirect(url_for('entregas.index'))
 
 @entregas_bp.route('/imagem/<filename>')

@@ -1,59 +1,71 @@
-{% extends 'shared/confirmar_exclusao.html' %}
+{% extends 'base.html' %}
 
-{% block item_details %}
-<div class="info-box p-3 bg-light rounded">
-    <div class="alert alert-danger">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <strong>Atenção:</strong> Excluir esta entrega também removerá todas as imagens associadas!
+{% block title %}Confirmar Exclusão de Entrega{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão de Entrega
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <p><strong>Atenção!</strong> Você está prestes a excluir permanentemente este registro de entrega.</p>
+                <p class="mb-0">Esta ação não pode ser desfeita! Todas as imagens associadas também serão excluídas.</p>
+            </div>
+            
+            <h5 class="card-title border-bottom pb-2">Dados da Entrega</h5>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Empresa:</strong> {{ empresa.nome_empresa if empresa else 'Não encontrada' }}</p>
+                    <p><strong>CNPJ:</strong> {{ entrega.cnpj }}</p>
+                    <p><strong>Data de Registro:</strong> {{ entrega.data_registro }}</p>
+                    <p><strong>Hora de Registro:</strong> {{ entrega.hora_registro }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Data de Envio:</strong> {{ entrega.data_envio if entrega.data_envio else 'Não registrado' }}</p>
+                    <p><strong>Hora de Envio:</strong> {{ entrega.hora_envio if entrega.hora_envio else 'Não registrado' }}</p>
+                    <p><strong>Nota Fiscal:</strong> {{ entrega.nota_fiscal if entrega.nota_fiscal else 'Não informada' }}</p>
+                    
+                    {% if entrega.observacoes %}
+                    <h6>Observações:</h6>
+                    <div class="p-3 bg-light border rounded">
+                        <p class="mb-0">{{ entrega.observacoes|nl2br }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if entrega.imagens %}
+            <h5 class="border-bottom pb-2">Imagens associadas ({{ entrega.imagens|length }})</h5>
+            <div class="row mb-4">
+                {% for imagem in entrega.imagens %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <img src="{{ url_for('entregas.imagem', filename=imagem.filename) }}" 
+                             class="card-img-top img-thumbnail" 
+                             alt="Imagem da entrega">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ cancel_url }}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                
+                <form action="{{ action_url }}" method="post">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <table class="table table-borderless mb-0 mt-3">
-        <tr>
-            <th style="width: 30%">ID:</th>
-            <td>{{ entrega.id }}</td>
-        </tr>
-        <tr>
-            <th>CNPJ:</th>
-            <td>{{ entrega.cnpj }}</td>
-        </tr>
-        <tr>
-            <th>Empresa:</th>
-            <td>{{ entrega.empresa.nome_empresa }}</td>
-        </tr>
-        <tr>
-            <th>Data de Registro:</th>
-            <td>{{ entrega.data_registro }}</td>
-        </tr>
-        <tr>
-            <th>Hora de Registro:</th>
-            <td>{{ entrega.hora_registro }}</td>
-        </tr>
-        {% if entrega.data_envio %}
-        <tr>
-            <th>Data de Envio:</th>
-            <td>{{ entrega.data_envio }}</td>
-        </tr>
-        <tr>
-            <th>Hora de Envio:</th>
-            <td>{{ entrega.hora_envio }}</td>
-        </tr>
-        {% endif %}
-        <tr>
-            <th>Nota Fiscal:</th>
-            <td>{{ entrega.nota_fiscal or 'Não informada' }}</td>
-        </tr>
-        {% if entrega.imagens|length > 0 %}
-        <tr>
-            <th>Imagens:</th>
-            <td>{{ entrega.imagens|length }} imagens</td>
-        </tr>
-        {% endif %}
-        {% if entrega.observacoes %}
-        <tr>
-            <th>Observações:</th>
-            <td>{{ entrega.observacoes|truncate(100) }}</td>
-        </tr>
-        {% endif %}
-    </table>
 </div>
 {% endblock %}
