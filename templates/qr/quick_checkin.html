@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Check-in Rápido - {{ pessoa.nome }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 
+                        Confirme os dados abaixo e preencha as informações adicionais para registrar a entrada.
+                    </div>
+
+                    <form method="POST" action="{{ url_for('qr.processar_checkin') }}">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="nome" value="{{ pessoa.nome }}" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control" id="cpf" name="cpf" value="{{ pessoa.cpf }}" readonly>
+                        </div>
+                        
+                        {% if pessoa.empresa %}
+                        <div class="mb-3">
+                            <label for="empresa" class="form-label">Empresa</label>
+                            <input type="text" class="form-control" id="empresa" value="{{ pessoa.empresa }}" readonly>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="motivo" class="form-label">Motivo da Visita <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="motivo" name="motivo" required maxlength="200">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="pessoa_setor" class="form-label">Pessoa/Setor a ser Visitado <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="pessoa_setor" name="pessoa_setor" required maxlength="100">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="observacoes" class="form-label">Observações</label>
+                            <textarea class="form-control" id="observacoes" name="observacoes" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('ingressos.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Confirmar Check-in
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

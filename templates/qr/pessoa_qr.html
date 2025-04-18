@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">QR Code - {{ pessoa.nome }}</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <h4>Código QR para Check-in Rápido</h4>
+                        <p>Use este código para realizar check-in rápido desta pessoa.</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <img src="{{ url_for('static', filename=qr_code_url) }}" alt="QR Code" class="img-fluid" style="max-width: 300px;">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h5>Informações da Pessoa</h5>
+                        <p><strong>Nome:</strong> {{ pessoa.nome }}</p>
+                        <p><strong>CPF:</strong> {{ pessoa.cpf }}</p>
+                        {% if pessoa.telefone %}
+                        <p><strong>Telefone:</strong> {{ pessoa.telefone }}</p>
+                        {% endif %}
+                        {% if pessoa.empresa %}
+                        <p><strong>Empresa:</strong> {{ pessoa.empresa }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="text-muted">
+                            <i class="bi bi-info-circle"></i>
+                            Este QR Code direciona para a rota de check-in rápido e contém informações de identificação.
+                        </p>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar para Pessoa
+                        </a>
+                        <a href="#" class="btn btn-primary" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Imprimir QR Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Check-out Rápido - {{ pessoa.nome }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        Você está prestes a registrar a saída deste visitante. Confira os dados abaixo.
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Informações do Ingresso</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Visitante:</strong> {{ pessoa.nome }}</p>
+                                <p><strong>CPF:</strong> {{ pessoa.cpf }}</p>
+                                <p><strong>Data:</strong> {{ ingresso.data }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Entrada:</strong> {{ ingresso.entrada }}</p>
+                                <p><strong>Motivo:</strong> {{ ingresso.motivo }}</p>
+                                <p><strong>Pessoa/Setor:</strong> {{ ingresso.pessoa_setor }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="{{ url_for('qr.processar_checkout', ingresso_id=ingresso.id) }}">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('ingressos.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Confirmar Check-out
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
