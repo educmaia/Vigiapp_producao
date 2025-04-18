@@ -82,30 +82,13 @@ function setupButtonEffects() {
 
 // Configura transições suaves entre páginas
 function setupPageTransitions() {
-    // Aplicar transição nas mudanças de página
+    // Navegação direta sem efeito de congelamento
     document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Ignorar links de ação (como logout) ou links com modificadores
-            if (this.href.includes('/logout') || 
-                this.href.includes('/delete') || 
-                e.ctrlKey || 
-                e.metaKey) {
-                return;
-            }
-            
-            e.preventDefault();
-            
-            // Aplicar efeito de desfoque ao conteúdo atual
-            document.body.classList.add('page-loading');
-            
-            // Navegar para a nova página após breve atraso
-            setTimeout(() => {
-                window.location.href = this.href;
-            }, 300);
-        });
+        // Não adiciona eventos especiais - a navegação ocorre de forma natural
+        // Removido o efeito de congelamento conforme solicitado pelo usuário
     });
     
-    // Remover classe de carregamento quando a página estiver pronta
+    // Garante que não haja classe de carregamento quando a página estiver pronta
     window.addEventListener('load', function() {
         document.body.classList.remove('page-loading');
     });
