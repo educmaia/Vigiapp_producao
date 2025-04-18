@@ -137,6 +137,26 @@ def registrar_saida(id):
     
     return redirect(url_for('ingressos.index'))
 
+@ingressos_bp.route('/confirmar-exclusao/<int:id>')
+@login_required
+def confirmar_exclusao(id):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('ingressos.index'))
+    
+    ingresso = Ingresso.query.get_or_404(id)
+    pessoa = Pessoa.query.get(ingresso.cpf)
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'ingressos/confirmar_exclusao.html',
+        ingresso=ingresso,
+        pessoa=pessoa,
+        action_url=url_for('ingressos.excluir', id=id),
+        cancel_url=url_for('ingressos.index')
+    )
+
 @ingressos_bp.route('/excluir/<int:id>', methods=['POST'])
 @login_required
 def excluir(id):
@@ -147,8 +167,13 @@ def excluir(id):
     
     ingresso = Ingresso.query.get_or_404(id)
     
-    db.session.delete(ingresso)
-    db.session.commit()
+    try:
+        db.session.delete(ingresso)
+        db.session.commit()
+        flash('Ingresso excluído com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Erro ao excluir ingresso: {str(e)}")
+        flash(f'Erro ao excluir ingresso: {str(e)}', 'danger')
     
-    flash('Ingresso excluído com sucesso!', 'success')
     return redirect(url_for('ingressos.index'))
