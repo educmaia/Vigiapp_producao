@@ -8,14 +8,17 @@ from forms import EmpresaForm
 from utils import format_cnpj, format_telefone
 import re
 
+# Criar um novo blueprint para empresas com configuração limpa
 empresas_bp = Blueprint('empresas', __name__, url_prefix='/empresas')
 
+# Listar todas as empresas
 @empresas_bp.route('/')
 @login_required
 def index():
     empresas = Empresa.query.all()
     return render_template('empresas/index.html', empresas=empresas)
 
+# Adicionar nova empresa
 @empresas_bp.route('/novo', methods=['GET', 'POST'])
 @login_required
 def novo():
@@ -61,6 +64,7 @@ def novo():
     
     return render_template('empresas/form.html', form=form, title='Nova Empresa')
 
+# Rota para editar empresa
 @empresas_bp.route('/editar/<string:cnpj>', methods=['GET', 'POST'])
 @login_required
 def editar(cnpj):
@@ -97,9 +101,10 @@ def editar(cnpj):
     
     return render_template('empresas/form.html', form=form, title='Editar Empresa')
 
-@empresas_bp.route('/confirmar-exclusao/<string:cnpj>')
+# Página de confirmação de exclusão
+@empresas_bp.route('/confirmar-excluir/<string:cnpj>')
 @login_required
-def confirmar_exclusao(cnpj):
+def confirmar_excluir(cnpj):
     # Only admins can delete records
     if current_user.role != 'admin':
         flash('Apenas administradores podem excluir registros.', 'danger')
@@ -110,18 +115,19 @@ def confirmar_exclusao(cnpj):
     # Contar entregas associadas a esta empresa
     entregas_count = Entrega.query.filter_by(cnpj=cnpj).count()
     
-    # Renderiza a página de confirmação de exclusão - mesmo formato que pessoas
+    # Renderiza a página de confirmação de exclusão
     return render_template(
         'empresas/confirmar_exclusao.html',
         empresa=empresa,
         entregas_count=entregas_count,
-        action_url=url_for('empresas.excluir', cnpj=cnpj),
+        action_url=url_for('empresas.executar_exclusao', cnpj=cnpj),
         cancel_url=url_for('empresas.index')
     )
 
-@empresas_bp.route('/excluir/<string:cnpj>', methods=['POST'])
+# Executar a exclusão após confirmação
+@empresas_bp.route('/executar-exclusao/<string:cnpj>', methods=['POST'])
 @login_required
-def excluir(cnpj):
+def executar_exclusao(cnpj):
     # Only admins can delete records
     if current_user.role != 'admin':
         flash('Apenas administradores podem excluir registros.', 'danger')
@@ -144,6 +150,7 @@ def excluir(cnpj):
     
     return redirect(url_for('empresas.index'))
 
+# Buscar informações de uma empresa através do CNPJ
 @empresas_bp.route('/buscar-por-cnpj/<string:cnpj>')
 @login_required
 def buscar_por_cnpj(cnpj):
@@ -161,6 +168,7 @@ def buscar_por_cnpj(cnpj):
     
     return jsonify({}), 404
 
+# Limpar variáveis de sessão
 @empresas_bp.route('/limpar-session', methods=['POST'])
 @login_required
 def limpar_session():
