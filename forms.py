@@ -107,6 +107,20 @@ class RegisterForm(FlaskForm):
         'Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
     role = SelectField('Função', choices=[('vigilante', 'Vigilante'), ('admin', 'Administrador')])
     submit = SubmitField('Registrar')
+    
+class EditUserForm(FlaskForm):
+    username = StringField('Usuário', validators=[DataRequired(), Length(min=3, max=64)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    role = SelectField('Função', choices=[('vigilante', 'Vigilante'), ('admin', 'Administrador')])
+    active = SelectField('Status', choices=[('1', 'Ativo'), ('0', 'Inativo')])
+    submit = SubmitField('Salvar Alterações')
+    
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Senha Atual', validators=[DataRequired()])
+    password = PasswordField('Nova Senha', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField(
+        'Confirmar Nova Senha', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Alterar Senha')
 
 class PessoaForm(FlaskForm):
     cpf = StringField('CPF', validators=[DataRequired(), validate_cpf])

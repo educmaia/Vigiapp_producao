@@ -24,6 +24,17 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password_hash, form.password.data):
+            # Verificar se o usuário está ativo
+            if not user.active:
+                flash('Sua conta está desativada. Entre em contato com o administrador.', 'danger')
+                return render_template('login.html', form=form)
+                
+            # Atualizar o último login
+            from datetime import datetime
+            user.last_login = datetime.now()
+            db.session.commit()
+            
+            # Realizar login
             login_user(user)
             next_page = request.args.get('next')
             flash('Login realizado com sucesso!', 'success')

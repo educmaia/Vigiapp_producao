@@ -71,6 +71,7 @@ from routes.correspondencias import correspondencias_bp
 from routes.ocorrencias import ocorrencias_bp
 from routes.relatorios import relatorios_bp
 from routes.qr_routes import qr_bp
+from routes.users import users_bp
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(pessoas_bp)
@@ -81,6 +82,7 @@ app.register_blueprint(correspondencias_bp)
 app.register_blueprint(ocorrencias_bp)
 app.register_blueprint(relatorios_bp)
 app.register_blueprint(qr_bp)
+app.register_blueprint(users_bp, url_prefix='/usuarios')
 
 # Load user
 @login_manager.user_loader
