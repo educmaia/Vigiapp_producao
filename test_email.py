@@ -1,8 +1,7 @@
-from email_sender import EmailSender
+from email_smtp import EmailSender
 from utils import get_brasil_datetime
 import os
 import json
-from mailersend.emails import NewEmail
 
 def test_mailersend_direct():
     """Teste direto da biblioteca MailerSend sem usar nossa classe personalizada"""
