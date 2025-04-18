@@ -23,4 +23,5 @@ dependencies = [
     "qrcode>=8.1",
     "mailersend>=0.5.8",
     "flask-mail>=0.10.0",
+    "markupsafe>=3.0.2",
 ]
