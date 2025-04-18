@@ -1,6 +1,77 @@
 from email_sender import EmailSender
 from utils import get_brasil_datetime
 import os
+import json
+from mailersend.emails import NewEmail
+
+def test_mailersend_direct():
+    """Teste direto da biblioteca MailerSend sem usar nossa classe personalizada"""
+    api_key = os.environ.get('MAILERSEND_API_KEY')
+    if not api_key:
+        print("❌ MAILERSEND_API_KEY não encontrada no ambiente.")
+        return
+
+    print(f"Usando API key (primeiros 4 caracteres): {api_key[:4]}...")
+    
+    try:
+        # Cria uma nova instância de email diretamente com a biblioteca
+        mail = NewEmail(api_key)
+        
+        # Cria o objeto de mensagem
+        message = {}
+        
+        # Configura o remetente (usando o domínio mailersend.net que é permitido para testes)
+        mail.set_mail_from({"email": "noreply@mailersend.net", "name": "VigiAPP Test"}, message)
+        
+        # Configura os destinatários
+        recipients = [{"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}]
+        mail.set_mail_to(recipients, message)
+        
+        # Configura o assunto
+        mail.set_subject("VigiAPP - Teste Direto MailerSend", message)
+        
+        # Configura o conteúdo HTML
+        now = get_brasil_datetime()
+        timestamp = now.strftime("%d/%m/%Y %H:%M:%S")
+        
+        html_content = f"""
+        <html>
+        <body>
+            <h2>VigiAPP - Teste Direto MailerSend</h2>
+            <p>Este é um email de teste enviado usando diretamente a biblioteca MailerSend.</p>
+            <p>Data e hora do envio: {timestamp}</p>
+            <p>Se você está visualizando este email, a integração está correta!</p>
+        </body>
+        </html>
+        """
+        mail.set_html_content(html_content, message)
+        
+        # Tenta enviar o email
+        print("🔄 Enviando email direto via MailerSend...")
+        print(f"🔄 Conteúdo da mensagem: {json.dumps(message, indent=2)}")
+        
+        response = mail.send(message)
+        
+        print(f"🔄 Tipo de resposta: {type(response)}")
+        print(f"🔄 Resposta completa: {response}")
+        
+        if response and hasattr(response, 'status_code'):
+            if response.status_code < 400:
+                print(f"✅ Email enviado com sucesso! Status code: {response.status_code}")
+                return True
+            else:
+                print(f"❌ Falha ao enviar email. Status code: {response.status_code}")
+                print(f"❌ Resposta detalhada: {response.text if hasattr(response, 'text') else 'Sem detalhes'}")
+                return False
+        else:
+            print(f"❌ Resposta inválida ou nula do servidor MailerSend")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Erro no teste direto: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 def test_mailersend():
     # Obtém a chave API do ambiente
@@ -8,6 +79,8 @@ def test_mailersend():
     if not api_key:
         print("❌ MAILERSEND_API_KEY não encontrada no ambiente.")
         return
+    
+    print("\n==== TESTE USANDO NOSSA CLASSE EMAIL SENDER ====\n")
     
     # Cria instância do EmailSender
     sender = EmailSender(api_key)
@@ -55,4 +128,6 @@ def test_mailersend():
         print(f"❌ Falha ao enviar email: {response}")
 
 if __name__ == "__main__":
+    print("\n==== TESTE DIRETO COM A BIBLIOTECA MAILERSEND ====\n")
+    test_mailersend_direct()
     test_mailersend()
