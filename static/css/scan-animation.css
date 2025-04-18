@@ -1,0 +1,88 @@
+/* Animação de escaneamento de QR Code */
+
+.scan-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.scan-animation {
+    width: 250px;
+    height: 250px;
+    border: 2px solid #2f9e41;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(47, 158, 65, 0.5);
+}
+
+.scan-line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #2f9e41, transparent);
+    top: 0;
+    box-shadow: 0 0 10px #2f9e41;
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: 0; }
+    50% { top: calc(100% - 4px); }
+    100% { top: 0; }
+}
+
+.scan-text {
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.scan-overlay.scan-complete .scan-animation {
+    border-color: #28a745;
+    animation: successPulse 1s ease;
+}
+
+.scan-overlay.scan-complete .scan-line {
+    height: 100%;
+    background: rgba(40, 167, 69, 0.3);
+    box-shadow: none;
+    animation: none;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(47, 158, 65, 0.5); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(47, 158, 65, 0.8); }
+    100% { transform: scale(1); box-shadow: 0 0 20px rgba(47, 158, 65, 0.5); }
+}
+
+/* Estilização adicional para scanner QR em dispositivos móveis */
+@media (max-width: 576px) {
+    .scan-animation {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .scan-text {
+        font-size: 1rem;
+    }
+}

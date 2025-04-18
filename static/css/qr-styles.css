@@ -1,0 +1,150 @@
+/* Estilos específicos para QR Codes no VigiAPP */
+
+/* Container para o QR Code com efeito 3D */
+.qr-container {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+.qr-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.1);
+}
+
+/* Imagem do QR code com borda */
+.qr-code-image {
+    padding: 5px;
+    border: 2px solid #2f9e41;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-code-image {
+    transform: scale(1.02);
+}
+
+/* Badge do tipo de QR code */
+.qr-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #2f9e41;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1;
+    transition: all 0.2s ease;
+}
+
+.qr-container:hover .qr-badge {
+    transform: rotate(5deg) scale(1.1);
+}
+
+/* Informações do QR code com animação */
+.qr-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+    transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-info {
+    border-top-color: #2f9e41;
+}
+
+/* Estilo para botão de impressão */
+.print-button {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.print-button:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+/* Instruções de uso do QR Code */
+.qr-instructions {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 3px solid #2f9e41;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-instructions {
+    background: #eaf5ee;
+}
+
+/* Efeito de destaque para QR Code na tela de checkout */
+.checkout-qr {
+    animation: highlightPulse 2s infinite;
+}
+
+@keyframes highlightPulse {
+    0% { box-shadow: 0 0 0 0 rgba(47, 158, 65, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(47, 158, 65, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(47, 158, 65, 0); }
+}
+
+/* Ícones animados para QR Code */
+.qr-icon {
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-icon {
+    transform: rotate(360deg);
+}
+
+/* Layout para modo de impressão */
+@media print {
+    .qr-container {
+        box-shadow: none !important;
+        margin: 0 auto !important;
+        padding: 5mm !important;
+        transform: none !important;
+    }
+    
+    .qr-badge {
+        position: relative !important;
+        top: 0 !important;
+        right: 0 !important;
+        display: inline-block !important;
+        margin-bottom: 5mm !important;
+    }
+    
+    .qr-instructions {
+        border: 1px solid #ddd !important;
+        padding: 5mm !important;
+    }
+    
+    .print-button, .btn, .nav, .footer {
+        display: none !important;
+    }
+    
+    .qr-info {
+        margin-top: 5mm !important;
+        padding-top: 5mm !important;
+    }
+}

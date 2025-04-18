@@ -1,0 +1,164 @@
+/* Animações e Micro-interações para o VigiAPP */
+
+/* Animação de fade-in para elementos */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Animação de slide-in para cards e modais */
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Efeito de pulsação para botões importantes */
+.pulse-button {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.pulse-button:hover {
+    transform: scale(1.05);
+}
+
+.pulse-button:active {
+    transform: scale(0.95);
+}
+
+/* Efeito de destaque para QR Codes */
+.qr-highlight {
+    transition: all 0.4s ease;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.qr-highlight:hover {
+    box-shadow: 0 0 15px rgba(47, 158, 65, 0.5);
+    transform: scale(1.02);
+}
+
+/* Animação de sucesso para feedback positivo */
+.success-animation {
+    animation: successPulse 1s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% { box-shadow: 0 0 0 0 rgba(47, 158, 65, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(47, 158, 65, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(47, 158, 65, 0); }
+}
+
+/* Animação de loading para operações assíncronas */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(0,0,0,0.1);
+    border-radius: 50%;
+    border-top-color: #2f9e41;
+    animation: spin 1s ease-in-out infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Animação para entrada e saída de alertas */
+.alert-fade {
+    animation: alertFade 0.5s ease-in-out;
+}
+
+@keyframes alertFade {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Efeito de hover para botões de ação */
+.action-button {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.action-button:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.action-button:hover:before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Efeito de borda para inputs ativos */
+.focus-border {
+    position: relative;
+}
+
+.focus-border:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #2f9e41;
+    transition: width 0.3s ease;
+}
+
+.focus-border:focus:after {
+    width: 100%;
+}
+
+/* Efeito para mensagens de notificação */
+.notification-badge {
+    animation: notificationPulse 2s infinite;
+}
+
+@keyframes notificationPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Animação para transição entre páginas */
+.page-transition {
+    animation: pageFade 0.4s ease-in-out;
+}
+
+@keyframes pageFade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Efeito para tabelas responsivas */
+.table-row-highlight {
+    transition: background-color 0.2s ease;
+}
+
+.table-row-highlight:hover {
+    background-color: rgba(47, 158, 65, 0.05) !important;
+}
