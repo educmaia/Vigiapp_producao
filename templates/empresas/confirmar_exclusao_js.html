@@ -44,9 +44,12 @@
                     <i class="fas fa-times me-2"></i>Cancelar
                 </a>
                 
-                <a href="#" class="btn btn-danger" id="confirmarExclusao">
-                    <i class="fas fa-trash me-2"></i>Confirmar Exclusão
-                </a>
+                <form id="exclusao-form" action="{{ action_url }}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -56,37 +59,34 @@
 {% block scripts %}
 {{ super() }}
 <script>
+  // Desativar quaisquer interceptações de formulários
   document.addEventListener('DOMContentLoaded', function() {
-    const btnExcluir = document.getElementById('confirmarExclusao');
-    if (btnExcluir) {
-      btnExcluir.addEventListener('click', function(e) {
-        e.preventDefault();
-        excluirEmpresa();
+    console.log('Página de confirmação de exclusão inicializada');
+    
+    // Garantir que o formulário funcione sem interferências
+    const form = document.getElementById('exclusao-form');
+    if (form) {
+      console.log('Formulário de exclusão encontrado');
+      
+      // Adicionar um manipulador de evento apenas para log
+      form.addEventListener('submit', function(e) {
+        console.log('Formulário de exclusão sendo enviado para:', this.action);
+        // Permitir o envio normal do formulário
       });
     }
+    
+    // Remover qualquer backdrop de modal que possa existir
+    const modalBackdrops = document.querySelectorAll('.modal-backdrop');
+    modalBackdrops.forEach(function(backdrop) {
+      if (backdrop.parentNode) {
+        backdrop.parentNode.removeChild(backdrop);
+      }
+    });
+    
+    // Remover classes de modal do body
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
   });
-  
-  function excluirEmpresa() {
-    console.log('Enviando solicitação de exclusão para empresa');
-    
-    // Criar um formulário temporário
-    const tempForm = document.createElement('form');
-    tempForm.method = 'POST';
-    tempForm.action = '{{ action_url }}';
-    tempForm.style.display = 'none';
-    
-    // Adicionar CSRF token
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = 'csrf_token';
-    csrfInput.value = '{{ csrf_token() }}';
-    tempForm.appendChild(csrfInput);
-    
-    // Adicionar ao corpo do documento
-    document.body.appendChild(tempForm);
-    
-    // Enviar o formulário
-    tempForm.submit();
-  }
 </script>
 {% endblock %}
