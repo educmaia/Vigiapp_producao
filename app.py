@@ -1,5 +1,7 @@
 import os
 import logging
+import jinja2
+import markupsafe
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -14,6 +16,14 @@ logging.basicConfig(level=logging.DEBUG)
 class Base(DeclarativeBase):
     pass
 
+# Filtro para converter quebras de linha em <br>
+def nl2br(value):
+    if value:
+        return markupsafe.Markup(
+            jinja2.escape(value).replace('\n', markupsafe.Markup('<br>\n'))
+        )
+    return ''
+
 # Initialize extensions
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
@@ -23,6 +33,9 @@ email_sender = EmailSender()  # Instância global do EmailSender
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "vigiapp-secret-key")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
+# Registrar o filtro nl2br
+app.jinja_env.filters['nl2br'] = nl2br
 
 # Configure the database
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///controle_portaria.db")

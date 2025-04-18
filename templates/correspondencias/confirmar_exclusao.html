@@ -1,46 +1,63 @@
-{% extends 'shared/confirmar_exclusao.html' %}
+{% extends 'base.html' %}
 
-{% block item_details %}
-<div class="info-box p-3 bg-light rounded">
-    <table class="table table-borderless mb-0">
-        <tr>
-            <th style="width: 30%">ID:</th>
-            <td>{{ correspondencia.id_correspondencia }}</td>
-        </tr>
-        <tr>
-            <th>Data de Recebimento:</th>
-            <td>{{ correspondencia.data_recebimento.strftime('%d/%m/%Y') }}</td>
-        </tr>
-        <tr>
-            <th>Hora de Recebimento:</th>
-            <td>{{ correspondencia.hora_recebimento.strftime('%H:%M') }}</td>
-        </tr>
-        <tr>
-            <th>Remetente:</th>
-            <td>{{ correspondencia.remetente }}</td>
-        </tr>
-        <tr>
-            <th>Destinatário:</th>
-            <td>{{ correspondencia.destinatario }}</td>
-        </tr>
-        <tr>
-            <th>Tipo:</th>
-            <td>{{ correspondencia.tipo|capitalize }}</td>
-        </tr>
-        <tr>
-            <th>Setor/Encomenda:</th>
-            <td>{{ correspondencia.setor_encomenda }}</td>
-        </tr>
-        <tr>
-            <th>Status:</th>
-            <td>
-                {% if correspondencia.data_destinacao %}
-                <span class="badge status-entregue">Entregue em {{ correspondencia.data_destinacao.strftime('%d/%m/%Y') }}</span>
-                {% else %}
-                <span class="badge status-pendente">Pendente</span>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
+{% block title %}Confirmar Exclusão de Correspondência{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão de Correspondência
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <p><strong>Atenção!</strong> Você está prestes a excluir permanentemente este registro de correspondência.</p>
+                <p class="mb-0">Esta ação não pode ser desfeita!</p>
+            </div>
+            
+            <h5 class="card-title border-bottom pb-2">Dados da Correspondência</h5>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Remetente:</strong> {{ correspondencia.remetente }}</p>
+                    <p><strong>Destinatário:</strong> {{ correspondencia.destinatario }}</p>
+                    <p><strong>Tipo:</strong> <span class="badge bg-secondary">{{ correspondencia.tipo|capitalize }}</span></p>
+                    <p><strong>Setor/Encomenda:</strong> {{ correspondencia.setor_encomenda }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Data de Recebimento:</strong> {{ correspondencia.data_recebimento.strftime('%d/%m/%Y') }}</p>
+                    <p><strong>Hora de Recebimento:</strong> {{ correspondencia.hora_recebimento.strftime('%H:%M') }}</p>
+                    
+                    {% if correspondencia.data_destinacao %}
+                    <p><strong>Data de Destinação:</strong> {{ correspondencia.data_destinacao.strftime('%d/%m/%Y') }}</p>
+                    {% endif %}
+                    
+                    {% if correspondencia.hora_destinacao %}
+                    <p><strong>Hora de Destinação:</strong> {{ correspondencia.hora_destinacao.strftime('%H:%M') }}</p>
+                    {% endif %}
+                    
+                    {% if correspondencia.observacoes %}
+                    <h6>Observações:</h6>
+                    <div class="p-3 bg-light border rounded">
+                        <p class="mb-0">{{ correspondencia.observacoes|nl2br }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ cancel_url }}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                
+                <form action="{{ action_url }}" method="post">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
