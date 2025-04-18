@@ -1,0 +1,329 @@
+import os
+import logging
+import base64
+from datetime import datetime
+from flask import current_app
+from flask_mail import Mail, Message
+from utils import get_brasil_datetime
+
+class EmailSender:
+    def __init__(self, app=None, username=None, password=None):
+        self.email_enabled = False
+        self.dev_mode = False  # Modo de produção por padrão
+        self.mail = None
+        self.sender_email = "vigiappcpv@gmail.com"
+        self.sender_name = "VigiAPP - Sistema de Controle de Acesso"
+        
+        try:
+            # Obtém as credenciais do ambiente ou dos parâmetros
+            self.username = username or os.environ.get('GMAIL_USERNAME', self.sender_email)
+            self.password = password or os.environ.get('GMAIL_PASSWORD')
+            
+            # Se não houver senha, o sistema de email fica desabilitado
+            if not self.password:
+                print("AVISO: GMAIL_PASSWORD não encontrada. Sistema de email desabilitado.")
+                if current_app:
+                    current_app.logger.warning("GMAIL_PASSWORD não encontrada. Sistema de email desabilitado.")
+                return
+            
+            # Se foi passado um app Flask, configura o Flask-Mail
+            if app:
+                self.init_app(app)
+            
+            # Marca como habilitado
+            self.email_enabled = True
+            print(f"Sistema de email inicializado com sucesso para: {self.username}")
+            
+            # Em ambiente de desenvolvimento, mostra aviso sobre simulação de envio
+            if self.dev_mode:
+                print("⚠️ Modo de desenvolvimento ativado - os emails serão simulados mas não enviados realmente")
+                
+        except Exception as e:
+            print(f"Erro ao inicializar sistema de email: {e}")
+            if current_app:
+                current_app.logger.error(f"Erro ao inicializar sistema de email: {e}")
+    
+    def init_app(self, app):
+        """Inicializa o Flask-Mail com um aplicativo Flask"""
+        # Configura o Flask-Mail
+        app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+        app.config['MAIL_PORT'] = 587
+        app.config['MAIL_USE_TLS'] = True
+        app.config['MAIL_USERNAME'] = self.username
+        app.config['MAIL_PASSWORD'] = self.password
+        app.config['MAIL_DEFAULT_SENDER'] = (self.sender_name, self.sender_email)
+        
+        # Inicializa o Flask-Mail
+        self.mail = Mail(app)
+        print("Flask-Mail inicializado e configurado")
+    
+    def send_email(self, subject, html_content, to_emails=None, attachments=None):
+        """
+        Envia um email com anexos opcionais para múltiplos destinatários usando SMTP do Gmail.
+        Em modo de desenvolvimento, simula o envio de email mas não realiza o envio real.
+        
+        Args:
+            subject (str): Assunto do email
+            html_content (str): Conteúdo HTML do email
+            to_emails (list): Lista de emails ou dicionários com emails dos destinatários 
+                             (se None, usa clt.cpv@ifsp.edu.br)
+            attachments (list): Lista de dicionários com informações dos anexos:
+                                [{'filepath': '/caminho/arquivo.jpg', 'filename': 'arquivo.jpg', 'type': 'image/jpeg'}]
+        
+        Returns:
+            tuple: (bool, response) indicando sucesso/falha e resposta/erro
+        """
+        # Se o email não estiver configurado, retorna falso mas permite que a aplicação continue
+        if not self.email_enabled:
+            if current_app:
+                current_app.logger.warning("Sistema de email está desabilitado")
+            return False, "Sistema de email desabilitado"
+        
+        # Define destinatários padrão se nenhum for fornecido
+        if to_emails is None:
+            to_emails = [
+                {"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}
+            ]
+        
+        # Normaliza os destinatários para o formato de dicionário
+        recipients = []
+        for recipient in to_emails:
+            if isinstance(recipient, dict):
+                email = recipient.get("email")
+                name = recipient.get("name", "")
+                recipients.append((name, email) if name else email)
+            else:
+                recipients.append(recipient)
+        
+        # Debug - imprime informações sobre os destinatários e o remetente
+        print("✅ Enviando e-mail:")
+        print(f"✅ De: {self.sender_email}")
+        print(f"✅ Para: {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
+        
+        # Em modo de desenvolvimento, simula o envio de email
+        if self.dev_mode:
+            print("📧 MODO DE SIMULAÇÃO DE EMAIL ATIVADO")
+            print(f"📧 Assunto: {subject}")
+            print(f"📧 Conteúdo HTML: {html_content[:100]}...")
+            
+            # Lista os anexos (se houver)
+            if attachments:
+                print(f"📧 Anexos: {', '.join([a['filename'] for a in attachments])}")
+            
+            print("📧 EMAIL SIMULADO COM SUCESSO")
+            
+            # Registra o log (se aplicável)
+            if current_app:
+                emails = [r[1] if isinstance(r, tuple) else r for r in recipients]
+                current_app.logger.info(f"Email simulado para {', '.join(emails)}: {subject}")
+            
+            # Retorna sucesso simulado
+            return True, {"simulated": True, "message": "Email simulado com sucesso"}
+        
+        # Modo de produção - tentativa real de envio
+        try:
+            # Cria a mensagem
+            msg = Message(
+                subject=subject,
+                recipients=recipients,
+                html=html_content,
+                sender=(self.sender_name, self.sender_email)
+            )
+            
+            # Adiciona anexos se houver
+            if attachments:
+                for attachment_info in attachments:
+                    try:
+                        with open(attachment_info['filepath'], 'rb') as f:
+                            msg.attach(
+                                filename=attachment_info['filename'],
+                                content_type=attachment_info.get('type', 'application/octet-stream'),
+                                data=f.read()
+                            )
+                    except Exception as e:
+                        if current_app:
+                            current_app.logger.error(f"Erro ao anexar arquivo {attachment_info['filepath']}: {e}")
+                        print(f"❌ Erro ao anexar arquivo: {e}")
+            
+            # Envia o email
+            if self.mail:
+                # Se estiver usando Flask-Mail (preferível)
+                self.mail.send(msg)
+                print("✅ Email enviado com sucesso via Flask-Mail")
+                if current_app:
+                    current_app.logger.info(f"Email enviado via Flask-Mail para {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
+                return True, "Email enviado com sucesso"
+            else:
+                # Se não tiver Flask-Mail inicializado, retorna erro
+                error_message = "Flask-Mail não inicializado. Use init_app() ou forneça o app no construtor."
+                print(f"❌ {error_message}")
+                if current_app:
+                    current_app.logger.error(error_message)
+                return False, error_message
+                
+        except Exception as e:
+            error_message = f"Erro ao enviar email: {str(e)}"
+            print(f"❌ {error_message}")
+            if current_app:
+                current_app.logger.error(error_message)
+            return False, error_message
+    
+    def enviar_email_pessoa(self, cpf, nome, telefone, empresa, motivo, pessoa_setor, observacoes):
+        subject = "VigiAPP - Nova Visita Inserida"
+        
+        # Conteúdo HTML da mensagem com horário brasileiro
+        dia_e_hora_atual = get_brasil_datetime()
+        diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        html_content = f"""
+                    <table style="width: auto; border-collapse: collapse;">
+                        <!-- TABELA DE REGISTRO -->
+                        <tbody><tr>
+                            <!-- IMAGEM -->
+                            <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                            </a></td>
+                            <!-- Título VIGIAPP -->
+                            <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                        </tr>
+                        <!-- Segunda linha da tabela -->
+                        <tr>
+                            <!-- NOVO REGISTRO -->
+                            <td style="border: 0;"><strong>NOVA VISITA:</strong></td>
+                            <!-- INFORMAÇÃO -->
+                            <td style="border: 0;">CPF: {cpf}<br>Nome: {nome}<br>Telefone: {telefone}<br>Empresa: {empresa}<br>Motivo: {motivo}<br>Pessoa/Setor: {pessoa_setor}<br>Observações: {observacoes}<br>Dia e Hora de Registro:{diaehoradeenvio}</td>
+                        </tr>
+                    </tbody></table>
+                    """
+        
+        return self.send_email(subject, html_content)
+        
+    def enviar_email_ingresso(self, ingresso, pessoa):
+        """Envia email notificando o registro de um novo ingresso"""
+        subject = "VigiAPP - Novo Ingresso Registrado"
+        
+        # Conteúdo HTML da mensagem com horário brasileiro
+        dia_e_hora_atual = get_brasil_datetime()
+        diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        html_content = f"""
+                    <html>
+                    <body>
+                        <h2>VIGIAPP - Novo Ingresso Registrado</h2>
+                        <h3>Informações da Pessoa:</h3>
+                        <p><strong>CPF:</strong> {pessoa.cpf}</p>
+                        <p><strong>Nome:</strong> {pessoa.nome}</p>
+                        <p><strong>Telefone:</strong> {pessoa.telefone or "-"}</p>
+                        
+                        <h3>Informações do Ingresso:</h3>
+                        <p><strong>Data:</strong> {ingresso.data}</p>
+                        <p><strong>Entrada:</strong> {ingresso.entrada}</p>
+                        <p><strong>Saída:</strong> {ingresso.saida or "Não registrada"}</p>
+                        <p><strong>Motivo:</strong> {ingresso.motivo}</p>
+                        <p><strong>Observações:</strong> {ingresso.observacoes or "-"}</p>
+                        <p><em>Registrado em: {diaehoradeenvio}</em></p>
+                    </body>
+                    </html>
+                    """
+        
+        return self.send_email(subject, html_content)
+    
+    def enviar_email_correspondencia(self, remetente, destinatario, tipo, setor, data_recebimento, hora_recebimento):
+        subject = "VigiAPP - Nova Correspondência Registrada"
+        
+        # Conteúdo HTML da mensagem com horário brasileiro
+        dia_e_hora_atual = get_brasil_datetime()
+        diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        html_content = f"""
+                    <table style="width: auto; border-collapse: collapse;">
+                        <!-- TABELA DE REGISTRO -->
+                        <tbody><tr>
+                            <!-- IMAGEM -->
+                            <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                            </a></td>
+                            <!-- Título VIGIAPP -->
+                            <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                        </tr>
+                        <!-- Segunda linha da tabela -->
+                        <tr>
+                            <!-- NOVO REGISTRO -->
+                            <td style="border: 0;"><strong>NOVA CORRESPONDÊNCIA:</strong></td>
+                            <!-- INFORMAÇÃO -->
+                            <td style="border: 0;">Remetente: {remetente}<br>Destinatário: {destinatario}<br>Tipo: {tipo}<br>Setor: {setor}<br>Data Recebimento: {data_recebimento}<br>Hora Recebimento: {hora_recebimento}<br>Dia e Hora de Registro: {diaehoradeenvio}</td>
+                        </tr>
+                    </tbody></table>
+                    """
+        
+        return self.send_email(subject, html_content)
+    
+    def enviar_email_ocorrencia(self, vigilante, envolvidos, data_registro, hora_registro, gravidade, ocorrencia):
+        subject = "VigiAPP - Nova Ocorrência Registrada"
+        
+        # Conteúdo HTML da mensagem com horário brasileiro
+        dia_e_hora_atual = get_brasil_datetime()
+        diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        html_content = f"""
+                    <table style="width: auto; border-collapse: collapse;">
+                        <!-- TABELA DE REGISTRO -->
+                        <tbody><tr>
+                            <!-- IMAGEM -->
+                            <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                            </a></td>
+                            <!-- Título VIGIAPP -->
+                            <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                        </tr>
+                        <!-- Segunda linha da tabela -->
+                        <tr>
+                            <!-- NOVO REGISTRO -->
+                            <td style="border: 0;"><strong>NOVA OCORRÊNCIA:</strong></td>
+                            <!-- INFORMAÇÃO -->
+                            <td style="border: 0;">Vigilante: {vigilante}<br>Envolvidos: {envolvidos}<br>Data Registro: {data_registro}<br>Hora Registro: {hora_registro}<br>Gravidade: {gravidade}<br>Ocorrência: {ocorrencia}<br>Dia e Hora de Registro:{diaehoradeenvio}</td>
+                        </tr>
+                    </tbody></table>
+                    """
+        
+        return self.send_email(subject, html_content)
+    
+    def enviar_email_entrega(self, entrega, empresa, imagens_paths=None):
+        """
+        Envia email notificando o registro de uma nova entrega com imagens anexadas
+        
+        Args:
+            entrega: Objeto Entrega do modelo
+            empresa: Objeto Empresa do modelo
+            imagens_paths: Lista de dicionários com caminhos e nomes das imagens
+                           [{
+                                'filepath': '/path/to/img.jpg',
+                                'filename': 'img.jpg',
+                                'type': 'image/jpeg'
+                           }]
+        """
+        subject = "VigiAPP - Nova Entrega Registrada"
+        
+        # Conteúdo HTML da mensagem com horário brasileiro
+        dia_e_hora_atual = get_brasil_datetime()
+        diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        
+        html_content = f"""
+                    <html>
+                    <body>
+                        <h2>VIGIAPP - Nova Entrega Registrada</h2>
+                        <h3>Informações da Empresa:</h3>
+                        <p><strong>CNPJ:</strong> {empresa.cnpj}</p>
+                        <p><strong>Nome da Empresa:</strong> {empresa.nome_empresa}</p>
+                        <p><strong>Telefone:</strong> {empresa.telefone_empresa or "-"}</p>
+                        
+                        <h3>Informações da Entrega:</h3>
+                        <p><strong>Data de Registro:</strong> {entrega.data_registro}</p>
+                        <p><strong>Hora de Registro:</strong> {entrega.hora_registro}</p>
+                        <p><strong>Nota Fiscal:</strong> {entrega.nota_fiscal or "-"}</p>
+                        <p><strong>Observações:</strong> {entrega.observacoes or "-"}</p>
+                        <p><em>Email enviado em: {diaehoradeenvio}</em></p>
+                        
+                        <p>Esta entrega possui {len(entrega.imagens) if hasattr(entrega, 'imagens') and entrega.imagens else 0} imagens anexadas.</p>
+                    </body>
+                    </html>
+                    """
+        
+        # Envia o email com anexos
+        return self.send_email(subject, html_content, attachments=imagens_paths)
