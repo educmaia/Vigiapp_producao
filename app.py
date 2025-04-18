@@ -1,6 +1,5 @@
 import os
 import logging
-import jinja2
 import markupsafe
 
 from flask import Flask
@@ -20,7 +19,7 @@ class Base(DeclarativeBase):
 def nl2br(value):
     if value:
         return markupsafe.Markup(
-            jinja2.escape(value).replace('\n', markupsafe.Markup('<br>\n'))
+            markupsafe.escape(value).replace('\n', markupsafe.Markup('<br>\n'))
         )
     return ''
 
