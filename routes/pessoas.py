@@ -112,6 +112,28 @@ def editar(cpf):
     
     return render_template('pessoas/form.html', form=form, title='Editar Cadastro')
 
+@pessoas_bp.route('/confirmar-exclusao/<string:cpf>')
+@login_required
+def confirmar_exclusao(cpf):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('pessoas.index'))
+    
+    pessoa = Pessoa.query.get_or_404(cpf)
+    
+    # Contar ingressos associados a esta pessoa
+    ingressos_count = len(pessoa.ingressos) if hasattr(pessoa, 'ingressos') else 0
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'pessoas/confirmar_exclusao.html',
+        pessoa=pessoa,
+        ingressos_count=ingressos_count,
+        action_url=url_for('pessoas.excluir', cpf=cpf),
+        cancel_url=url_for('pessoas.index')
+    )
+
 @pessoas_bp.route('/excluir/<string:cpf>', methods=['POST'])
 @login_required
 def excluir(cpf):

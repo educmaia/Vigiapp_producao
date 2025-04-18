@@ -97,6 +97,28 @@ def editar(cnpj):
     
     return render_template('empresas/form.html', form=form, title='Editar Empresa')
 
+@empresas_bp.route('/confirmar-exclusao/<string:cnpj>')
+@login_required
+def confirmar_exclusao(cnpj):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('empresas.index'))
+    
+    empresa = Empresa.query.get_or_404(cnpj)
+    
+    # Contar entregas associadas a esta empresa
+    entregas_count = empresa.entregas.count() if hasattr(empresa, 'entregas') else 0
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'empresas/confirmar_exclusao.html',
+        empresa=empresa,
+        entregas_count=entregas_count,
+        action_url=url_for('empresas.excluir', cnpj=cnpj),
+        cancel_url=url_for('empresas.index')
+    )
+
 @empresas_bp.route('/excluir/<string:cnpj>', methods=['POST'])
 @login_required
 def excluir(cnpj):
