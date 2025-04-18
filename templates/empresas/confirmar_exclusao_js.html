@@ -46,7 +46,7 @@
                 
                 <form action="{{ action_url }}" method="post" class="delete-confirmation-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger" onclick="submitExclusao('{{ empresa.cnpj }}'); return false;">
                         <i class="fas fa-trash me-2"></i>Confirmar Exclusão
                     </button>
                 </form>
@@ -54,4 +54,35 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+  function submitExclusao(cnpj) {
+    console.log('Enviando solicitação de exclusão para empresa com CNPJ:', cnpj);
+    
+    // Envia uma requisição fetch para excluir a empresa
+    fetch('{{ action_url }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'csrf_token={{ csrf_token() }}'
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Empresa excluída com sucesso');
+        window.location.href = '{{ cancel_url }}';
+      } else {
+        console.error('Erro ao excluir a empresa');
+        alert('Ocorreu um erro ao excluir a empresa. Por favor, tente novamente.');
+      }
+    })
+    .catch(error => {
+      console.error('Erro na requisição:', error);
+      alert('Ocorreu um erro ao enviar a solicitação. Por favor, tente novamente.');
+    });
+  }
+</script>
 {% endblock %}

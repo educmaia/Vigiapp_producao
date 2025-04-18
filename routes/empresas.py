@@ -110,9 +110,9 @@ def confirmar_exclusao(cnpj):
     # Contar entregas associadas a esta empresa
     entregas_count = len(empresa.entregas) if hasattr(empresa, 'entregas') else 0
     
-    # Renderiza a página de confirmação de exclusão
+    # Renderiza a página de confirmação de exclusão com versão alternativa
     return render_template(
-        'empresas/confirmar_exclusao.html',
+        'empresas/confirmar_exclusao_js.html',
         empresa=empresa,
         entregas_count=entregas_count,
         action_url=url_for('empresas.excluir', cnpj=cnpj),
