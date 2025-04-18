@@ -282,6 +282,9 @@ body {
     color: var(--primary-black);
     border-radius: 8px;
     border: 1px solid var(--primary-green);
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
@@ -290,11 +293,14 @@ body {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     border-bottom: none;
+    padding: 1rem;
 }
 
 .modal-body {
     color: var(--primary-black);
     background-color: var(--primary-white);
+    padding: 1rem;
+    min-height: 120px;
 }
 
 .modal-footer {
@@ -302,4 +308,33 @@ body {
     border-top: 1px solid #e9ecef;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Correção para visualização de modais no mobile */
+.modal {
+    z-index: 1050;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show .modal-dialog {
+    z-index: 1055;
+    margin: 1.75rem auto;
+}
+
+/* Botão de exclusão no modal */
+.btn-confirm-delete {
+    min-width: 140px;
+}
+
+/* Formulário de exclusão */
+.delete-form {
+    display: inline-block;
 }

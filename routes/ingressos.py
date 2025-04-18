@@ -59,9 +59,7 @@ def novo():
         
         # Send email notification
         try:
-            email_sender = EmailSender()
-            
-            # Enviar email usando o novo método específico para ingressos
+            # Usar instância global de email_sender
             success, response = email_sender.enviar_email_ingresso(
                 ingresso=novo_ingresso,
                 pessoa=pessoa
