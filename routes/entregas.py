@@ -3,12 +3,11 @@ from flask import (
     send_from_directory
 )
 from flask_login import login_required, current_user
-from app import db
+from app import db, email_sender
 from models import Entrega, Empresa, EntregaImagem
 from forms import EntregaForm
 from utils import get_brasil_datetime
 from utils import format_cnpj
-from email_sender import EmailSender
 import re
 import os
 import io
@@ -188,8 +187,7 @@ def novo():
                             'type': mime_type
                         })
                 
-                # Enviar email
-                email_sender = EmailSender()
+                # Enviar email usando a instância global do email_sender
                 success, response = email_sender.enviar_email_entrega(
                     entrega=nova_entrega, 
                     empresa=empresa, 

@@ -304,10 +304,25 @@ class EmailSender:
         dia_e_hora_atual = get_brasil_datetime()
         diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
         
+        # Verifica se há imagens para anexar
+        imagens_count = len(entrega.imagens) if hasattr(entrega, 'imagens') and entrega.imagens else 0
+        
         html_content = f"""
                     <html>
                     <body>
-                        <h2>VIGIAPP - Nova Entrega Registrada</h2>
+                        <table style="width: auto; border-collapse: collapse;">
+                            <!-- TABELA DE REGISTRO -->
+                            <tbody><tr>
+                                <!-- IMAGEM -->
+                                <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                    <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                                </a></td>
+                                <!-- Título VIGIAPP -->
+                                <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                            </tr>
+                        </tbody></table>
+                        
+                        <h2>Nova Entrega Registrada</h2>
                         <h3>Informações da Empresa:</h3>
                         <p><strong>CNPJ:</strong> {empresa.cnpj}</p>
                         <p><strong>Nome da Empresa:</strong> {empresa.nome_empresa}</p>
@@ -320,10 +335,23 @@ class EmailSender:
                         <p><strong>Observações:</strong> {entrega.observacoes or "-"}</p>
                         <p><em>Email enviado em: {diaehoradeenvio}</em></p>
                         
-                        <p>Esta entrega possui {len(entrega.imagens) if hasattr(entrega, 'imagens') and entrega.imagens else 0} imagens anexadas.</p>
+                        <p>Esta entrega possui {imagens_count} imagens anexadas a este email.</p>
+                        
+                        <hr>
+                        <p style="font-size: 12px; color: #666;">
+                            Este é um email automático enviado pelo sistema VigiAPP. Favor não responder.
+                        </p>
                     </body>
                     </html>
                     """
+        
+        # Log das imagens sendo enviadas
+        if imagens_paths:
+            print(f"Anexando {len(imagens_paths)} imagens ao email:")
+            for img in imagens_paths:
+                print(f"  - {img['filename']} ({img['type']})")
+        else:
+            print("Nenhuma imagem para anexar ao email.")
         
         # Envia o email com anexos
         return self.send_email(subject, html_content, attachments=imagens_paths)
