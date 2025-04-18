@@ -75,21 +75,27 @@ def editar(id):
         flash('Apenas administradores podem editar registros.', 'danger')
         return redirect(url_for('ocorrencias.index'))
     
-    ocorrencia = Ocorrencia.query.get_or_404(id)
+    # Busca ocorrência pelo id_ocorrencia (nome correto da chave primária)
+    ocorrencia = Ocorrencia.query.filter_by(id_ocorrencia=id).first_or_404()
     form = OcorrenciaForm(obj=ocorrencia)
     
     if form.validate_on_submit():
-        # Update ocorrencia
-        ocorrencia.vigilante = form.vigilante.data
-        ocorrencia.envolvidos = form.envolvidos.data
-        ocorrencia.data_registro = form.data_registro.data
-        ocorrencia.hora_registro = form.hora_registro.data
-        ocorrencia.gravidade = form.gravidade.data
-        ocorrencia.ocorrencia = form.ocorrencia.data
-        
-        db.session.commit()
-        flash('Ocorrência atualizada com sucesso!', 'success')
-        return redirect(url_for('ocorrencias.index'))
+        try:
+            # Update ocorrencia
+            ocorrencia.vigilante = form.vigilante.data
+            ocorrencia.envolvidos = form.envolvidos.data
+            ocorrencia.data_registro = form.data_registro.data
+            ocorrencia.hora_registro = form.hora_registro.data
+            ocorrencia.gravidade = form.gravidade.data
+            ocorrencia.ocorrencia = form.ocorrencia.data
+            
+            db.session.commit()
+            flash('Ocorrência atualizada com sucesso!', 'success')
+            return redirect(url_for('ocorrencias.index'))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Erro ao atualizar ocorrência: {str(e)}")
+            flash(f'Erro ao atualizar ocorrência: {str(e)}', 'danger')
     
     return render_template('ocorrencias/form.html', form=form, title='Editar Ocorrência')
 
@@ -101,10 +107,16 @@ def excluir(id):
         flash('Apenas administradores podem excluir registros.', 'danger')
         return redirect(url_for('ocorrencias.index'))
     
-    ocorrencia = Ocorrencia.query.get_or_404(id)
+    # Busca ocorrência pelo id_ocorrencia (nome correto da chave primária)
+    ocorrencia = Ocorrencia.query.filter_by(id_ocorrencia=id).first_or_404()
     
-    db.session.delete(ocorrencia)
-    db.session.commit()
+    try:
+        db.session.delete(ocorrencia)
+        db.session.commit()
+        flash('Ocorrência excluída com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Erro ao excluir ocorrência: {str(e)}")
+        flash(f'Erro ao excluir ocorrência: {str(e)}', 'danger')
     
-    flash('Ocorrência excluída com sucesso!', 'success')
     return redirect(url_for('ocorrencias.index'))
