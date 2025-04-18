@@ -7,7 +7,7 @@ from models import Ingresso, Pessoa
 from forms import IngressoForm
 from utils import get_brasil_datetime
 from utils import format_cpf
-from email_sender import EmailSender
+from email_smtp import EmailSender
 import re
 
 ingressos_bp = Blueprint('ingressos', __name__, url_prefix='/ingressos')

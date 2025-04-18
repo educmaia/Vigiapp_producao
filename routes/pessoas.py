@@ -55,7 +55,7 @@ def novo():
         session['pessoa_nome'] = form.nome.data
         
         # Enviar email de notificação
-        from email_sender import EmailSender
+        from email_smtp import EmailSender
         email_sender = EmailSender()
         email_sender.enviar_email_pessoa(
             cpf=formatted_cpf,

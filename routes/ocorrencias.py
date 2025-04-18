@@ -6,7 +6,7 @@ from app import db
 from models import Ocorrencia
 from forms import OcorrenciaForm
 from utils import get_brasil_datetime
-from email_sender import EmailSender
+from email_smtp import EmailSender
 
 ocorrencias_bp = Blueprint('ocorrencias', __name__, url_prefix='/ocorrencias')
 

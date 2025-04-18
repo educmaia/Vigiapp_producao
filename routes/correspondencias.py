@@ -6,7 +6,7 @@ from app import db
 from models import Correspondencia
 from forms import CorrespondenciaForm
 from utils import get_brasil_datetime
-from email_sender import EmailSender
+from email_smtp import EmailSender
 
 correspondencias_bp = Blueprint('correspondencias', __name__, url_prefix='/correspondencias')
 
