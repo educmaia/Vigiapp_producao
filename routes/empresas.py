@@ -110,9 +110,9 @@ def confirmar_exclusao(cnpj):
     # Contar entregas associadas a esta empresa
     entregas_count = Entrega.query.filter_by(cnpj=cnpj).count()
     
-    # Usar a versão simples do template com links diretos
+    # Usar o novo template dedicado para exclusão
     return render_template(
-        'empresas/confirmar_exclusao_simples.html',
+        'empresas/exclusao.html',
         empresa=empresa,
         entregas_count=entregas_count
     )
@@ -142,12 +142,30 @@ def excluir_direto(cnpj):
     
     return redirect(url_for('empresas.index'))
 
-# Manter a rota antiga para compatibilidade
 @empresas_bp.route('/excluir/<string:cnpj>', methods=['POST'])
 @login_required
 def excluir(cnpj):
-    # Redirecionar para a nova rota de exclusão direta
-    return redirect(url_for('empresas.excluir_direto', cnpj=cnpj))
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('empresas.index'))
+    
+    empresa = Empresa.query.get_or_404(cnpj)
+    
+    try:
+        # Primeiro excluir as entregas relacionadas (elas devem ter cascade delete para imagens)
+        Entrega.query.filter_by(cnpj=cnpj).delete()
+        
+        # Depois excluir a empresa
+        db.session.delete(empresa)
+        db.session.commit()
+        flash('Empresa excluída com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Erro ao excluir empresa: {str(e)}")
+        flash('Não foi possível excluir esta empresa. Erro: ' + str(e), 'danger')
+    
+    return redirect(url_for('empresas.index'))
 
 @empresas_bp.route('/buscar-por-cnpj/<string:cnpj>')
 @login_required

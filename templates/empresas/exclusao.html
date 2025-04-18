@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Exclusão de Empresa{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão de Empresa
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <p><strong>Atenção!</strong> Você está prestes a excluir permanentemente este cadastro de empresa.</p>
+                <p class="mb-0">Esta ação não pode ser desfeita!</p>
+            </div>
+            
+            {% if entregas_count > 0 %}
+            <div class="alert alert-danger mb-4">
+                <p><strong><i class="fas fa-exclamation-circle me-2"></i>Aviso Importante:</strong></p>
+                <p>Esta empresa possui <strong>{{ entregas_count }} registro(s) de entrega</strong> associado(s).</p>
+                <p class="mb-0">Excluir este cadastro também excluirá todos os registros relacionados!</p>
+            </div>
+            {% endif %}
+            
+            <h5 class="card-title border-bottom pb-2">Dados da Empresa</h5>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Nome da Empresa:</strong> {{ empresa.nome_empresa }}</p>
+                    <p><strong>CNPJ:</strong> {{ empresa.cnpj }}</p>
+                    <p><strong>Telefone da Empresa:</strong> {{ empresa.telefone_empresa if empresa.telefone_empresa else 'Não informado' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Nome do Funcionário:</strong> {{ empresa.nome_func if empresa.nome_func else 'Não informado' }}</p>
+                    <p><strong>Telefone do Funcionário:</strong> {{ empresa.telefone_func if empresa.telefone_func else 'Não informado' }}</p>
+                    <p><strong>Observação:</strong> {{ empresa.coringa if empresa.coringa else 'Nenhuma observação' }}</p>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('empresas.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                
+                <form method="POST" action="{{ url_for('empresas.excluir', cnpj=empresa.cnpj) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
