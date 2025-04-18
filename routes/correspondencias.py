@@ -113,6 +113,24 @@ def registrar_destinacao(id):
     
     return redirect(url_for('correspondencias.index'))
 
+@correspondencias_bp.route('/confirmar-exclusao/<int:id>')
+@login_required
+def confirmar_exclusao(id):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('correspondencias.index'))
+    
+    correspondencia = Correspondencia.query.get_or_404(id)
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'correspondencias/confirmar_exclusao.html',
+        correspondencia=correspondencia,
+        action_url=url_for('correspondencias.excluir', id=id),
+        cancel_url=url_for('correspondencias.index')
+    )
+
 @correspondencias_bp.route('/excluir/<int:id>', methods=['POST'])
 @login_required
 def excluir(id):
@@ -123,8 +141,13 @@ def excluir(id):
     
     correspondencia = Correspondencia.query.get_or_404(id)
     
-    db.session.delete(correspondencia)
-    db.session.commit()
+    try:
+        db.session.delete(correspondencia)
+        db.session.commit()
+        flash('Correspondência excluída com sucesso!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Erro ao excluir correspondência: {str(e)}")
+        flash(f'Erro ao excluir correspondência: {str(e)}', 'danger')
     
-    flash('Correspondência excluída com sucesso!', 'success')
     return redirect(url_for('correspondencias.index'))

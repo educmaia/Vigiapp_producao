@@ -1,40 +1,56 @@
-{% extends 'shared/confirmar_exclusao.html' %}
+{% extends 'base.html' %}
 
-{% block item_details %}
-<div class="info-box p-3 bg-light rounded">
-    <table class="table table-borderless mb-0">
-        <tr>
-            <th style="width: 30%">ID:</th>
-            <td>{{ ocorrencia.id_ocorrencia }}</td>
-        </tr>
-        <tr>
-            <th>Data:</th>
-            <td>{{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</td>
-        </tr>
-        <tr>
-            <th>Hora:</th>
-            <td>{{ ocorrencia.hora_registro.strftime('%H:%M') }}</td>
-        </tr>
-        <tr>
-            <th>Vigilante:</th>
-            <td>{{ ocorrencia.vigilante }}</td>
-        </tr>
-        <tr>
-            <th>Envolvidos:</th>
-            <td>{{ ocorrencia.envolvidos }}</td>
-        </tr>
-        <tr>
-            <th>Gravidade:</th>
-            <td>
-                <span class="badge severity-{{ ocorrencia.gravidade }}">
-                    {{ ocorrencia.gravidade|capitalize }}
-                </span>
-            </td>
-        </tr>
-        <tr>
-            <th>Ocorrência:</th>
-            <td>{{ ocorrencia.ocorrencia|truncate(150) }}</td>
-        </tr>
-    </table>
+{% block title %}Confirmar Exclusão de Ocorrência{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+                <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão de Ocorrência
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <p><strong>Atenção!</strong> Você está prestes a excluir permanentemente esta ocorrência.</p>
+                <p class="mb-0">Esta ação não pode ser desfeita!</p>
+            </div>
+            
+            <h5 class="card-title border-bottom pb-2">Dados da Ocorrência</h5>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p><strong>Vigilante:</strong> {{ ocorrencia.vigilante }}</p>
+                    <p><strong>Envolvidos:</strong> {{ ocorrencia.envolvidos }}</p>
+                    <p><strong>Data:</strong> {{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</p>
+                    <p><strong>Hora:</strong> {{ ocorrencia.hora_registro.strftime('%H:%M') }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Gravidade:</strong> 
+                        <span class="badge {% if ocorrencia.gravidade == 'baixa' %}bg-info{% elif ocorrencia.gravidade == 'media' %}bg-warning{% elif ocorrencia.gravidade == 'alta' %}bg-danger{% else %}bg-danger text-white{% endif %}">
+                            {{ ocorrencia.gravidade|capitalize }}
+                        </span>
+                    </p>
+                    <h6>Descrição da Ocorrência:</h6>
+                    <div class="p-3 bg-light border rounded">
+                        <p class="mb-0">{{ ocorrencia.ocorrencia|nl2br }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ cancel_url }}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+                
+                <form action="{{ action_url }}" method="post">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

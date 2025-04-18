@@ -98,6 +98,25 @@ def editar(id):
     
     return render_template('ocorrencias/form.html', form=form, title='Editar Ocorrência')
 
+@ocorrencias_bp.route('/confirmar-exclusao/<int:id>')
+@login_required
+def confirmar_exclusao(id):
+    # Only admins can delete records
+    if current_user.role != 'admin':
+        flash('Apenas administradores podem excluir registros.', 'danger')
+        return redirect(url_for('ocorrencias.index'))
+    
+    # Busca ocorrência pelo id_ocorrencia (nome correto da chave primária)
+    ocorrencia = Ocorrencia.query.filter_by(id_ocorrencia=id).first_or_404()
+    
+    # Renderiza a página de confirmação de exclusão
+    return render_template(
+        'ocorrencias/confirmar_exclusao.html',
+        ocorrencia=ocorrencia,
+        action_url=url_for('ocorrencias.excluir', id=id),
+        cancel_url=url_for('ocorrencias.index')
+    )
+
 @ocorrencias_bp.route('/excluir/<int:id>', methods=['POST'])
 @login_required
 def excluir(id):
