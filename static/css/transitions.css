@@ -27,15 +27,13 @@ body {
     }
 }
 
-/* Efeito de deslizamento para cards */
+/* Efeito de deslizamento para cards - removido conforme solicitado */
 .card {
-    transition: all 0.3s ease;
-    transform-origin: center;
+    /* transição removida */
 }
 
 .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    /* efeitos hover removidos */
 }
 
 /* Animação para links de navegação */
@@ -109,41 +107,14 @@ body {
     width: 0.5rem;
 }
 
-/* Efeito de clique em botões */
+/* Efeito de clique em botões - removido conforme solicitado */
 .btn {
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
+    /* transições removidas */
 }
 
-.btn:after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 5px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.5);
-    opacity: 0;
-    border-radius: 100%;
-    transform: scale(1, 1) translate(-50%, -50%);
-    transform-origin: 50% 50%;
-}
-
-.btn:active:after {
-    animation: ripple 0.4s ease-out;
-}
-
-@keyframes ripple {
-    0% {
-        opacity: 1;
-        transform: scale(0, 0) translate(-50%, -50%);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(20, 20) translate(-50%, -50%);
-    }
-}
+/* Efeitos de animação após clique removidos */
 
 /* Transição suave para modais */
 .modal.fade .modal-dialog {
@@ -216,15 +187,15 @@ body {
     100% { background-position: 100% 0; }
 }
 
-/* Efeito hover para cards de lista */
+/* Efeito hover para cards de lista - removido conforme solicitado */
 .list-card {
-    transition: all 0.3s ease;
+    /* transição removida */
     border-left: 3px solid transparent;
 }
 
 .list-card:hover {
     border-left-color: #2f9e41;
-    transform: translateX(5px);
+    /* transformação removida */
 }
 
 /* Efeito de destaque para itens com notificação */
