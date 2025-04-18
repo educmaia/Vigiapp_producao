@@ -16,6 +16,7 @@ class Pessoa(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     telefone = db.Column(db.String(20))
     empresa = db.Column(db.String(100))
+    qr_code_url = db.Column(db.String(255))  # URL para o código QR desta pessoa
     ingressos = db.relationship('Ingresso', backref='pessoa', lazy=True)
 
 class Ingresso(db.Model):
@@ -28,6 +29,7 @@ class Ingresso(db.Model):
     motivo = db.Column(db.String(200), nullable=False)
     pessoa_setor = db.Column(db.String(100), nullable=False)
     observacoes = db.Column(db.Text)
+    qr_code_url = db.Column(db.String(255))  # URL para o código QR deste ingresso
 
 class Empresa(db.Model):
     __tablename__ = 'empresas'

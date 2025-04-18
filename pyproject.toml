@@ -20,4 +20,5 @@ dependencies = [
     "sendgrid>=6.11.0",
     "pillow>=11.2.1",
     "twilio>=9.5.2",
+    "qrcode>=8.1",
 ]
