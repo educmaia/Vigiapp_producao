@@ -22,8 +22,8 @@
                 <div class="col-md-6">
                     <p><strong>Vigilante:</strong> {{ ocorrencia.vigilante }}</p>
                     <p><strong>Envolvidos:</strong> {{ ocorrencia.envolvidos }}</p>
-                    <p><strong>Data:</strong> {{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</p>
-                    <p><strong>Hora:</strong> {{ ocorrencia.hora_registro.strftime('%H:%M') }}</p>
+                    <p><strong>Data:</strong> {{ ocorrencia.data_registro.strftime('%d/%m/%Y') if ocorrencia.data_registro else 'Não informada' }}</p>
+                    <p><strong>Hora:</strong> {{ ocorrencia.hora_registro.strftime('%H:%M') if ocorrencia.hora_registro else 'Não informada' }}</p>
                 </div>
                 <div class="col-md-6">
                     <p>

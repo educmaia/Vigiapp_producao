@@ -26,8 +26,8 @@
                     <p><strong>Setor/Encomenda:</strong> {{ correspondencia.setor_encomenda }}</p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Data de Recebimento:</strong> {{ correspondencia.data_recebimento.strftime('%d/%m/%Y') }}</p>
-                    <p><strong>Hora de Recebimento:</strong> {{ correspondencia.hora_recebimento.strftime('%H:%M') }}</p>
+                    <p><strong>Data de Recebimento:</strong> {{ correspondencia.data_recebimento.strftime('%d/%m/%Y') if correspondencia.data_recebimento else 'Não informada' }}</p>
+                    <p><strong>Hora de Recebimento:</strong> {{ correspondencia.hora_recebimento.strftime('%H:%M') if correspondencia.hora_recebimento else 'Não informada' }}</p>
                     
                     {% if correspondencia.data_destinacao %}
                     <p><strong>Data de Destinação:</strong> {{ correspondencia.data_destinacao.strftime('%d/%m/%Y') }}</p>
