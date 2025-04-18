@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Exclusão</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Tem certeza que deseja excluir este item?</h5>
+                    
+                    <div class="alert alert-warning">
+                        <p><i class="fas fa-exclamation-circle me-2"></i>Esta ação <strong>não pode ser desfeita</strong>. Os dados serão permanentemente removidos do sistema.</p>
+                    </div>
+                    
+                    <div class="item-details mt-4 mb-4">
+                        <h5>Detalhes do item:</h5>
+                        {% block item_details %}
+                        <!-- Detalhes específicos do item serão renderizados aqui -->
+                        {% endblock %}
+                    </div>
+                    
+                    <form action="{{ action_url }}" method="post" class="mt-4">
+                        <input type="hidden" name="confirm" value="1">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ cancel_url }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <table class="table table-borderless mb-0">
+        <tr>
+            <th style="width: 30%">ID:</th>
+            <td>{{ correspondencia.id_correspondencia }}</td>
+        </tr>
+        <tr>
+            <th>Data de Recebimento:</th>
+            <td>{{ correspondencia.data_recebimento.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        <tr>
+            <th>Hora de Recebimento:</th>
+            <td>{{ correspondencia.hora_recebimento.strftime('%H:%M') }}</td>
+        </tr>
+        <tr>
+            <th>Remetente:</th>
+            <td>{{ correspondencia.remetente }}</td>
+        </tr>
+        <tr>
+            <th>Destinatário:</th>
+            <td>{{ correspondencia.destinatario }}</td>
+        </tr>
+        <tr>
+            <th>Tipo:</th>
+            <td>{{ correspondencia.tipo|capitalize }}</td>
+        </tr>
+        <tr>
+            <th>Setor/Encomenda:</th>
+            <td>{{ correspondencia.setor_encomenda }}</td>
+        </tr>
+        <tr>
+            <th>Status:</th>
+            <td>
+                {% if correspondencia.data_destinacao %}
+                <span class="badge status-entregue">Entregue em {{ correspondencia.data_destinacao.strftime('%d/%m/%Y') }}</span>
+                {% else %}
+                <span class="badge status-pendente">Pendente</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

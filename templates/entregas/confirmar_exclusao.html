@@ -1,0 +1,59 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Atenção:</strong> Excluir esta entrega também removerá todas as imagens associadas!
+    </div>
+
+    <table class="table table-borderless mb-0 mt-3">
+        <tr>
+            <th style="width: 30%">ID:</th>
+            <td>{{ entrega.id }}</td>
+        </tr>
+        <tr>
+            <th>CNPJ:</th>
+            <td>{{ entrega.cnpj }}</td>
+        </tr>
+        <tr>
+            <th>Empresa:</th>
+            <td>{{ entrega.empresa.nome_empresa }}</td>
+        </tr>
+        <tr>
+            <th>Data de Registro:</th>
+            <td>{{ entrega.data_registro }}</td>
+        </tr>
+        <tr>
+            <th>Hora de Registro:</th>
+            <td>{{ entrega.hora_registro }}</td>
+        </tr>
+        {% if entrega.data_envio %}
+        <tr>
+            <th>Data de Envio:</th>
+            <td>{{ entrega.data_envio }}</td>
+        </tr>
+        <tr>
+            <th>Hora de Envio:</th>
+            <td>{{ entrega.hora_envio }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Nota Fiscal:</th>
+            <td>{{ entrega.nota_fiscal or 'Não informada' }}</td>
+        </tr>
+        {% if entrega.imagens|length > 0 %}
+        <tr>
+            <th>Imagens:</th>
+            <td>{{ entrega.imagens|length }} imagens</td>
+        </tr>
+        {% endif %}
+        {% if entrega.observacoes %}
+        <tr>
+            <th>Observações:</th>
+            <td>{{ entrega.observacoes|truncate(100) }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

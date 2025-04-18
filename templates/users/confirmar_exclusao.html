@@ -1,0 +1,55 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Atenção:</strong> Excluir este usuário removerá permanentemente seu acesso ao sistema!
+    </div>
+
+    <table class="table table-borderless mb-0 mt-3">
+        <tr>
+            <th style="width: 30%">ID:</th>
+            <td>{{ user.id }}</td>
+        </tr>
+        <tr>
+            <th>Nome de Usuário:</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email:</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>Função:</th>
+            <td>
+                {% if user.role == 'admin' %}
+                <span class="badge bg-danger">Administrador</span>
+                {% else %}
+                <span class="badge bg-success">Vigilante</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Status:</th>
+            <td>
+                {% if user.active %}
+                <span class="badge bg-success">Ativo</span>
+                {% else %}
+                <span class="badge bg-secondary">Inativo</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Criado em:</th>
+            <td>{{ user.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% if user.last_login %}
+        <tr>
+            <th>Último login:</th>
+            <td>{{ user.last_login.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <table class="table table-borderless mb-0">
+        <tr>
+            <th style="width: 30%">ID:</th>
+            <td>{{ ocorrencia.id_ocorrencia }}</td>
+        </tr>
+        <tr>
+            <th>Data:</th>
+            <td>{{ ocorrencia.data_registro.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        <tr>
+            <th>Hora:</th>
+            <td>{{ ocorrencia.hora_registro.strftime('%H:%M') }}</td>
+        </tr>
+        <tr>
+            <th>Vigilante:</th>
+            <td>{{ ocorrencia.vigilante }}</td>
+        </tr>
+        <tr>
+            <th>Envolvidos:</th>
+            <td>{{ ocorrencia.envolvidos }}</td>
+        </tr>
+        <tr>
+            <th>Gravidade:</th>
+            <td>
+                <span class="badge severity-{{ ocorrencia.gravidade }}">
+                    {{ ocorrencia.gravidade|capitalize }}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>Ocorrência:</th>
+            <td>{{ ocorrencia.ocorrencia|truncate(150) }}</td>
+        </tr>
+    </table>
+</div>
+{% endblock %}

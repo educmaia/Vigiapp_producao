@@ -1,0 +1,35 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Atenção:</strong> Excluir esta pessoa também removerá todos os ingressos associados a este CPF!
+    </div>
+
+    <table class="table table-borderless mb-0 mt-3">
+        <tr>
+            <th style="width: 30%">CPF:</th>
+            <td>{{ pessoa.cpf }}</td>
+        </tr>
+        <tr>
+            <th>Nome:</th>
+            <td>{{ pessoa.nome }}</td>
+        </tr>
+        <tr>
+            <th>Telefone:</th>
+            <td>{{ pessoa.telefone or 'Não informado' }}</td>
+        </tr>
+        <tr>
+            <th>Empresa:</th>
+            <td>{{ pessoa.empresa or 'Não informado' }}</td>
+        </tr>
+        {% if pessoa.ingressos|length > 0 %}
+        <tr>
+            <th>Ingressos Vinculados:</th>
+            <td>{{ pessoa.ingressos|length }} ingressos</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Atenção:</strong> Excluir esta empresa também removerá todas as entregas associadas a este CNPJ!
+    </div>
+
+    <table class="table table-borderless mb-0 mt-3">
+        <tr>
+            <th style="width: 30%">CNPJ:</th>
+            <td>{{ empresa.cnpj }}</td>
+        </tr>
+        <tr>
+            <th>Nome:</th>
+            <td>{{ empresa.nome_empresa }}</td>
+        </tr>
+        <tr>
+            <th>Telefone:</th>
+            <td>{{ empresa.telefone_empresa or 'Não informado' }}</td>
+        </tr>
+        <tr>
+            <th>Funcionário:</th>
+            <td>{{ empresa.nome_func or 'Não informado' }}</td>
+        </tr>
+        <tr>
+            <th>Telefone (Func.):</th>
+            <td>{{ empresa.telefone_func or 'Não informado' }}</td>
+        </tr>
+        <tr>
+            <th>Observação:</th>
+            <td>{{ empresa.coringa or 'Nenhuma' }}</td>
+        </tr>
+        {% if empresa.entregas|length > 0 %}
+        <tr>
+            <th>Entregas Vinculadas:</th>
+            <td>{{ empresa.entregas|length }} entregas</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'shared/confirmar_exclusao.html' %}
+
+{% block item_details %}
+<div class="info-box p-3 bg-light rounded">
+    <table class="table table-borderless mb-0">
+        <tr>
+            <th style="width: 30%">ID:</th>
+            <td>{{ ingresso.id }}</td>
+        </tr>
+        <tr>
+            <th>CPF:</th>
+            <td>{{ ingresso.cpf }}</td>
+        </tr>
+        <tr>
+            <th>Nome:</th>
+            <td>{{ ingresso.pessoa.nome }}</td>
+        </tr>
+        <tr>
+            <th>Data:</th>
+            <td>{{ ingresso.data }}</td>
+        </tr>
+        <tr>
+            <th>Entrada:</th>
+            <td>{{ ingresso.entrada }}</td>
+        </tr>
+        <tr>
+            <th>Saída:</th>
+            <td>
+                {% if ingresso.saida %}
+                {{ ingresso.saida }}
+                {% else %}
+                <span class="text-warning">Não registrada</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Motivo:</th>
+            <td>{{ ingresso.motivo }}</td>
+        </tr>
+        <tr>
+            <th>Pessoa/Setor:</th>
+            <td>{{ ingresso.pessoa_setor }}</td>
+        </tr>
+        {% if ingresso.observacoes %}
+        <tr>
+            <th>Observações:</th>
+            <td>{{ ingresso.observacoes|truncate(100) }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endblock %}
