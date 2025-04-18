@@ -17,6 +17,7 @@ class Base(DeclarativeBase):
 # Initialize extensions
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
+email_sender = EmailSender()  # Instância global do EmailSender
 
 # Create and configure the app
 app = Flask(__name__)
@@ -37,6 +38,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 login_manager.login_message = 'Por favor, faça login para acessar esta página.'
 login_manager.login_message_category = 'warning'
+
+# Inicializa o sistema de email
+email_sender.init_app(app)
 
 # Import models and create tables
 with app.app_context():
