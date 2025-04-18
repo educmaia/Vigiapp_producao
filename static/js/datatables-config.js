@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializa DataTables em todas as tabelas com a classe 'table-datatable'
     $('.table-datatable').each(function() {
-        // Verifica se já não foi inicializado
-        if (!$.fn.DataTable.isDataTable(this)) {
+        // Verifica se já não foi inicializado (usando isDataTable)
+        if (!$.fn.dataTable.isDataTable(this)) {
             // Obtém configurações específicas da tabela, se existirem
             let tableConfig = $(this).data('dt-config') || {};
             
@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Inicializa a tabela
             $(this).DataTable(config);
+        } else {
+            console.log('Tabela já inicializada: ', this);
         }
     });
     
