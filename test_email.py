@@ -20,8 +20,8 @@ def test_mailersend_direct():
         # Cria o objeto de mensagem
         message = {}
         
-        # Configura o remetente (usando o domínio mailersend.net que é permitido para testes)
-        mail.set_mail_from({"email": "noreply@mailersend.net", "name": "VigiAPP Test"}, message)
+        # Configura o remetente usando o email verificado
+        mail.set_mail_from({"email": "eduardo.maia@ifsp.edu.br", "name": "VigiAPP Test"}, message)
         
         # Configura os destinatários
         recipients = [{"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}]
