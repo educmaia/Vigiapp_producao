@@ -62,8 +62,15 @@ a:hover .fab {
   background: #2f9e41 !important;
 }
 
+/* Permitir tooltips normais ao passar o mouse sobre botões */
+.tooltip {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
 /* Prevenção para qualquer transform ou animação */
-[class*="fade"], [class*="slide"], [class*="appear"] {
+[class*="fade"]:not(.tooltip), [class*="slide"], [class*="appear"] {
   opacity: 1 !important;
   transform: none !important;
   animation: none !important;
