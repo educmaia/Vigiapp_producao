@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Detalhes do Ingresso #{{ ingresso.id }}</h5>
+                    <div>
+                        <a href="{{ url_for('ingressos.index') }}" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Informações do Ingresso</h5>
+                            <p><strong>Data:</strong> {{ ingresso.data }}</p>
+                            <p><strong>Horário de Entrada:</strong> {{ ingresso.entrada }}</p>
+                            <p><strong>Horário de Saída:</strong> {{ ingresso.saida or 'Pendente' }}</p>
+                            <p><strong>Motivo:</strong> {{ ingresso.motivo }}</p>
+                            <p><strong>Pessoa/Setor Visitado:</strong> {{ ingresso.pessoa_setor }}</p>
+                            {% if ingresso.observacoes %}
+                            <p><strong>Observações:</strong> {{ ingresso.observacoes }}</p>
+                            {% endif %}
+                            
+                            <h5 class="mt-4 mb-3">Informações do Visitante</h5>
+                            <p><strong>Nome:</strong> {{ pessoa.nome }}</p>
+                            <p><strong>CPF:</strong> {{ pessoa.cpf }}</p>
+                            {% if pessoa.telefone %}
+                            <p><strong>Telefone:</strong> {{ pessoa.telefone }}</p>
+                            {% endif %}
+                            {% if pessoa.empresa %}
+                            <p><strong>Empresa:</strong> {{ pessoa.empresa }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            {% if ingresso.qr_code_url and not ingresso.saida %}
+                            <h5 class="mb-3">QR Code para Check-out Rápido</h5>
+                            <div class="text-center mb-3">
+                                <img src="{{ url_for('static', filename=ingresso.qr_code_url) }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
+                            </div>
+                            <p class="text-center text-muted">
+                                <i class="bi bi-info-circle"></i>
+                                Este QR Code pode ser utilizado para registrar a saída rapidamente.
+                            </p>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-end mt-3">
+                                {% if not ingresso.saida %}
+                                <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" class="me-2">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-box-arrow-right"></i> Registrar Saída
+                                    </button>
+                                </form>
+                                
+                                <a href="{{ url_for('qr.gerar_qrcode_ingresso', id=ingresso.id) }}" class="btn btn-primary me-2">
+                                    <i class="bi bi-qr-code"></i> {% if ingresso.qr_code_url %}Ver QR Code{% else %}Gerar QR Code{% endif %}
+                                </a>
+                                {% endif %}
+                                
+                                <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('ingressos.index') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Voltar
+                        </a>
+                        
+                        <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-info">
+                            <i class="bi bi-person"></i> Ver Perfil do Visitante
+                        </a>
+                        
+                        {% if current_user.role == 'admin' %}
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash"></i> Excluir
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação de exclusão -->
+{% if current_user.role == 'admin' %}
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este registro de ingresso?</p>
+                <ul>
+                    <li><strong>Data:</strong> {{ ingresso.data }}</li>
+                    <li><strong>Visitante:</strong> {{ pessoa.nome }}</li>
+                    <li><strong>Motivo:</strong> {{ ingresso.motivo }}</li>
+                </ul>
+                <p class="text-danger"><strong>Atenção:</strong> Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form action="{{ url_for('ingressos.excluir', id=ingresso.id) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

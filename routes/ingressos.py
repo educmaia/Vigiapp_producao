@@ -117,6 +117,14 @@ def editar(id):
     
     return render_template('ingressos/form.html', form=form, title='Editar Ingresso')
 
+@ingressos_bp.route('/visualizar/<int:id>')
+@login_required
+def visualizar(id):
+    """Visualiza os detalhes de um ingresso específico"""
+    ingresso = Ingresso.query.get_or_404(id)
+    pessoa = Pessoa.query.get(ingresso.cpf)
+    return render_template('ingressos/visualizar.html', ingresso=ingresso, pessoa=pessoa, title=f'Ingresso #{id}')
+
 @ingressos_bp.route('/registrar-saida/<int:id>', methods=['POST'])
 @login_required
 def registrar_saida(id):
