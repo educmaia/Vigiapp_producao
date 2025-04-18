@@ -59,32 +59,9 @@
                                 <a href="{{ url_for('empresas.editar', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ empresa.cnpj|replace('.', '')|replace('-', '')|replace('/', '') }}" title="Excluir">
+                                <a href="{{ url_for('empresas.confirmar_exclusao', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
                                     <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                            
-                            <!-- Delete Modal -->
-                            <div class="modal fade" id="deleteModal{{ empresa.cnpj|replace('.', '')|replace('-', '')|replace('/', '') }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ empresa.cnpj|replace('.', '')|replace('-', '')|replace('/', '') }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteModalLabel{{ empresa.cnpj|replace('.', '')|replace('-', '')|replace('/', '') }}">Confirmar Exclusão</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Tem certeza que deseja excluir <strong>{{ empresa.nome_empresa }}</strong> (CNPJ: {{ empresa.cnpj }})?</p>
-                                            <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Esta ação não pode ser desfeita!</p>
-                                            <p>Todas as entregas associadas a esta empresa também serão excluídas.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                            <form action="{{ url_for('empresas.excluir', cnpj=empresa.cnpj) }}" method="post">
-                                                <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                </a>
                             </div>
                         </td>
                     </tr>

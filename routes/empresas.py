@@ -108,7 +108,7 @@ def confirmar_exclusao(cnpj):
     empresa = Empresa.query.get_or_404(cnpj)
     
     # Contar entregas associadas a esta empresa
-    entregas_count = empresa.entregas.count() if hasattr(empresa, 'entregas') else 0
+    entregas_count = len(empresa.entregas) if hasattr(empresa, 'entregas') else 0
     
     # Renderiza a página de confirmação de exclusão
     return render_template(
