@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/transitions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/qr-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scan-animation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -146,6 +147,9 @@
     <!-- Animation and Interaction Scripts -->
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/qr-interactions.js') }}"></script>
+    
+    <!-- Mobile Optimizations -->
+    <script src="{{ url_for('static', filename='js/mobile-optimizations.js') }}"></script>
     
     {% block extra_js %}{% endblock %}
     {% block scripts %}{% endblock %}
