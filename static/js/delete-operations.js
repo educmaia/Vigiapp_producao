@@ -1,28 +1,27 @@
 /**
  * Script dedicado para operações de exclusão no VigiAPP
- * Corrige problemas de interação com modais e assegura
- * que os formulários de exclusão sejam enviados corretamente
+ * Versão 3.0 - Suporte a páginas de confirmação dedicadas
  * 
- * Versão 2.0 - Implementação completa e corrigida
+ * Agora suporta dois fluxos:
+ * 1. Modais de confirmação (legado)
+ * 2. Páginas dedicadas de confirmação (nova abordagem)
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Inicializando operações de exclusão VigiAPP v2.0');
+    console.log('Inicializando operações de exclusão VigiAPP v3.0');
     
-    // Função para configurar os modais e formulários
+    // Função para configurar os modais e formulários (legado)
     function setupDeleteModal(modalElement) {
         if (!modalElement) return;
         
         // Forçar o modal a ser exibido corretamente
         modalElement.classList.add('modal-force-display');
-        
-        // Ajustar zIndex para garantir visibilidade
         modalElement.style.zIndex = '1055';
         
         // Encontrar o formulário de exclusão
         const deleteForm = modalElement.querySelector('form.delete-form');
         if (!deleteForm) {
-            console.error('Formulário de exclusão não encontrado no modal');
+            // Isso é esperado nas páginas que usam a nova abordagem
             return;
         }
         
@@ -41,14 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitButton.parentNode.replaceChild(newButton, submitButton);
             }
             
-            // Adicionar novo listener que garantirá o envio correto
+            // Adicionar novo listener
             newButton.addEventListener('click', function(event) {
                 event.preventDefault();
                 event.stopPropagation();
                 
                 console.log('Formulário sendo enviado:', deleteForm.action);
-                
-                // Submeter o formulário diretamente
                 deleteForm.submit();
                 
                 // Esconder o modal
@@ -56,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (bsModal) {
                     bsModal.hide();
                 } else {
-                    // Ocultação forçada se não conseguirmos obter a instância
+                    // Ocultação forçada se necessário
                     modalElement.style.display = 'none';
                     const backdrop = document.querySelector('.modal-backdrop');
                     if (backdrop && backdrop.parentNode) {
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.style.paddingRight = '';
                 }
                 
-                // Recarregar a página após um pequeno atraso para permitir que o backend processe
+                // Recarregar a página após um pequeno atraso
                 setTimeout(function() {
                     window.location.reload();
                 }, 300);
@@ -75,10 +72,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Função para configurar os botões de exclusão
+    // Função para configurar os formulários nas novas páginas de confirmação
+    function setupConfirmationPages() {
+        // Nas páginas de confirmação dedicadas temos um formulário simples
+        const confirmForm = document.querySelector('.card-body form');
+        if (confirmForm) {
+            console.log('Formulário de confirmação encontrado na página dedicada');
+            
+            // Não precisamos fazer nada especial, o formulário já funciona corretamente
+            // Este código está aqui apenas para expansões futuras
+        }
+    }
+    
+    // Função para configurar os botões de exclusão do tipo modal (legado)
     function setupDeleteButtons() {
         const deleteButtons = document.querySelectorAll('.btn-delete');
-        console.log(`Encontrados ${deleteButtons.length} botões de exclusão`);
+        console.log(`Encontrados ${deleteButtons.length} botões de exclusão (modais)`);
+        
+        if (deleteButtons.length === 0) {
+            // Provavelmente estamos usando a nova abordagem
+            return;
+        }
         
         deleteButtons.forEach(function(button) {
             // Remove listeners existentes
@@ -100,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Aplicar configurações ao modal antes de exibi-lo
+                // Aplicar configurações ao modal
                 setupDeleteModal(modalElement);
                 
                 // Exibir o modal
@@ -112,13 +126,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicialização
     setupDeleteButtons();
+    setupConfirmationPages();
     
-    // Configurar os modais já existentes na página
+    // Configurar os modais que ainda existem na página (legado)
     document.querySelectorAll('.modal').forEach(setupDeleteModal);
     
     // Re-inicializar após carregamento de DataTables
     document.addEventListener('draw.dt', function() {
-        console.log('DataTable atualizado - reconfigurando botões de exclusão');
+        console.log('DataTable atualizado - reconfigurando botões');
         setupDeleteButtons();
     });
 });
