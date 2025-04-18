@@ -1,173 +1,174 @@
-// Animações e Micro-interações para o VigiAPP
+// Animações e micro-interações para o VigiAPP
+// Este arquivo contém animações gerais para a aplicação
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Adiciona classe de animação a todos os cartões ao carregar
+    // Adicionar classe para animação de entrada ao conteúdo principal
+    const mainContent = document.querySelector('.container.mt-4.mb-5');
+    if (mainContent) {
+        mainContent.classList.add('main-container');
+    }
+    
+    // Adicionar efeitos aos cards da aplicação
+    initializeCardAnimations();
+    
+    // Configurar efeitos de hover aos botões
+    setupButtonEffects();
+    
+    // Configurar transições de página
+    setupPageTransitions();
+    
+    // Inicializar animações para tabelas
+    initializeTableAnimations();
+    
+    // Inicializar animações específicas para páginas de formulário
+    initializeFormAnimations();
+    
+    // Configurar animações para mensagens flash
+    setupFlashMessageAnimations();
+});
+
+// Inicializa animações para cards da interface
+function initializeCardAnimations() {
+    // Encontrar todos os cards da aplicação
     const cards = document.querySelectorAll('.card');
+    
     cards.forEach((card, index) => {
-        setTimeout(() => {
-            card.classList.add('fade-in');
-        }, index * 100); // Atraso escalonado para efeito de cascata
-    });
-
-    // Adiciona classe para linhas de tabela
-    const tableRows = document.querySelectorAll('tbody tr');
-    tableRows.forEach(row => {
-        row.classList.add('table-row-highlight');
-    });
-
-    // Adiciona classe de pulsação para botões importantes
-    const actionButtons = document.querySelectorAll('.btn-success, .btn-primary');
-    actionButtons.forEach(button => {
-        button.classList.add('pulse-button');
-    });
-
-    // Adiciona classe de animação para QR codes
-    const qrCodes = document.querySelectorAll('.qr-code-image');
-    qrCodes.forEach(qr => {
-        qr.classList.add('qr-highlight');
-    });
-
-    // Animação para alertas
-    const alerts = document.querySelectorAll('.alert');
-    alerts.forEach(alert => {
-        alert.classList.add('alert-fade');
+        // Adicionar atraso escalonado aos cards para efeito de cascata
+        card.style.animationDelay = `${index * 0.1}s`;
         
-        // Auto-fechar alertas após 5 segundos
-        if (!alert.classList.contains('alert-danger')) {
-            setTimeout(() => {
-                // Cria uma animação de desaparecimento
-                alert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                alert.style.opacity = '0';
-                alert.style.transform = 'translateY(-20px)';
-                
-                // Remove o alerta do DOM após a animação
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.parentNode.removeChild(alert);
-                    }
-                }, 500);
-            }, 5000);
-        }
+        // Adicionar classe para animar entrada
+        card.classList.add('fade-in-up');
+        
+        // Adicionar efeito de destaque ao passar o mouse
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('card-highlight');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('card-highlight');
+        });
     });
+}
 
-    // Adiciona efeito de transição para links de navegação
-    const navLinks = document.querySelectorAll('nav a, .breadcrumb a');
-    navLinks.forEach(link => {
+// Configura efeitos visuais para botões
+function setupButtonEffects() {
+    // Adicionar efeito de onda (ripple) aos botões
+    const buttons = document.querySelectorAll('.btn');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Criar elemento para efeito de onda
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            
+            // Posicionar o efeito no ponto clicado
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+            ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+            
+            // Adicionar o efeito ao botão
+            this.appendChild(ripple);
+            
+            // Remover após a animação
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+}
+
+// Configura transições suaves entre páginas
+function setupPageTransitions() {
+    // Aplicar transição nas mudanças de página
+    document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])').forEach(link => {
         link.addEventListener('click', function(e) {
-            // Não aplica a animações para links que abrem em nova janela ou têm comportamento especial
-            if (this.target === '_blank' || this.dataset.toggle || this.dataset.bs) {
+            // Ignorar links de ação (como logout) ou links com modificadores
+            if (this.href.includes('/logout') || 
+                this.href.includes('/delete') || 
+                e.ctrlKey || 
+                e.metaKey) {
                 return;
             }
             
             e.preventDefault();
-            const href = this.getAttribute('href');
             
-            // Aplica efeito de fade-out à página atual
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.3s ease';
+            // Aplicar efeito de desfoque ao conteúdo atual
+            document.body.classList.add('page-loading');
             
-            // Navega para o novo URL após a animação
+            // Navegar para a nova página após breve atraso
             setTimeout(() => {
-                window.location.href = href;
+                window.location.href = this.href;
             }, 300);
         });
     });
+    
+    // Remover classe de carregamento quando a página estiver pronta
+    window.addEventListener('load', function() {
+        document.body.classList.remove('page-loading');
+    });
+}
 
-    // Adiciona efeito de loading para formulários
-    const forms = document.querySelectorAll('form:not([data-no-loading])');
+// Inicializa animações para tabelas
+function initializeTableAnimations() {
+    const tables = document.querySelectorAll('.table');
+    
+    tables.forEach(table => {
+        // Adicionar classe para fade-in das tabelas
+        table.classList.add('table-animated');
+        
+        // Animar linhas da tabela em cascata
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach((row, index) => {
+            row.style.animationDelay = `${0.05 + (index * 0.05)}s`;
+            row.classList.add('table-row-animated');
+        });
+    });
+}
+
+// Inicializa animações para formulários
+function initializeFormAnimations() {
+    const forms = document.querySelectorAll('form');
+    
     forms.forEach(form => {
-        form.addEventListener('submit', function() {
-            // Encontra o botão de submit
-            const submitButton = this.querySelector('button[type="submit"]');
-            if (submitButton) {
-                // Salva o texto original
-                const originalText = submitButton.innerHTML;
-                
-                // Adiciona spinner e desabilita o botão
-                submitButton.innerHTML = '<span class="loading-spinner"></span> Processando...';
-                submitButton.disabled = true;
-                
-                // Restaura o botão se o envio levar mais de 10 segundos (caso de timeout)
-                setTimeout(() => {
-                    if (submitButton.disabled) {
-                        submitButton.innerHTML = originalText;
-                        submitButton.disabled = false;
-                    }
-                }, 10000);
-            }
-        });
-    });
-
-    // Efeito para inputs de formulário
-    const formInputs = document.querySelectorAll('.form-control');
-    formInputs.forEach(input => {
-        input.classList.add('focus-border');
-        
-        // Adiciona efeito de destaque ao focar
-        input.addEventListener('focus', function() {
-            this.parentNode.classList.add('input-focused');
+        // Animar campos de formulário em sequência
+        const fields = form.querySelectorAll('.form-group, .mb-3');
+        fields.forEach((field, index) => {
+            field.style.animationDelay = `${0.1 + (index * 0.05)}s`;
+            field.classList.add('form-field-animated');
         });
         
-        input.addEventListener('blur', function() {
-            this.parentNode.classList.remove('input-focused');
+        // Adicionar feedback visual ao clicar em campos
+        const inputs = form.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.closest('.form-group, .mb-3')?.classList.add('focused-field');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.closest('.form-group, .mb-3')?.classList.remove('focused-field');
+            });
         });
     });
+}
 
-    // Animação de sucesso para operações bem-sucedidas
-    if (document.querySelector('.alert-success')) {
-        const successCards = document.querySelectorAll('.card');
-        successCards.forEach(card => {
-            card.classList.add('success-animation');
-        });
-    }
-
-    // Efeito hover para botões de ação
-    const hoverButtons = document.querySelectorAll('.btn-info, .btn-warning, .btn-danger');
-    hoverButtons.forEach(button => {
-        button.classList.add('action-button');
-    });
-
-    // Adiciona animação de página para o conteúdo principal
-    const mainContent = document.querySelector('main') || document.querySelector('.container');
-    if (mainContent) {
-        mainContent.classList.add('page-transition');
-    }
-});
-
-// Funções utilitárias para animações
-
-// Mostra notificação animada
-function showAnimatedNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `animated-notification ${type} alert-fade`;
-    notification.innerHTML = message;
+// Configura animações para mensagens flash
+function setupFlashMessageAnimations() {
+    const alerts = document.querySelectorAll('.alert');
     
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('show');
-    }, 10);
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
+    alerts.forEach(alert => {
+        // Adicionar classe para animar entrada
+        alert.classList.add('alert-animated');
+        
+        // Adicionar timeout para remover o alerta após alguns segundos
         setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Adiciona efeito de pulsação a um elemento
-function pulseElement(element) {
-    element.classList.add('notification-badge');
-    setTimeout(() => {
-        element.classList.remove('notification-badge');
-    }, 2000);
-}
-
-// Aplica animação de sucesso a um elemento
-function animateSuccess(element) {
-    element.classList.add('success-animation');
-    setTimeout(() => {
-        element.classList.remove('success-animation');
-    }, 1000);
+            alert.classList.add('alert-dismissing');
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 5000);
+    });
 }
