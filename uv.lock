@@ -445,6 +445,18 @@ wheels = [
 ]
 
 [[package]]
+name = "mailersend"
+version = "0.5.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d5/df/279929bfa8239799b16cdf39045d0ff5598cedcc4ff81d420b71cec4f069/mailersend-0.5.8.tar.gz", hash = "sha256:c96d196278d5771346563d56b54b83b9290ca32768a451aed8f3dabd6b0ae1b8", size = 22214 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/e9/2f1b8da6049569aa3b1fe4a0e1c4f250d197c9c55aba45adb641684ff087/mailersend-0.5.8-py3-none-any.whl", hash = "sha256:24292c10ad180570ed76e90b4e7daede5d9cd98713860206a540f1ff900258fe", size = 26370 },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -806,6 +818,7 @@ dependencies = [
     { name = "flask-sqlalchemy" },
     { name = "flask-wtf" },
     { name = "gunicorn" },
+    { name = "mailersend" },
     { name = "pillow" },
     { name = "psycopg2-binary" },
     { name = "qrcode" },
@@ -827,6 +840,7 @@ requires-dist = [
     { name = "flask-sqlalchemy", specifier = ">=3.1.1" },
     { name = "flask-wtf", specifier = ">=1.2.2" },
     { name = "gunicorn", specifier = ">=23.0.0" },
+    { name = "mailersend", specifier = ">=0.5.8" },
     { name = "pillow", specifier = ">=11.2.1" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "qrcode", specifier = ">=8.1" },

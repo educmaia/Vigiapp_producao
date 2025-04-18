@@ -21,4 +21,5 @@ dependencies = [
     "pillow>=11.2.1",
     "twilio>=9.5.2",
     "qrcode>=8.1",
+    "mailersend>=0.5.8",
 ]
