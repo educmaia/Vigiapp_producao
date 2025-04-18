@@ -2,12 +2,11 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db
+from app import db, email_sender
 from models import Ingresso, Pessoa
 from forms import IngressoForm
 from utils import get_brasil_datetime
 from utils import format_cpf
-from email_smtp import EmailSender
 import re
 
 ingressos_bp = Blueprint('ingressos', __name__, url_prefix='/ingressos')

@@ -2,11 +2,10 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db
+from app import db, email_sender
 from models import Ocorrencia
 from forms import OcorrenciaForm
 from utils import get_brasil_datetime
-from email_smtp import EmailSender
 
 ocorrencias_bp = Blueprint('ocorrencias', __name__, url_prefix='/ocorrencias')
 
@@ -44,7 +43,7 @@ def novo():
         
         # Send email notification
         try:
-            email_sender = EmailSender()
+            # Usar instância global de email_sender
             success, response = email_sender.enviar_email_ocorrencia(
                 form.vigilante.data,
                 form.envolvidos.data,
@@ -55,9 +54,9 @@ def novo():
             )
             
             if success:
-                current_app.logger.info("Email enviado com sucesso")
+                current_app.logger.info(f"Email enviado com sucesso para ocorrência ID {nova_ocorrencia.id_ocorrencia}")
             else:
-                current_app.logger.warning(f"Falha ao enviar email: {response}")
+                current_app.logger.warning(f"Falha ao enviar email para ocorrência ID {nova_ocorrencia.id_ocorrencia}: {response}")
                 
         except Exception as e:
             current_app.logger.error(f"Erro ao enviar email: {str(e)}")
