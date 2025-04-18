@@ -45,11 +45,15 @@
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 {% if not ingresso.saida %}
-                                <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post">
+                                <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" class="d-inline">
                                     <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" title="Registrar Saída">
                                         <i class="fas fa-sign-out-alt"></i>
                                     </button>
                                 </form>
+                                
+                                <a href="{{ url_for('qr.gerar_qrcode_ingresso', id=ingresso.id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" title="QR Code para Check-out">
+                                    <i class="fas fa-qrcode"></i>
+                                </a>
                                 {% endif %}
                                 
                                 <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Editar">

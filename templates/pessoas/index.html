@@ -54,6 +54,12 @@
                         <td>{{ pessoa.empresa or "-" }}</td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
+                                <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Visualizar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('qr.gerar_qrcode_pessoa', cpf=pessoa.cpf) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="QR Code">
+                                    <i class="fas fa-qrcode"></i>
+                                </a>
                                 <a href="{{ url_for('pessoas.editar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
                                     <i class="fas fa-edit"></i>
                                 </a>

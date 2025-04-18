@@ -126,6 +126,13 @@ def excluir(cpf):
     
     return redirect(url_for('pessoas.index'))
 
+@pessoas_bp.route('/visualizar/<string:cpf>')
+@login_required
+def visualizar(cpf):
+    """Visualiza os detalhes de uma pessoa específica"""
+    pessoa = Pessoa.query.get_or_404(cpf)
+    return render_template('pessoas/visualizar.html', pessoa=pessoa, title=f'Detalhes - {pessoa.nome}')
+
 @pessoas_bp.route('/buscar-por-cpf/<string:cpf>')
 @login_required
 def buscar_por_cpf(cpf):
