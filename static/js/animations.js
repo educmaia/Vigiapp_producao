@@ -1,30 +1,15 @@
 // Animações e micro-interações para o VigiAPP
-// Este arquivo contém animações gerais para a aplicação
+// Este arquivo contém animações gerais para a aplicação que foram desativadas a pedido do usuário
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Adicionar classe para animação de entrada ao conteúdo principal
-    const mainContent = document.querySelector('.container.mt-4.mb-5');
-    if (mainContent) {
-        mainContent.classList.add('main-container');
-    }
+    // Todas as animações foram desativadas conforme solicitado
+    // Inicializar tooltips do Bootstrap apenas para funcionalidade (sem animações)
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
     
-    // Adicionar efeitos aos cards da aplicação
-    initializeCardAnimations();
-    
-    // Configurar efeitos de hover aos botões
-    setupButtonEffects();
-    
-    // Configurar transições de página
-    setupPageTransitions();
-    
-    // Inicializar animações para tabelas
-    initializeTableAnimations();
-    
-    // Inicializar animações específicas para páginas de formulário
-    initializeFormAnimations();
-    
-    // Configurar animações para mensagens flash
-    setupFlashMessageAnimations();
+    // Nenhuma animação será inicializada
 });
 
 // Inicializa animações para cards da interface

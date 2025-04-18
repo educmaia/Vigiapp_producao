@@ -15,11 +15,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/transitions.css') }}">
+    <!-- CSS de animações (desativado) -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/transitions.css') }}"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/qr-styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scan-animation.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+    <!-- CSS para desativar todas as animações -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/no-animations.css') }}">
     
     {% block extra_css %}{% endblock %}
 </head>
