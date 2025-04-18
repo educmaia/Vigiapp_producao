@@ -86,11 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Função para configurar os botões de exclusão do tipo modal (legado)
     function setupDeleteButtons() {
-        const deleteButtons = document.querySelectorAll('.btn-delete');
+        // Esta função agora está desativada, pois usamos a abordagem de páginas dedicadas
+        // Mas mantemos o código para compatibilidade com outros módulos que podem precisar dele
+        const deleteButtons = document.querySelectorAll('.btn-delete[data-bs-target^="#deleteModal"]');
         console.log(`Encontrados ${deleteButtons.length} botões de exclusão (modais)`);
         
         if (deleteButtons.length === 0) {
-            // Provavelmente estamos usando a nova abordagem
+            // Estamos usando a nova abordagem
             return;
         }
         
@@ -107,6 +109,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Obtém o ID do modal
                 const modalId = this.getAttribute('data-bs-target');
+                if (!modalId || !modalId.startsWith('#deleteModal')) {
+                    return; // Ignorar se não for um modal de exclusão
+                }
+                
                 const modalElement = document.querySelector(modalId);
                 
                 if (!modalElement) {
@@ -128,8 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDeleteButtons();
     setupConfirmationPages();
     
-    // Configurar os modais que ainda existem na página (legado)
-    document.querySelectorAll('.modal').forEach(setupDeleteModal);
+    // Configurar apenas modais de exclusão que ainda existem na página (legado)
+    document.querySelectorAll('.modal[id^="deleteModal"]').forEach(setupDeleteModal);
     
     // Re-inicializar após carregamento de DataTables
     document.addEventListener('draw.dt', function() {
