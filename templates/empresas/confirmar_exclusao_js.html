@@ -44,12 +44,9 @@
                     <i class="fas fa-times me-2"></i>Cancelar
                 </a>
                 
-                <form action="{{ action_url }}" method="post" class="delete-confirmation-form">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-danger" onclick="submitExclusao('{{ empresa.cnpj }}'); return false;">
-                        <i class="fas fa-trash me-2"></i>Confirmar Exclusão
-                    </button>
-                </form>
+                <a href="#" class="btn btn-danger" id="confirmarExclusao">
+                    <i class="fas fa-trash me-2"></i>Confirmar Exclusão
+                </a>
             </div>
         </div>
     </div>
@@ -59,30 +56,37 @@
 {% block scripts %}
 {{ super() }}
 <script>
-  function submitExclusao(cnpj) {
-    console.log('Enviando solicitação de exclusão para empresa com CNPJ:', cnpj);
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnExcluir = document.getElementById('confirmarExclusao');
+    if (btnExcluir) {
+      btnExcluir.addEventListener('click', function(e) {
+        e.preventDefault();
+        excluirEmpresa();
+      });
+    }
+  });
+  
+  function excluirEmpresa() {
+    console.log('Enviando solicitação de exclusão para empresa');
     
-    // Envia uma requisição fetch para excluir a empresa
-    fetch('{{ action_url }}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'csrf_token={{ csrf_token() }}'
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log('Empresa excluída com sucesso');
-        window.location.href = '{{ cancel_url }}';
-      } else {
-        console.error('Erro ao excluir a empresa');
-        alert('Ocorreu um erro ao excluir a empresa. Por favor, tente novamente.');
-      }
-    })
-    .catch(error => {
-      console.error('Erro na requisição:', error);
-      alert('Ocorreu um erro ao enviar a solicitação. Por favor, tente novamente.');
-    });
+    // Criar um formulário temporário
+    const tempForm = document.createElement('form');
+    tempForm.method = 'POST';
+    tempForm.action = '{{ action_url }}';
+    tempForm.style.display = 'none';
+    
+    // Adicionar CSRF token
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrf_token';
+    csrfInput.value = '{{ csrf_token() }}';
+    tempForm.appendChild(csrfInput);
+    
+    // Adicionar ao corpo do documento
+    document.body.appendChild(tempForm);
+    
+    // Enviar o formulário
+    tempForm.submit();
   }
 </script>
 {% endblock %}
