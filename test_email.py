@@ -2,131 +2,81 @@ from email_smtp import EmailSender
 from utils import get_brasil_datetime
 import os
 import json
+from flask import Flask
 
-def test_mailersend_direct():
-    """Teste direto da biblioteca MailerSend sem usar nossa classe personalizada"""
-    api_key = os.environ.get('MAILERSEND_API_KEY')
-    if not api_key:
-        print("❌ MAILERSEND_API_KEY não encontrada no ambiente.")
-        return
-
-    print(f"Usando API key (primeiros 4 caracteres): {api_key[:4]}...")
+def test_gmail_smtp():
+    """Teste de envio de email usando Flask-Mail com Gmail SMTP"""
+    print("\n==== TESTE DE ENVIO DE EMAIL COM FLASK-MAIL E GMAIL SMTP ====\n")
     
-    try:
-        # Cria uma nova instância de email diretamente com a biblioteca
-        mail = NewEmail(api_key)
+    # Verificando se a senha do Gmail está configurada
+    gmail_password = os.environ.get('GMAIL_PASSWORD')
+    if not gmail_password:
+        print("❌ GMAIL_PASSWORD não encontrada no ambiente. Impossível enviar emails.")
+        return False
+    
+    # Criando uma aplicação Flask temporária para teste
+    app = Flask(__name__)
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = 'vigiappcpv@gmail.com'
+    app.config['MAIL_PASSWORD'] = gmail_password
+    app.config['MAIL_DEFAULT_SENDER'] = ('VigiAPP - Sistema de Controle de Acesso', 'vigiappcpv@gmail.com')
+    
+    # Inicializando o EmailSender
+    with app.app_context():
+        sender = EmailSender(app)
         
-        # Cria o objeto de mensagem
-        message = {}
+        # Preparando o email de teste
+        subject = "VigiAPP - Teste de Email via Gmail SMTP"
         
-        # Configura o remetente usando um email do domínio mailersend.net (que não precisa de verificação)
-        mail.set_mail_from({"email": "noreply@mailersend.net", "name": "VigiAPP Test"}, message)
-        
-        # Configura os destinatários
-        recipients = [{"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}]
-        mail.set_mail_to(recipients, message)
-        
-        # Configura o assunto
-        mail.set_subject("VigiAPP - Teste Direto MailerSend", message)
-        
-        # Configura o conteúdo HTML
+        # Obtendo a data/hora atual no formato brasileiro
         now = get_brasil_datetime()
         timestamp = now.strftime("%d/%m/%Y %H:%M:%S")
         
+        # Conteúdo HTML do email de teste
         html_content = f"""
         <html>
         <body>
-            <h2>VigiAPP - Teste Direto MailerSend</h2>
-            <p>Este é um email de teste enviado usando diretamente a biblioteca MailerSend.</p>
+            <table style="width: auto; border-collapse: collapse;">
+                <tr>
+                    <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                        <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                    </a></td>
+                    <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                </tr>
+            </table>
+            
+            <h2>Teste de Envio de Email</h2>
+            
+            <p>Este é um email de teste enviado pelo sistema VigiAPP utilizando Gmail SMTP através do Flask-Mail.</p>
             <p>Data e hora do envio: {timestamp}</p>
-            <p>Se você está visualizando este email, a integração está correta!</p>
+            <p>Se você está visualizando este email, a integração foi concluída com sucesso!</p>
+            
+            <hr>
+            <p style="font-size: 12px; color: #666;">
+                Este é um email automático, favor não responder.
+            </p>
         </body>
         </html>
         """
-        mail.set_html_content(html_content, message)
         
-        # Tenta enviar o email
-        print("🔄 Enviando email direto via MailerSend...")
-        print(f"🔄 Conteúdo da mensagem: {json.dumps(message, indent=2)}")
+        # Destinatário padrão
+        to_emails = ["clt.cpv@ifsp.edu.br"]
         
-        response = mail.send(message)
+        # Tentando enviar o email
+        print("🔄 Enviando email de teste via Gmail SMTP...")
+        success, response = sender.send_email(subject, html_content, to_emails)
         
-        print(f"🔄 Tipo de resposta: {type(response)}")
-        print(f"🔄 Resposta completa: {response}")
-        
-        if response and hasattr(response, 'status_code'):
-            if response.status_code < 400:
-                print(f"✅ Email enviado com sucesso! Status code: {response.status_code}")
-                return True
-            else:
-                print(f"❌ Falha ao enviar email. Status code: {response.status_code}")
-                print(f"❌ Resposta detalhada: {response.text if hasattr(response, 'text') else 'Sem detalhes'}")
-                return False
+        # Verificando o resultado
+        if success:
+            print("✅ Email de teste enviado com sucesso!")
+            print(f"✅ Detalhes: {response}")
+            return True
         else:
-            print(f"❌ Resposta inválida ou nula do servidor MailerSend")
+            print(f"❌ Falha ao enviar email: {response}")
             return False
-            
-    except Exception as e:
-        print(f"❌ Erro no teste direto: {e}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-def test_mailersend():
-    # Obtém a chave API do ambiente
-    api_key = os.environ.get('MAILERSEND_API_KEY')
-    if not api_key:
-        print("❌ MAILERSEND_API_KEY não encontrada no ambiente.")
-        return
-    
-    print("\n==== TESTE USANDO NOSSA CLASSE EMAIL SENDER ====\n")
-    
-    # Cria instância do EmailSender
-    sender = EmailSender(api_key)
-    
-    # Verifica se o email está habilitado
-    if not sender.email_enabled:
-        print("❌ Sistema de email está desabilitado.")
-        return
-    
-    # Prepara o conteúdo do email de teste
-    subject = "VigiAPP - Teste de Integração MailerSend"
-    
-    # Obtém a data/hora atual
-    now = get_brasil_datetime()
-    timestamp = now.strftime("%d/%m/%Y %H:%M:%S")
-    
-    # Conteúdo HTML
-    html_content = f"""
-    <html>
-    <body>
-        <h2>VigiAPP - Teste de Integração MailerSend</h2>
-        <p>Este é um email de teste enviado pelo sistema VigiAPP utilizando a API do MailerSend.</p>
-        <p>Data e hora do envio: {timestamp}</p>
-        <p>Se você está visualizando este email, a integração foi concluída com sucesso!</p>
-        <hr>
-        <p style="font-size: 12px; color: #666;">
-            Este é um email automático, favor não responder.
-        </p>
-    </body>
-    </html>
-    """
-    
-    # Define destinatário (para testes, usamos o padrão)
-    to_emails = None  # Usará o destinatário padrão (clt.cpv@ifsp.edu.br)
-    
-    # Tenta enviar o email
-    print("🔄 Enviando email de teste...")
-    success, response = sender.send_email(subject, html_content, to_emails)
-    
-    # Verifica o resultado
-    if success:
-        print("✅ Email de teste enviado com sucesso!")
-        print(f"✅ Resposta: {response}")
-    else:
-        print(f"❌ Falha ao enviar email: {response}")
 
 if __name__ == "__main__":
-    print("\n==== TESTE DIRETO COM A BIBLIOTECA MAILERSEND ====\n")
-    test_mailersend_direct()
-    test_mailersend()
+    test_gmail_smtp()

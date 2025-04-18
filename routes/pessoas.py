@@ -2,7 +2,7 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app, session
 )
 from flask_login import login_required, current_user
-from app import db
+from app import db, email_sender
 from models import Pessoa
 from forms import PessoaForm
 from utils import format_cpf, format_telefone
@@ -54,18 +54,25 @@ def novo():
         session['pessoa_cpf'] = formatted_cpf
         session['pessoa_nome'] = form.nome.data
         
-        # Enviar email de notificação
-        from email_smtp import EmailSender
-        email_sender = EmailSender()
-        email_sender.enviar_email_pessoa(
-            cpf=formatted_cpf,
-            nome=form.nome.data,
-            telefone=telefone,
-            empresa=form.empresa.data,
-            motivo="",
-            pessoa_setor="",
-            observacoes=""
-        )
+        # Enviar email de notificação usando a instância global
+        try:
+            success, response = email_sender.enviar_email_pessoa(
+                cpf=formatted_cpf,
+                nome=form.nome.data,
+                telefone=telefone,
+                empresa=form.empresa.data,
+                motivo="",
+                pessoa_setor="",
+                observacoes=""
+            )
+            
+            if success:
+                current_app.logger.info(f"Email enviado com sucesso para pessoa CPF {formatted_cpf}")
+            else:
+                current_app.logger.warning(f"Falha ao enviar email para pessoa CPF {formatted_cpf}: {response}")
+                
+        except Exception as e:
+            current_app.logger.error(f"Erro ao enviar email: {str(e)}")
         
         return redirect(url_for('pessoas.index'))
     
