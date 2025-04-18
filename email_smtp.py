@@ -261,25 +261,57 @@ class EmailSender:
         # Conteúdo HTML da mensagem com horário brasileiro
         dia_e_hora_atual = get_brasil_datetime()
         diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Ajuste da formatação da gravidade para destacar visualmente
+        estilo_gravidade = {
+            'baixa': 'color: green;',
+            'media': 'color: orange;',
+            'alta': 'color: red; font-weight: bold;',
+            'critica': 'color: red; font-weight: bold; text-transform: uppercase;'
+        }
+        
+        estilo = estilo_gravidade.get(gravidade.lower(), '')
+        
+        # Formatação do texto da ocorrência para substituir quebras de linha por tags HTML
+        ocorrencia_formatada = ocorrencia.replace('\n', '<br>')
+        
         html_content = f"""
-                    <table style="width: auto; border-collapse: collapse;">
-                        <!-- TABELA DE REGISTRO -->
-                        <tbody><tr>
-                            <!-- IMAGEM -->
-                            <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
-                                <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
-                            </a></td>
-                            <!-- Título VIGIAPP -->
-                            <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
-                        </tr>
-                        <!-- Segunda linha da tabela -->
-                        <tr>
-                            <!-- NOVO REGISTRO -->
-                            <td style="border: 0;"><strong>NOVA OCORRÊNCIA:</strong></td>
-                            <!-- INFORMAÇÃO -->
-                            <td style="border: 0;">Vigilante: {vigilante}<br>Envolvidos: {envolvidos}<br>Data Registro: {data_registro}<br>Hora Registro: {hora_registro}<br>Gravidade: {gravidade}<br>Ocorrência: {ocorrencia}<br>Dia e Hora de Registro:{diaehoradeenvio}</td>
-                        </tr>
-                    </tbody></table>
+                    <html>
+                    <body>
+                        <table style="width: auto; border-collapse: collapse;">
+                            <!-- TABELA DE REGISTRO -->
+                            <tbody><tr>
+                                <!-- IMAGEM -->
+                                <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                    <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                                </a></td>
+                                <!-- Título VIGIAPP -->
+                                <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                            </tr>
+                        </tbody></table>
+                        
+                        <h2>Nova Ocorrência Registrada</h2>
+                        
+                        <h3>Informações da Ocorrência:</h3>
+                        <p><strong>Vigilante Responsável:</strong> {vigilante}</p>
+                        <p><strong>Envolvidos:</strong> {envolvidos}</p>
+                        <p><strong>Data de Registro:</strong> {data_registro}</p>
+                        <p><strong>Hora de Registro:</strong> {hora_registro}</p>
+                        <p><strong>Gravidade:</strong> <span style="{estilo}">{gravidade.upper()}</span></p>
+                        
+                        <h3>Detalhes da Ocorrência:</h3>
+                        <div style="background-color: #f5f5f5; padding: 15px; border-left: 4px solid #2f9e41; margin: 10px 0;">
+                            {ocorrencia_formatada}
+                        </div>
+                        
+                        <p><em>Email enviado em: {diaehoradeenvio}</em></p>
+                        
+                        <hr>
+                        <p style="font-size: 12px; color: #666;">
+                            Este é um email automático enviado pelo sistema VigiAPP. Favor não responder.
+                        </p>
+                    </body>
+                    </html>
                     """
         
         return self.send_email(subject, html_content)
