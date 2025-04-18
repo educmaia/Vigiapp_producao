@@ -204,22 +204,63 @@ class EmailSender:
         # Conteúdo HTML da mensagem com horário brasileiro
         dia_e_hora_atual = get_brasil_datetime()
         diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Formatação do texto da observação para substituir quebras de linha por tags HTML
+        observacoes_formatadas = ingresso.observacoes.replace('\n', '<br>') if ingresso.observacoes else "-"
+        
+        # Status de saída formatado com estilo
+        if ingresso.saida:
+            status_saida = f'<span style="color: green;">{ingresso.saida}</span>'
+        else:
+            status_saida = '<span style="color: orange; font-style: italic;">Não registrada</span>'
+        
         html_content = f"""
                     <html>
                     <body>
-                        <h2>VIGIAPP - Novo Ingresso Registrado</h2>
+                        <table style="width: auto; border-collapse: collapse;">
+                            <!-- TABELA DE REGISTRO -->
+                            <tbody><tr>
+                                <!-- IMAGEM -->
+                                <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                    <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                                </a></td>
+                                <!-- Título VIGIAPP -->
+                                <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                            </tr>
+                        </tbody></table>
+                        
+                        <h2>Novo Ingresso Registrado</h2>
+                        
                         <h3>Informações da Pessoa:</h3>
-                        <p><strong>CPF:</strong> {pessoa.cpf}</p>
-                        <p><strong>Nome:</strong> {pessoa.nome}</p>
-                        <p><strong>Telefone:</strong> {pessoa.telefone or "-"}</p>
+                        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                            <p><strong>CPF:</strong> {pessoa.cpf}</p>
+                            <p><strong>Nome:</strong> {pessoa.nome}</p>
+                            <p><strong>Telefone:</strong> {pessoa.telefone or "-"}</p>
+                            <p><strong>Empresa:</strong> {pessoa.empresa or "-"}</p>
+                        </div>
                         
                         <h3>Informações do Ingresso:</h3>
-                        <p><strong>Data:</strong> {ingresso.data}</p>
-                        <p><strong>Entrada:</strong> {ingresso.entrada}</p>
-                        <p><strong>Saída:</strong> {ingresso.saida or "Não registrada"}</p>
-                        <p><strong>Motivo:</strong> {ingresso.motivo}</p>
-                        <p><strong>Observações:</strong> {ingresso.observacoes or "-"}</p>
-                        <p><em>Registrado em: {diaehoradeenvio}</em></p>
+                        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px;">
+                            <p><strong>Data:</strong> {ingresso.data}</p>
+                            <p><strong>Entrada:</strong> <span style="color: blue;">{ingresso.entrada}</span></p>
+                            <p><strong>Saída:</strong> {status_saida}</p>
+                            <p><strong>Motivo:</strong> {ingresso.motivo}</p>
+                            <p><strong>Pessoa/Setor:</strong> {ingresso.pessoa_setor}</p>
+                            
+                            <div style="margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px;">
+                                <p><strong>Observações:</strong></p>
+                                <div style="background-color: white; padding: 8px; border-left: 4px solid #2f9e41;">
+                                    {observacoes_formatadas}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p><em>Email enviado em: {diaehoradeenvio}</em></p>
+                        
+                        <hr>
+                        <p style="font-size: 12px; color: #666;">
+                            Este é um email automático enviado pelo sistema VigiAPP. Favor não responder.
+                        </p>
                     </body>
                     </html>
                     """
@@ -232,25 +273,59 @@ class EmailSender:
         # Conteúdo HTML da mensagem com horário brasileiro
         dia_e_hora_atual = get_brasil_datetime()
         diaehoradeenvio = dia_e_hora_atual.strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Cores para os diferentes tipos de correspondência
+        cores_tipo = {
+            'carta': '#3498db',  # azul
+            'pacote': '#f39c12',  # laranja
+            'encomenda': '#e74c3c',  # vermelho
+            'documento': '#2ecc71',  # verde
+            'outros': '#95a5a6'   # cinza
+        }
+        
+        cor_tipo = cores_tipo.get(tipo.lower(), '#95a5a6')
+        
         html_content = f"""
-                    <table style="width: auto; border-collapse: collapse;">
-                        <!-- TABELA DE REGISTRO -->
-                        <tbody><tr>
-                            <!-- IMAGEM -->
-                            <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
-                                <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
-                            </a></td>
-                            <!-- Título VIGIAPP -->
-                            <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
-                        </tr>
-                        <!-- Segunda linha da tabela -->
-                        <tr>
-                            <!-- NOVO REGISTRO -->
-                            <td style="border: 0;"><strong>NOVA CORRESPONDÊNCIA:</strong></td>
-                            <!-- INFORMAÇÃO -->
-                            <td style="border: 0;">Remetente: {remetente}<br>Destinatário: {destinatario}<br>Tipo: {tipo}<br>Setor: {setor}<br>Data Recebimento: {data_recebimento}<br>Hora Recebimento: {hora_recebimento}<br>Dia e Hora de Registro: {diaehoradeenvio}</td>
-                        </tr>
-                    </tbody></table>
+                    <html>
+                    <body>
+                        <table style="width: auto; border-collapse: collapse;">
+                            <!-- TABELA DE REGISTRO -->
+                            <tbody><tr>
+                                <!-- IMAGEM -->
+                                <td style="border: 0;"><a href="https://ibb.co/mJsWTzD">
+                                    <img src="https://i.ibb.co/SNTCyvs/vigiapp.jpg" alt="vigiapp" border="0" width="125">
+                                </a></td>
+                                <!-- Título VIGIAPP -->
+                                <td style="text-align: center; font-size: 20px;"><strong>VIGIAPP em AÇÃO</strong></td>
+                            </tr>
+                        </tbody></table>
+                        
+                        <h2>Nova Correspondência Registrada</h2>
+                        
+                        <h3>Informações da Correspondência:</h3>
+                        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                            <p><strong>Tipo:</strong> <span style="color: {cor_tipo}; font-weight: bold;">{tipo.upper()}</span></p>
+                            <p><strong>Remetente:</strong> {remetente}</p>
+                            <p><strong>Destinatário:</strong> {destinatario}</p>
+                            <p><strong>Setor/Encomenda:</strong> {setor}</p>
+                        </div>
+                        
+                        <h3>Informações de Recebimento:</h3>
+                        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 5px;">
+                            <p><strong>Data de Recebimento:</strong> {data_recebimento}</p>
+                            <p><strong>Hora de Recebimento:</strong> {hora_recebimento}</p>
+                            <p><strong>Data de Registro:</strong> {diaehoradeenvio.split()[0]}</p>
+                            <p><strong>Hora de Registro:</strong> {diaehoradeenvio.split()[1]}</p>
+                        </div>
+                        
+                        <p><em>Email enviado em: {diaehoradeenvio}</em></p>
+                        
+                        <hr>
+                        <p style="font-size: 12px; color: #666;">
+                            Este é um email automático enviado pelo sistema VigiAPP. Favor não responder.
+                        </p>
+                    </body>
+                    </html>
                     """
         
         return self.send_email(subject, html_content)
