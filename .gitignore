@@ -1,59 +1,86 @@
-# Ambiente virtual
-venv/
-env/
+# Arquivos de ambiente e configuração
 .env
-.venv/
+.env.local
+env/
+venv/
 ENV/
+env.bak/
+venv.bak/
+.python-version
 
-# Arquivos de cache Python
+# Arquivos de banco de dados local
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Arquivos temporários Python
 __pycache__/
 *.py[cod]
 *$py.class
-.pytest_cache/
-.coverage
-htmlcov/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Logs
-*.log
-logs/
-
-# Arquivos de banco de dados local
-*.db
-*.sqlite
-*.sqlite3
+# Diretórios específicos da aplicação
 instance/
+uploads/
+temp/
+logs/
+temp_vigiapp/
+static/uploads/
 
-# Arquivos de configuração com segredos
-.env
-*.pem
-*.key
+# Arquivos de mídia e conteúdo gerado
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+*.zip
+*.tar.gz
 
-# Arquivos de mídia carregados pelos usuários
-#static/uploads/
+# Exceções específicas (importante manter imagens do sistema)
+!static/img/*.png
+!static/img/*.jpg
+!static/img/*.jpeg
+!static/img/*.gif
+!static/img/logo.png
+!static/img/background.jpg
+!vigiapp.JPG
+!generated-icon.png
 
-# Arquivos de QR code gerados
-#static/qrcodes/
-
-# Arquivos de IDE e editores
+# Arquivos de configuração do IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Arquivos temporários
-temp_*/
-*.tmp
-.cache/
-
-# Arquivos compilados
-*.so
-*.dylib
-*.dll
-*.exe
-
-# Arquivos de migrações potencialmente sensíveis
-alembic/versions/
-
-# Arquivos de relatórios gerados
-relatorios/
+# Arquivos de log
+*.log

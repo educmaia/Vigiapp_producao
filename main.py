@@ -1,3 +1,7 @@
+# Carregar variáveis de ambiente antes de importar o app
+from load_env import load_dotenv
+load_dotenv()
+
 from app import app
 
 if __name__ == '__main__':
