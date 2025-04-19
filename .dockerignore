@@ -1,0 +1,77 @@
+# Ignorar arquivos e diretórios durante a construção da imagem Docker
+
+# Virtualenv / Ambiente virtual
+venv/
+env/
+ENV/
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Arquivos secretos e configurações locais
+.env
+.env.local
+*.log
+
+# Banco de dados local
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Diretórios específicos da aplicação que não precisam ser copiados
+temp_vigiapp/
+instance/
+
+# Arquivos de documentação
+README.md
+DEPLOYMENT.md
+CONTRIBUTING.md
+LICENSE
+docs/
+
+# Arquivos Docker relacionados (já presentes no contexto de build)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Arquivos de IDE
+.idea/
+.vscode/
+.project
+.classpath
+.settings/
+
+# Diretórios para arquivos de upload (estes serão montados como volumes)
+static/uploads/
+uploads/

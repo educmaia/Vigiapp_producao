@@ -91,23 +91,35 @@ vigiapp/
 ├── static/                  # Arquivos estáticos (CSS, JS, imagens)
 ├── templates/               # Templates HTML
 ├── app.py                   # Configuração principal da aplicação
-├── main.py                  # Ponto de entrada da aplicação
+├── main.py                  # Ponto de entrada da aplicação para desenvolvimento
+├── wsgi.py                  # Ponto de entrada para produção (WSGI)
 ├── models.py                # Modelos do banco de dados
 ├── forms.py                 # Formulários wtforms
 ├── email_smtp.py            # Configuração de envio de email
 ├── qr_code.py               # Utilitários para geração de QR codes
 ├── utils.py                 # Funções utilitárias
 ├── dependencies.txt         # Lista de dependências
-└── .env.example             # Exemplo de variáveis de ambiente
+├── .env.example             # Exemplo de variáveis de ambiente
+├── Dockerfile               # Configuração para build de imagem Docker
+├── docker-compose.yml       # Configuração para deploy com Docker Compose
+├── DEPLOYMENT.md            # Instruções detalhadas de implantação
+├── CONTRIBUTING.md          # Guia para contribuidores
+└── LICENSE                  # Licença MIT
 ```
 
+Para instruções detalhadas sobre implantação em diferentes ambientes, consulte o arquivo [DEPLOYMENT.md](DEPLOYMENT.md).
+
 ## Contribuindo
+
+Para contribuir com o VigiAPP:
 
 1. Faça um fork do projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
 3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
+
+Consulte o [Guia de Contribuição](CONTRIBUTING.md) para obter informações detalhadas sobre como contribuir com o projeto, incluindo padrões de código, processo de pull request e outros requisitos.
 
 ## Autor
 
