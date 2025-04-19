@@ -1,0 +1,59 @@
+# Ambiente virtual
+venv/
+env/
+.env
+.venv/
+ENV/
+
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# Arquivos de banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Arquivos de configuração com segredos
+.env
+*.pem
+*.key
+
+# Arquivos de mídia carregados pelos usuários
+#static/uploads/
+
+# Arquivos de QR code gerados
+#static/qrcodes/
+
+# Arquivos de IDE e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos temporários
+temp_*/
+*.tmp
+.cache/
+
+# Arquivos compilados
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Arquivos de migrações potencialmente sensíveis
+alembic/versions/
+
+# Arquivos de relatórios gerados
+relatorios/

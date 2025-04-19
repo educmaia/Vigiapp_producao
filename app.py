@@ -30,7 +30,7 @@ email_sender = EmailSender()  # Instância global do EmailSender
 
 # Create and configure the app
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "vigiapp-secret-key")
+app.secret_key = os.environ.get("SECRET_KEY", "vigiapp-secret-key")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # Registrar o filtro nl2br
