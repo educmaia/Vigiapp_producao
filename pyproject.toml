@@ -24,4 +24,5 @@ dependencies = [
     "mailersend>=0.5.8",
     "flask-mail>=0.10.0",
     "markupsafe>=3.0.2",
+    "pyflakes>=3.3.2",
 ]

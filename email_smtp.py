@@ -1,7 +1,4 @@
 import os
-import logging
-import base64
-from datetime import datetime
 from flask import current_app
 from flask_mail import Mail, Message
 from utils import get_brasil_datetime
