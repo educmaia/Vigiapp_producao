@@ -38,9 +38,6 @@ def create_app():
     
     # Importa e registra blueprints
     with app.app_context():
-        # Importa modelos
-        from . import models
-        
         # Cria as tabelas
         db.create_all()
         

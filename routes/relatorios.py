@@ -1,12 +1,9 @@
 from flask import (
-    Blueprint, render_template, send_file, redirect, url_for, flash, request, current_app,
-    make_response
+    Blueprint, render_template, send_file, request
 )
-from flask_login import login_required, current_user
-from app import db
+from flask_login import login_required
 from models import Pessoa, Ingresso, Empresa, Entrega, Correspondencia, Ocorrencia
 from forms import RelatorioForm
-from datetime import timedelta
 from utils import generate_pdf_report, get_brasil_datetime
 import os
 import tempfile

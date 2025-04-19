@@ -1,9 +1,8 @@
 """
 Script para realizar migrações no banco de dados
 """
-import sys
 from app import app, db
-from sqlalchemy import inspect, text, Column, Boolean, DateTime
+from sqlalchemy import inspect, text
 
 def add_columns_to_user_table():
     """Adiciona novas colunas à tabela user."""
