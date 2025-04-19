@@ -66,6 +66,7 @@ def novo():
 
 # Rota para editar empresa
 @empresas_bp.route('/editar/<string:cnpj>', methods=['GET', 'POST'])
+@empresas_bp.route('/editar-empresa/<string:cnpj>', methods=['GET', 'POST'])  # Rota alternativa para compatibilidade
 @login_required
 def editar(cnpj):
     # Only admins can edit records
@@ -103,6 +104,7 @@ def editar(cnpj):
 
 # Página de confirmação de exclusão
 @empresas_bp.route('/confirmar-excluir/<string:cnpj>')
+@empresas_bp.route('/confirmar_excluir/<string:cnpj>')  # Rota alternativa para compatibilidade
 @login_required
 def confirmar_excluir(cnpj):
     # Only admins can delete records
@@ -126,6 +128,7 @@ def confirmar_excluir(cnpj):
 
 # Executar a exclusão após confirmação
 @empresas_bp.route('/executar-exclusao/<string:cnpj>', methods=['POST'])
+@empresas_bp.route('/executar_exclusao/<string:cnpj>', methods=['POST'])  # Rota alternativa para compatibilidade
 @login_required
 def executar_exclusao(cnpj):
     # Only admins can delete records

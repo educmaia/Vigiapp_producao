@@ -175,14 +175,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle delete confirmation modals
-    var deleteButtons = document.querySelectorAll('.btn-delete');
-    deleteButtons.forEach(function(button) {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = this.getAttribute('data-bs-target');
-            const modal = new bootstrap.Modal(document.querySelector(target));
-            modal.show();
+    // Handle delete confirmation modals - evitar execução na seção de empresas
+    if (!window.location.pathname.includes('/empresas')) {
+        var deleteButtons = document.querySelectorAll('.btn-delete');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-bs-target');
+                if (target && document.querySelector(target)) {
+                    const modal = new bootstrap.Modal(document.querySelector(target));
+                    modal.show();
+                }
+            });
         });
-    });
+    }
 });
