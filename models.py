@@ -45,7 +45,7 @@ class Empresa(db.Model):
     coringa = db.Column(db.String(100))
     nome_func = db.Column(db.String(100))
     telefone_func = db.Column(db.String(20))
-    entregas = db.relationship('Entrega', backref='empresa', lazy=True)
+    entregas = db.relationship('Entrega', backref='empresa', lazy=True, cascade='all, delete-orphan')
 
 class EntregaImagem(db.Model):
     __tablename__ = 'entrega_imagens'
@@ -60,7 +60,7 @@ class EntregaImagem(db.Model):
 class Entrega(db.Model):
     __tablename__ = 'entregas'
     id = db.Column(db.Integer, primary_key=True)
-    cnpj = db.Column(db.String(18), db.ForeignKey('empresas.cnpj'), nullable=False)
+    cnpj = db.Column(db.String(18), db.ForeignKey('empresas.cnpj', ondelete='CASCADE'), nullable=False)
     data_registro = db.Column(db.String(10), nullable=False)
     hora_registro = db.Column(db.String(10), nullable=False)
     data_envio = db.Column(db.String(10))

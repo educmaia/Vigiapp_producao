@@ -75,29 +75,63 @@ def editar(cnpj):
         return redirect(url_for('empresas.index'))
     
     empresa = Empresa.query.get_or_404(cnpj)
+    
+    # Pré-preencher o formulário com os dados atuais
+    # Precisamos garantir que o CNPJ seja exibido exatamente como está no banco
     form = EmpresaForm(obj=empresa)
     
     if form.validate_on_submit():
+        # Formatamos o CNPJ do formulário
         new_cnpj = format_cnpj(form.cnpj.data)
         
-        # If CNPJ is being changed, check if new CNPJ already exists
-        if new_cnpj != cnpj:
-            existing_empresa = Empresa.query.filter_by(cnpj=new_cnpj).first()
-            if existing_empresa:
-                flash('CNPJ já cadastrado.', 'danger')
-                return render_template('empresas/form.html', form=form, title='Editar Empresa')
+        try:
+            # Se o CNPJ está sendo alterado, verificamos se o novo já existe
+            if new_cnpj != cnpj:
+                existing_empresa = Empresa.query.filter_by(cnpj=new_cnpj).first()
+                if existing_empresa:
+                    flash('CNPJ já cadastrado no sistema.', 'danger')
+                    return render_template('empresas/form.html', form=form, title='Editar Empresa')
+                
+                # Aqui é um ponto crítico: precisamos criar uma nova empresa e transferir as entregas
+                # em vez de apenas alterar o CNPJ, pois ele é a chave primária
+                new_empresa = Empresa(
+                    cnpj=new_cnpj,
+                    nome_empresa=form.nome_empresa.data,
+                    telefone_empresa=format_telefone(form.telefone_empresa.data) if form.telefone_empresa.data else "",
+                    coringa=form.coringa.data,
+                    nome_func=form.nome_func.data,
+                    telefone_func=format_telefone(form.telefone_func.data) if form.telefone_func.data else ""
+                )
+                
+                # Adicionamos a nova empresa
+                db.session.add(new_empresa)
+                
+                # Atualizamos as entregas para usar o novo CNPJ
+                for entrega in Entrega.query.filter_by(cnpj=cnpj).all():
+                    entrega.cnpj = new_cnpj
+                
+                # Removemos a empresa antiga
+                db.session.delete(empresa)
+                
+            else:
+                # Se o CNPJ não mudou, atualizamos os demais campos normalmente
+                empresa.nome_empresa = form.nome_empresa.data
+                empresa.telefone_empresa = format_telefone(form.telefone_empresa.data) if form.telefone_empresa.data else ""
+                empresa.coringa = form.coringa.data
+                empresa.nome_func = form.nome_func.data
+                empresa.telefone_func = format_telefone(form.telefone_func.data) if form.telefone_func.data else ""
+            
+            # Confirmamos as alterações
+            db.session.commit()
+            flash('Empresa atualizada com sucesso!', 'success')
+            
+        except Exception as e:
+            # Em caso de erro, revertemos as alterações
+            db.session.rollback()
+            current_app.logger.error(f"Erro ao atualizar empresa: {str(e)}")
+            flash(f'Erro ao atualizar empresa: {str(e)}', 'danger')
+            return render_template('empresas/form.html', form=form, title='Editar Empresa')
         
-        # Update empresa
-        empresa.cnpj = new_cnpj
-        empresa.nome_empresa = form.nome_empresa.data
-        empresa.telefone_empresa = format_telefone(form.telefone_empresa.data) if form.telefone_empresa.data else ""
-        empresa.coringa = form.coringa.data
-        empresa.nome_func = form.nome_func.data
-        empresa.telefone_func = format_telefone(form.telefone_func.data) if form.telefone_func.data else ""
-        
-        db.session.commit()
-        
-        flash('Empresa atualizada com sucesso!', 'success')
         return redirect(url_for('empresas.index'))
     
     return render_template('empresas/form.html', form=form, title='Editar Empresa')
@@ -139,12 +173,16 @@ def executar_exclusao(cnpj):
     empresa = Empresa.query.get_or_404(cnpj)
     
     try:
-        # Primeiro excluir as entregas relacionadas (elas devem ter cascade delete para imagens)
-        Entrega.query.filter_by(cnpj=cnpj).delete()
+        # Agora que configuramos o cascade, a exclusão de uma empresa deve automaticamente
+        # excluir todas as entregas relacionadas, que por sua vez excluirão todas as imagens relacionadas
         
-        # Depois excluir a empresa
+        # Log para debug
+        current_app.logger.info(f"Excluindo empresa {empresa.nome_empresa} (CNPJ: {empresa.cnpj}) e {len(empresa.entregas)} entregas associadas")
+        
+        # Excluímos diretamente a empresa, confiando no CASCADE
         db.session.delete(empresa)
         db.session.commit()
+        
         flash('Empresa excluída com sucesso!', 'success')
     except Exception as e:
         db.session.rollback()

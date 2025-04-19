@@ -1,0 +1,65 @@
+Problemas na Funcionalidade de Editar Empresas
+
+Problema com a Chave Primária:
+
+Na função editar, você busca a empresa com Empresa.query.get_or_404(cnpj), mas parece que a comparação de CNPJ formatado com o CNPJ no banco pode estar causando problemas.
+Quando você faz new_cnpj != cnpj, está comparando o CNPJ formatado com o CNPJ da URL, não necessariamente o que está no banco.
+
+
+Formatação de CNPJ:
+
+Ao editar, você formata o CNPJ com format_cnpj(form.cnpj.data), mas não está verificando se form.cnpj.data já está formatado ou se precisa remover formatação antes.
+
+
+
+Problemas na Funcionalidade de Excluir Empresas
+
+Problema com Relações no Banco de Dados:
+
+Você está tentando excluir primeiro as entregas com Entrega.query.filter_by(cnpj=cnpj).delete(), e depois a empresa, mas pode haver um problema de referência na relação entre essas tabelas.
+A relação está configurada como db.relationship('Entrega', backref='empresa', lazy=True) na classe Empresa, mas pode ser que as chaves estrangeiras não estejam configuradas com ondelete='CASCADE'.
+
+
+Potencial Problema de Transação:
+
+Embora você esteja usando db.session.rollback() para caso de erro, pode haver algum problema na transação que não está sendo capturado corretamente.
+
+
+
+Outros Aspectos Relevantes
+
+Verificação de Permissão:
+
+A verificação if current_user.role != 'admin' está presente, mas pode ser que o usuário atual não esteja sendo identificado corretamente como admin.
+
+
+Problema de CSRF Token:
+
+Em confirmar_exclusao.html, você tem o campo CSRF token, mas pode haver algum problema com a validação deste token.
+
+
+Problema de Integridade Referencial:
+
+Analisando o modelo Entrega, o relacionamento com EntregaImagem está configurado com cascade='all, delete-orphan', mas a relação inversa entre Empresa e Entrega pode não estar com a configuração de cascade adequada.
+
+
+
+Soluções Recomendadas
+
+Para o Problema de Editar:
+
+Verifique se o CNPJ está sendo tratado corretamente tanto na busca quanto na comparação
+Considere usar empresa.cnpj = new_cnpj somente se realmente houve alteração
+
+
+Para o Problema de Excluir:
+
+Adicione ondelete='CASCADE' na definição da chave estrangeira em Entrega.cnpj
+Alternativamente, busque cada objeto Entrega relacionado e remova individualmente
+Certifique-se de que todas as imagens relacionadas também sejam excluídas
+
+
+Para Verificação de Erros:
+
+Adicione logs mais detalhados para identificar o erro específico
+Verifique no console do servidor se há alguma mensagem de erro quando executa as operações
