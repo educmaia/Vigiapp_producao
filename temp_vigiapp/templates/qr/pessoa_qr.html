@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-qrcode me-2"></i>
+                        QR Code - {{ pessoa.nome }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4 text-center">
+                        <h4 class="animated-title">Código QR para Check-in Rápido</h4>
+                        <p>Use este código para realizar check-in rápido desta pessoa.</p>
+                    </div>
+                    
+                    <!-- Container QR com efeitos visuais -->
+                    <div class="d-flex justify-content-center">
+                        <div class="qr-container" data-qr-type="check-in">
+                            <div class="qr-badge">Check-in</div>
+                            <img src="{{ url_for('static', filename=qr_code_url) }}" 
+                                alt="QR Code {{ pessoa.nome }}" 
+                                class="img-fluid qr-code-image">
+                            
+                            <div class="qr-info">
+                                <div class="qr-instructions">
+                                    <div><i class="fas fa-info-circle qr-icon"></i> <strong>Instruções:</strong></div>
+                                    <p>Utilize este QR code para registrar rapidamente a entrada do visitante sem precisar digitar o CPF.</p>
+                                    <ol>
+                                        <li>Apresente este QR code ao responsável pela portaria.</li>
+                                        <li>Após a leitura, confirme os detalhes da visita.</li>
+                                        <li>Pronto! O registro de entrada será feito automaticamente.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Informações da pessoa com estilos melhorados -->
+                    <div class="mt-4 bg-light p-3 rounded border-left border-success">
+                        <h5 class="mb-3 border-bottom pb-2">
+                            <i class="fas fa-user-circle me-2"></i>
+                            Informações da Pessoa
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Nome:</strong> {{ pessoa.nome }}</p>
+                                <p><strong>CPF:</strong> {{ pessoa.cpf }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                {% if pessoa.telefone %}
+                                <p><strong>Telefone:</strong> {{ pessoa.telefone }}</p>
+                                {% endif %}
+                                {% if pessoa.empresa %}
+                                <p><strong>Empresa:</strong> {{ pessoa.empresa }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de ação com ícones animados -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Voltar para Pessoa
+                        </a>
+                        <button class="btn btn-success print-button">
+                            <i class="fas fa-print me-2"></i> Imprimir QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Código JavaScript específico para esta página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Adicionar classe de animação pulsante ao QR code
+        setTimeout(() => {
+            const qrContainer = document.querySelector('.qr-container');
+            qrContainer.classList.add('pulse-attention');
+            
+            // Remover a animação após alguns pulsos
+            setTimeout(() => {
+                qrContainer.classList.remove('pulse-attention');
+            }, 3000);
+        }, 1000);
+    });
+</script>
+{% endblock %}

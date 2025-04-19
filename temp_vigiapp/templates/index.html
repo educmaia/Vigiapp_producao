@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}VigiAPP - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Dashboard</h4>
+            </div>
+            <div class="card-body">
+                <!-- Primeira linha: Pessoas, Ingressos, Correspondências -->
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-users dashboard-icon text-success"></i>
+                                <h5 class="card-title">Pessoas</h5>
+                                <p class="card-text">Gerencie cadastros de pessoas e visitantes</p>
+                                <a href="{{ url_for('pessoas.index') }}" class="btn btn-success">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-clipboard-list dashboard-icon text-primary"></i>
+                                <h5 class="card-title">Ingressos</h5>
+                                <p class="card-text">Registre entradas e saídas de visitantes</p>
+                                <a href="{{ url_for('ingressos.index') }}" class="btn btn-primary">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-envelope dashboard-icon text-secondary"></i>
+                                <h5 class="card-title">Correspondências</h5>
+                                <p class="card-text">Registre e controle correspondências recebidas</p>
+                                <a href="{{ url_for('correspondencias.index') }}" class="btn btn-secondary">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segunda linha: Empresas, Entregas, Ocorrências -->
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-building dashboard-icon text-info"></i>
+                                <h5 class="card-title">Empresas</h5>
+                                <p class="card-text">Gerencie cadastros de empresas</p>
+                                <a href="{{ url_for('empresas.index') }}" class="btn btn-info">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-truck dashboard-icon text-warning"></i>
+                                <h5 class="card-title">Entregas</h5>
+                                <p class="card-text">Registre e acompanhe entregas de materiais</p>
+                                <a href="{{ url_for('entregas.index') }}" class="btn btn-warning">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card dashboard-card">
+                            <div class="card-body">
+                                <i class="fas fa-exclamation-triangle dashboard-icon text-danger"></i>
+                                <h5 class="card-title">Ocorrências</h5>
+                                <p class="card-text">Registre e monitore ocorrências</p>
+                                <a href="{{ url_for('ocorrencias.index') }}" class="btn btn-success">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header" style="background-color: #2f9e41; color: white;">
+                <h4 class="mb-0">Relatórios</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Gere relatórios personalizados do sistema</p>
+                <a href="{{ url_for('relatorios.index') }}" class="btn btn-dark">
+                    <i class="fas fa-chart-bar me-1"></i> Acessar Relatórios
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

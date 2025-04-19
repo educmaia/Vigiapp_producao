@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}VigiAPP - {{ title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0"><i class="fas fa-building me-2"></i>{{ title }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="POST" class="needs-validation" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="cnpj" class="form-label">{{ form.cnpj.label }} <span class="text-danger">*</span></label>
+                    {{ form.cnpj(class="form-control cnpj-input", id="cnpj", placeholder="00.000.000/0000-00", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe um CNPJ válido.
+                    </div>
+                    {% for error in form.cnpj.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="nome_empresa" class="form-label">{{ form.nome_empresa.label }} <span class="text-danger">*</span></label>
+                    {{ form.nome_empresa(class="form-control", id="nome_empresa", placeholder="Nome da empresa", required=true) }}
+                    <div class="invalid-feedback">
+                        Por favor, informe o nome da empresa.
+                    </div>
+                    {% for error in form.nome_empresa.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="telefone_empresa" class="form-label">{{ form.telefone_empresa.label }}</label>
+                    {{ form.telefone_empresa(class="form-control phone-input", id="telefone_empresa", placeholder="(00) 00000-0000") }}
+                    <div class="invalid-feedback">
+                        Por favor, informe um telefone válido.
+                    </div>
+                    {% for error in form.telefone_empresa.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="coringa" class="form-label">{{ form.coringa.label }}</label>
+                    {{ form.coringa(class="form-control", id="coringa", placeholder="Informação adicional") }}
+                    {% for error in form.coringa.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nome_func" class="form-label">{{ form.nome_func.label }}</label>
+                    {{ form.nome_func(class="form-control", id="nome_func", placeholder="Nome do funcionário responsável") }}
+                    {% for error in form.nome_func.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="telefone_func" class="form-label">{{ form.telefone_func.label }}</label>
+                    {{ form.telefone_func(class="form-control phone-input", id="telefone_func", placeholder="(00) 00000-0000") }}
+                    <div class="invalid-feedback">
+                        Por favor, informe um telefone válido.
+                    </div>
+                    {% for error in form.telefone_func.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('empresas.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Voltar
+                </a>
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

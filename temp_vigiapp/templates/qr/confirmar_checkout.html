@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Check-out Rápido - {{ pessoa.nome }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning fade-in-up">
+                        <i class="fas fa-exclamation-triangle me-2"></i> 
+                        Você está prestes a registrar a saída deste visitante. Confira os dados abaixo.
+                    </div>
+
+                    <!-- Card com destaque de visita em andamento -->
+                    <div class="card mb-4 border-success">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-clipboard-check me-2"></i>
+                                    Informações do Ingresso
+                                </h5>
+                                <div class="badge bg-success rounded-pill px-3 py-2 pulse-attention">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Visita em andamento
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Visitante:</strong> {{ pessoa.nome }}</p>
+                                    <p><strong>CPF:</strong> {{ pessoa.cpf }}</p>
+                                    <p><strong>Data:</strong> {{ ingresso.data }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Entrada:</strong> {{ ingresso.entrada }}</p>
+                                    <p><strong>Motivo:</strong> {{ ingresso.motivo }}</p>
+                                    <p><strong>Pessoa/Setor:</strong> {{ ingresso.pessoa_setor }}</p>
+                                </div>
+                            </div>
+                            
+                            {% if ingresso.observacoes %}
+                            <div class="mt-2">
+                                <hr>
+                                <p><strong>Observações:</strong></p>
+                                <p class="text-muted fst-italic">{{ ingresso.observacoes }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Resumo do tempo de permanência -->
+                    <div class="mb-4 text-center fade-in-up">
+                        <div class="bg-light p-3 rounded">
+                            <h6 class="mb-3">Resumo da Visita</h6>
+                            <div class="d-flex justify-content-center">
+                                <div class="me-4 text-center">
+                                    <span class="d-block text-success fw-bold">ENTRADA</span>
+                                    <span class="d-block fs-4">{{ ingresso.entrada }}</span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="d-block text-danger fw-bold">SAÍDA</span>
+                                    <span class="d-block fs-4" id="horaAtual">--:--</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="d-block text-muted">Tempo de permanência:</span>
+                                <span class="d-block fs-5 fw-bold" id="tempoPermanencia">Calculando...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formulário de checkout com animação -->
+                    <form method="POST" action="{{ url_for('qr.processar_checkout', ingresso_id=ingresso.id) }}" id="checkoutForm">
+                        <!-- Botões de ação com micro-interações -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('ingressos.index') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-check-circle me-2"></i> Confirmar Check-out
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Funções para manipulação de tempo
+        const horaEntrada = "{{ ingresso.entrada }}";
+        
+        // Atualizar a hora atual e o tempo de permanência
+        function atualizarHoras() {
+            const agora = new Date();
+            const horaAtualStr = agora.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            document.getElementById('horaAtual').textContent = horaAtualStr;
+            
+            // Calcular tempo de permanência
+            const [horaEntradaH, horaEntradaM] = horaEntrada.split(':').map(Number);
+            const horaEntradaMinutos = horaEntradaH * 60 + horaEntradaM;
+            
+            const horaAtualMinutos = agora.getHours() * 60 + agora.getMinutes();
+            
+            // Calcular diferença em minutos
+            let difMinutos = horaAtualMinutos - horaEntradaMinutos;
+            if (difMinutos < 0) {
+                // Caso a entrada tenha sido no dia anterior
+                difMinutos += 24 * 60;
+            }
+            
+            const horas = Math.floor(difMinutos / 60);
+            const minutos = difMinutos % 60;
+            
+            let tempoStr = "";
+            if (horas > 0) {
+                tempoStr += `${horas} hora${horas > 1 ? 's' : ''}`;
+                if (minutos > 0) {
+                    tempoStr += ` e ${minutos} minuto${minutos > 1 ? 's' : ''}`;
+                }
+            } else {
+                tempoStr = `${minutos} minuto${minutos > 1 ? 's' : ''}`;
+            }
+            
+            document.getElementById('tempoPermanencia').textContent = tempoStr;
+        }
+        
+        // Atualizar a cada minuto
+        atualizarHoras();
+        setInterval(atualizarHoras, 60000);
+        
+        // Adicionar efeito de pulsação ao botão de confirmação
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.classList.add('pulse-button');
+        
+        // Simular animação de scanner ao enviar
+        const form = document.getElementById('checkoutForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Mostrar animação de escaneamento
+            showScanAnimation();
+            
+            // Enviar o formulário após a animação
+            setTimeout(() => {
+                form.submit();
+            }, 2500);
+        });
+        
+        // Função para mostrar animação de escaneamento
+        function showScanAnimation() {
+            const scanOverlay = document.createElement('div');
+            scanOverlay.className = 'scan-overlay';
+            scanOverlay.innerHTML = `
+                <div class="scan-animation">
+                    <div class="scan-line"></div>
+                </div>
+                <div class="scan-text">Registrando check-out...</div>
+            `;
+            
+            document.body.appendChild(scanOverlay);
+            
+            setTimeout(() => {
+                scanOverlay.classList.add('scan-complete');
+                scanOverlay.querySelector('.scan-text').textContent = 'Check-out confirmado!';
+                
+                setTimeout(() => {
+                    scanOverlay.remove();
+                }, 1000);
+            }, 1500);
+        }
+    });
+</script>
+{% endblock %}

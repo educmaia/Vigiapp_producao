@@ -1,0 +1,209 @@
+/* Transições e efeitos visuais para o VigiAPP */
+
+/* Estilo base para transições de página */
+body {
+    opacity: 1;
+    /* Removido a transição que causava o efeito de congelamento */
+}
+
+/* Efeito de desfoque durante carregamento - removido */
+.page-loading {
+    /* Efeitos removidos conforme solicitado pelo usuário */
+}
+
+/* Container principal com animação */
+.main-container {
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efeito de deslizamento para cards - removido conforme solicitado */
+.card {
+    /* transição removida */
+}
+
+.card:hover {
+    /* efeitos hover removidos */
+}
+
+/* Animação para links de navegação */
+.nav-link {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #2f9e41;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover:after {
+    width: 100%;
+}
+
+.nav-link.active:after {
+    width: 100%;
+}
+
+/* Efeito para dropdown menus */
+.dropdown-menu {
+    animation: dropdownFade 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 8px;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(47, 158, 65, 0.1);
+    padding-left: 1.5rem;
+}
+
+.dropdown-item:after {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    width: 0;
+    height: 2px;
+    background: #2f9e41;
+    transition: all 0.2s ease;
+    transform: translateY(-50%);
+}
+
+.dropdown-item:hover:after {
+    width: 0.5rem;
+}
+
+/* Efeito de clique em botões - removido conforme solicitado */
+.btn {
+    position: relative;
+    overflow: hidden;
+    /* transições removidas */
+}
+
+/* Efeitos de animação após clique removidos */
+
+/* Transição suave para modais */
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: scale(0.9);
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+.modal-content {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1), 0 8px 10px rgba(0,0,0,0.1);
+    border: none;
+    overflow: hidden;
+}
+
+.modal-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-header:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, #2f9e41, #89d679, #2f9e41);
+    background-size: 200% auto;
+    animation: gradient 2s linear infinite;
+}
+
+@keyframes gradient {
+    0% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+    100% { background-position: 0% center; }
+}
+
+/* Animação para as tabelas */
+.table {
+    opacity: 0;
+    animation: tableAppear 0.5s ease forwards;
+    animation-delay: 0.1s;
+}
+
+@keyframes tableAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efeito de carregamento */
+.skeleton-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+@keyframes loading {
+    0% { background-position: -100% 0; }
+    100% { background-position: 100% 0; }
+}
+
+/* Efeito hover para cards de lista - removido conforme solicitado */
+.list-card {
+    /* transição removida */
+    border-left: 3px solid transparent;
+}
+
+.list-card:hover {
+    border-left-color: #2f9e41;
+    /* transformação removida */
+}
+
+/* Efeito de destaque para itens com notificação */
+.notification-item {
+    animation: notificationHighlight 2s ease infinite;
+}
+
+@keyframes notificationHighlight {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: rgba(47, 158, 65, 0.1); }
+}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}VigiAPP - Empresas Cadastradas{% endblock %}
+
+{% block content %}
+<!-- Modal para oferecer cadastro de entrega -->
+<div class="modal fade" id="ofertaEntregaModal" tabindex="-1" aria-labelledby="ofertaEntregaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ofertaEntregaModalLabel">Registrar Entrega</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Empresa <strong>{{ session.get('empresa_nome', '') }}</strong> cadastrada com sucesso!</p>
+                <p>Deseja registrar uma entrega para esta empresa agora?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="{{ url_for('entregas.novo', cnpj=session.get('empresa_cnpj', '')) }}" class="btn btn-warning">
+                    <i class="fas fa-truck me-1"></i> Registrar Entrega
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"><i class="fas fa-building me-2"></i>Empresas Cadastradas</h4>
+        <a href="{{ url_for('empresas.novo') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle me-1"></i> Nova Empresa
+        </a>
+    </div>
+    <div class="card-body">
+        {% if empresas %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>CNPJ</th>
+                        <th>Nome da Empresa</th>
+                        <th>Telefone</th>
+                        <th>Funcionário</th>
+                        <th>Telefone Func.</th>
+                        <th class="no-sort text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empresa in empresas %}
+                    <tr>
+                        <td>{{ empresa.cnpj }}</td>
+                        <td>{{ empresa.nome_empresa }}</td>
+                        <td>{{ empresa.telefone_empresa or "-" }}</td>
+                        <td>{{ empresa.nome_func or "-" }}</td>
+                        <td>{{ empresa.telefone_func or "-" }}</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('empresas.editar', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a href="{{ url_for('empresas.confirmar_excluir', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i>Nenhuma empresa cadastrada no sistema.
+        </div>
+        <a href="{{ url_for('empresas.novo') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> Cadastrar Nova Empresa
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if session.get('mostrar_oferta_entrega') %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('ofertaEntregaModal'));
+        myModal.show();
+        
+        // Limpar a session após mostrar o modal
+        fetch("{{ url_for('empresas.limpar_session') }}", {method: 'POST'});
+    });
+</script>
+{% endif %}
+{% endblock %}

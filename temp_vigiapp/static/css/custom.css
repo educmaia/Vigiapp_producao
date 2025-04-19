@@ -1,0 +1,340 @@
+/* Custom styles for VigiAPP */
+
+:root {
+    --primary-green: #2f9e41;
+    --primary-red: #cd191e;
+    --primary-black: #000000;
+    --primary-white: #ffffff;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar {
+    background-color: var(--primary-green) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--primary-white);
+}
+
+.navbar-dark .navbar-toggler {
+    border-color: var(--primary-white);
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    border-color: var(--primary-green);
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+}
+
+.card-header {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    font-weight: bold;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+}
+
+.card-body {
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+}
+
+.btn {
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn:hover, .btn:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
+}
+
+.btn-success {
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
+}
+
+.btn-danger {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: white;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background-color: #b1161a;
+    border-color: #b1161a;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #2f9e41;
+    border-color: #2f9e41;
+    color: white;
+}
+
+.btn-warning:hover, .btn-warning:focus {
+    background-color: #248735;
+    border-color: #248735;
+    color: white;
+}
+
+.form-control {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+    border-color: #ced4da;
+}
+
+.form-control::placeholder {
+    color: #464646 !important;
+    opacity: 1;
+}
+
+.form-control:-ms-input-placeholder {
+    color: #464646 !important;
+}
+
+.form-control::-ms-input-placeholder {
+    color: #464646 !important;
+}
+
+.form-control:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(47, 158, 65, 0.25);
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+}
+
+.form-select {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--primary-black);
+}
+
+.pagination .page-item .page-link {
+    background-color: white;
+    color: var(--primary-black);
+    border-color: #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: white;
+    color: var(--primary-black);
+    border-color: var(--primary-green);
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: white;
+    color: #6c757d;
+}
+
+.table thead th {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    font-weight: bold;
+}
+
+.table tbody tr {
+    background-color: white !important;
+    color: var(--primary-black) !important;
+}
+
+.table tbody tr td {
+    background-color: white !important;
+    color: var(--primary-black) !important;
+}
+
+.alert {
+    border-radius: 8px;
+}
+
+.dashboard-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-green);
+}
+
+.dashboard-card {
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.footer {
+    padding: 1rem 0;
+    text-align: center;
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+}
+
+/* Severity colors for ocorrências */
+.severity-baixa {
+    background-color: #d8f0dd;
+    color: var(--primary-green);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.severity-media {
+    background-color: #fff3cd;
+    color: #664d03;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.severity-alta {
+    background-color: #f8d7d8;
+    color: var(--primary-red);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.severity-critica {
+    background-color: var(--primary-red);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Status colors */
+.status-pendente {
+    background-color: #fff3cd;
+    color: var(--primary-black);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.status-enviado, .status-entregue {
+    background-color: #d8f0dd;
+    color: var(--primary-green);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Back button */
+.btn-back-home {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-icon {
+        font-size: 2rem;
+    }
+
+    .card-header {
+        font-size: 1rem;
+    }
+}
+
+.form-text {
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #464646 !important;
+}
+
+/* Modal styles */
+.modal-content {
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+    border-radius: 8px;
+    border: 1px solid var(--primary-green);
+    width: 100%;
+    max-width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    background-color: var(--primary-green);
+    color: var(--primary-white);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: none;
+    padding: 1rem;
+}
+
+.modal-body {
+    color: var(--primary-black);
+    background-color: var(--primary-white);
+    padding: 1rem;
+    min-height: 120px;
+}
+
+.modal-footer {
+    background-color: var(--primary-white);
+    border-top: 1px solid #e9ecef;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+/* Correção para visualização de modais no mobile */
+.modal {
+    z-index: 1050;
+}
+
+.modal-backdrop {
+    z-index: 1040;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show .modal-dialog {
+    z-index: 1055;
+    margin: 1.75rem auto;
+}
+
+/* Botão de exclusão no modal */
+.btn-confirm-delete {
+    min-width: 140px;
+}
+
+/* Formulário de exclusão */
+.delete-form {
+    display: inline-block;
+}
