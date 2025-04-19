@@ -55,6 +55,29 @@ O VigiAPP é um sistema desenvolvido para auxiliar no controle de acesso, monito
    # Edite o arquivo .env com suas configurações
    ```
 
+   Você precisará configurar as seguintes variáveis de ambiente no arquivo `.env`:
+   
+   **Banco de Dados (PostgreSQL):**
+   - `DATABASE_URL`: URL completa de conexão ao PostgreSQL
+   - `PGUSER`: Nome de usuário do PostgreSQL
+   - `PGPASSWORD`: Senha do PostgreSQL
+   - `PGHOST`: Endereço do servidor PostgreSQL
+   - `PGPORT`: Porta do PostgreSQL (normalmente 5432)
+   - `PGDATABASE`: Nome do banco de dados
+
+   **Email (Gmail SMTP):**
+   - `GMAIL_PASSWORD`: Senha de aplicativo do Gmail para envio de emails
+   
+   **Segurança:**
+   - `SECRET_KEY`: Chave secreta para proteção das sessões e tokens
+
+   **Serviços Opcionais:**
+   - `MAILERSEND_API_KEY`: Chave de API do MailerSend (opcional)
+   - `SENDGRID_API_KEY`: Chave de API do SendGrid (opcional)
+   - `TWILIO_ACCOUNT_SID`: ID da conta Twilio para SMS (opcional)
+   - `TWILIO_AUTH_TOKEN`: Token de autenticação Twilio (opcional)
+   - `TWILIO_PHONE_NUMBER`: Número de telefone Twilio para enviar SMS (opcional)
+
 5. Execute o aplicativo:
    ```
    python main.py
