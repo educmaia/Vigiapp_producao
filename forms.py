@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileField
 
 # MultipleFileField não está disponível no Flask-WTF, então vamos criar nossa própria
 class MultipleFileField(FileField):
@@ -10,13 +10,12 @@ class MultipleFileField(FileField):
             self.data = []
 from wtforms import (
     StringField, PasswordField, SubmitField, TextAreaField, SelectField,
-    DateField, TimeField, HiddenField
+    DateField, TimeField
 )
 from wtforms.validators import (
     DataRequired, Email, EqualTo, Length, ValidationError, Optional
 )
 import re
-from datetime import datetime
 
 def validate_cpf(form, field):
     # Remove non-numeric characters for validation

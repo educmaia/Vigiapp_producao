@@ -1,7 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, current_app, jsonify, request, send_from_directory
-from flask_login import login_required, current_user
-import os
-from datetime import datetime
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask_login import login_required
 from models import db, Pessoa, Ingresso
 from qr_code import generate_person_qr_code, generate_entrance_qr_code
 from utils import get_brasil_datetime, format_cpf

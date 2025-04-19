@@ -2,7 +2,6 @@
 Script para carregar variáveis de ambiente do arquivo .env
 """
 import os
-import re
 from pathlib import Path
 
 def load_dotenv(dotenv_path=None):

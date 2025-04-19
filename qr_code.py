@@ -1,7 +1,5 @@
 import os
 import qrcode
-from PIL import Image
-from flask import url_for
 
 # Pasta para armazenar os códigos QR gerados
 QR_FOLDER = os.path.join('static', 'qrcodes')
