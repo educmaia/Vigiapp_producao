@@ -170,6 +170,7 @@ def buscar_por_cnpj(cnpj):
 
 # Limpar variáveis de sessão
 @empresas_bp.route('/limpar-session', methods=['POST'])
+@empresas_bp.route('/limpar_session', methods=['POST'])  # Rota alternativa para compatibilidade
 @login_required
 def limpar_session():
     # Limpar as variáveis de sessão usadas para o modal
