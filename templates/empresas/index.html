@@ -28,11 +28,9 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mb-0"><i class="fas fa-building me-2"></i>Empresas Cadastradas</h4>
-        {% if current_user.role == 'admin' %}
         <a href="{{ url_for('empresas.novo') }}" class="btn btn-success">
             <i class="fas fa-plus-circle me-1"></i> Nova Empresa
         </a>
-        {% endif %}
     </div>
     <div class="card-body">
         {% if empresas %}
@@ -79,11 +77,9 @@
         <div class="alert alert-info" role="alert">
             <i class="fas fa-info-circle me-2"></i>Nenhuma empresa cadastrada no sistema.
         </div>
-        {% if current_user.role == 'admin' %}
         <a href="{{ url_for('empresas.novo') }}" class="btn btn-primary">
             <i class="fas fa-plus-circle me-1"></i> Cadastrar Nova Empresa
         </a>
-        {% endif %}
         {% endif %}
     </div>
 </div>
