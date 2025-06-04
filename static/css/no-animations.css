@@ -7,7 +7,7 @@
   transform: none !important;
 }
 
-/* Remover efeitos de hover */
+/* Remover efeitos de hover mantendo a visibilidade */
 .btn:hover,
 .card:hover,
 a:hover,
@@ -18,9 +18,11 @@ a:hover,
 .table tr:hover {
   transform: none !important;
   box-shadow: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* Remover efeitos de ícones */
+/* Remover efeitos de ícones mantendo a visibilidade */
 .btn:hover .fas, 
 .btn:hover .far, 
 .btn:hover .fab,
@@ -28,6 +30,8 @@ a:hover .fas,
 a:hover .far, 
 a:hover .fab {
   transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Remover efeitos de gradiente e sombras */

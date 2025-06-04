@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import (
     StringField, PasswordField, SubmitField, TextAreaField, SelectField,
-    DateField, TimeField, EmailField
+    DateField, TimeField, EmailField, BooleanField
 )
 from wtforms.validators import (
     DataRequired, Email, EqualTo, Length, ValidationError, Optional
@@ -96,6 +96,7 @@ def validate_telefone(form, field):
 class LoginForm(FlaskForm):
     username = StringField('Usuário', validators=[DataRequired()])
     password = PasswordField('Senha', validators=[DataRequired()])
+    remember = BooleanField('Lembrar-me')
     submit = SubmitField('Entrar')
 
 class RegisterForm(FlaskForm):

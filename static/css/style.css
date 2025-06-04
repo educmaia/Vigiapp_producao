@@ -1,6 +1,7 @@
 /* Estilos gerais */
 body {
-    background-color: #f8f9fa;
+    background: #fff !important;
+    background-image: none !important;
     font-family: 'Roboto', sans-serif;
 }
 

@@ -1,0 +1,271 @@
+/* Correção de emergência para botões */
+.btn,
+button,
+[role="button"],
+.nav-link,
+.dropdown-item {
+    all: unset !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    background-color: #2f9e41 !important;
+    color: white !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    border: 1px solid transparent !important;
+    border-radius: 0.25rem !important;
+    margin: 0.25rem !important;
+}
+
+/* Estilos específicos para cada tipo de botão */
+.btn-primary { background-color: #2f9e41 !important; }
+.btn-secondary { background-color: #6c757d !important; }
+.btn-success { background-color: #2f9e41 !important; }
+.btn-danger { background-color: #dc3545 !important; }
+.btn-warning { background-color: #ffc107 !important; color: #000 !important; }
+.btn-info { background-color: #0dcaf0 !important; }
+.btn-light { background-color: #f8f9fa !important; color: #000 !important; }
+.btn-dark { background-color: #212529 !important; }
+
+/* Hover states */
+.btn:hover,
+button:hover,
+[role="button"]:hover,
+.nav-link:hover,
+.dropdown-item:hover {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: brightness(90%) !important;
+}
+
+/* Focus states */
+.btn:focus,
+button:focus,
+[role="button"]:focus,
+.nav-link:focus,
+.dropdown-item:focus {
+    opacity: 1 !important;
+    visibility: visible !important;
+    outline: 2px solid #2f9e41 !important;
+    outline-offset: 2px !important;
+}
+
+/* Active states */
+.btn:active,
+button:active,
+[role="button"]:active,
+.nav-link:active,
+.dropdown-item:active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(1px) !important;
+}
+
+/* Disabled states */
+.btn:disabled,
+button:disabled,
+[role="button"]:disabled,
+.btn.disabled {
+    opacity: 0.65 !important;
+    pointer-events: none !important;
+}
+
+/* Nav links específicos */
+.nav-link {
+    color: white !important;
+    text-decoration: none !important;
+    padding: 0.5rem 1rem !important;
+}
+
+/* Dropdown items específicos */
+.dropdown-item {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.5rem 1rem !important;
+    clear: both !important;
+    font-weight: 400 !important;
+    color: #212529 !important;
+    text-align: inherit !important;
+    white-space: nowrap !important;
+    background-color: transparent !important;
+    border: 0 !important;
+}
+
+.dropdown-item:hover {
+    color: #16181b !important;
+    text-decoration: none !important;
+    background-color: #f8f9fa !important;
+}
+
+/* Botões em grupos */
+.btn-group {
+    position: relative !important;
+    display: inline-flex !important;
+    vertical-align: middle !important;
+}
+
+.btn-group > .btn {
+    position: relative !important;
+    flex: 1 1 auto !important;
+}
+
+/* Botões em tabelas */
+.table .btn {
+    margin: 0.25rem !important;
+}
+
+/* Botões em modais */
+.modal-footer .btn {
+    margin-left: 0.5rem !important;
+}
+
+/* Botões em formulários */
+.form-group .btn {
+    margin-right: 0.5rem !important;
+}
+
+/* Botões em cards */
+.card-footer .btn {
+    margin-right: 0.5rem !important;
+}
+
+/* Botões em alerts */
+.alert .btn {
+    margin-left: 0.5rem !important;
+}
+
+/* Botões em paginação */
+.pagination .btn {
+    margin: 0 0.25rem !important;
+}
+
+/* Botões em tooltips */
+.tooltip .btn {
+    margin: 0 !important;
+}
+
+/* Botões em popovers */
+.popover .btn {
+    margin: 0 !important;
+}
+
+/* Botões em dropdowns */
+.dropdown-menu .btn {
+    margin: 0 !important;
+    width: 100% !important;
+    text-align: left !important;
+}
+
+/* Botões em navs */
+.nav .btn {
+    margin: 0 0.25rem !important;
+}
+
+/* Botões em tabs */
+.tab-content .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em accordions */
+.accordion .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em carousels */
+.carousel .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em jumbotrons */
+.jumbotron .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em wells */
+.well .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em panels */
+.panel .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em list groups */
+.list-group .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em badges */
+.badge .btn {
+    margin: 0 !important;
+}
+
+/* Botões em labels */
+.label .btn {
+    margin: 0 !important;
+}
+
+/* Botões em progress bars */
+.progress .btn {
+    margin: 0 !important;
+}
+
+/* Botões em media objects */
+.media .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em thumbnails */
+.thumbnail .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em wells */
+.well .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em panels */
+.panel .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em list groups */
+.list-group .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em badges */
+.badge .btn {
+    margin: 0 !important;
+}
+
+/* Botões em labels */
+.label .btn {
+    margin: 0 !important;
+}
+
+/* Botões em progress bars */
+.progress .btn {
+    margin: 0 !important;
+}
+
+/* Botões em media objects */
+.media .btn {
+    margin: 0.5rem 0 !important;
+}
+
+/* Botões em thumbnails */
+.thumbnail .btn {
+    margin: 0.5rem 0 !important;
+} 

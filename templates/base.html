@@ -8,15 +8,56 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fix-buttons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/stable-layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    
+    <style>
+        /* Estilos de emergência para garantir visibilidade dos botões */
+        .btn {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        .btn-group .btn {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        .nav-link {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        .dropdown-item {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+    </style>
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -154,6 +195,48 @@
     <script src="{{ url_for('static', filename='js/datatables-config.js') }}"></script>
     <script src="{{ url_for('static', filename='js/delete-operations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/mobile-optimizations.js') }}"></script>
+    
+    <!-- Script de emergência para garantir visibilidade dos botões -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Forçar visibilidade de todos os botões
+            const buttons = document.querySelectorAll('.btn, .nav-link, .dropdown-item');
+            buttons.forEach(button => {
+                button.style.display = 'inline-block';
+                button.style.visibility = 'visible';
+                button.style.opacity = '1';
+                button.style.pointerEvents = 'auto';
+                button.style.position = 'relative';
+                button.style.zIndex = '1';
+            });
+            
+            // Observar mudanças no DOM para garantir que novos botões também sejam visíveis
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                                const newButtons = node.querySelectorAll('.btn, .nav-link, .dropdown-item');
+                                newButtons.forEach(button => {
+                                    button.style.display = 'inline-block';
+                                    button.style.visibility = 'visible';
+                                    button.style.opacity = '1';
+                                    button.style.pointerEvents = 'auto';
+                                    button.style.position = 'relative';
+                                    button.style.zIndex = '1';
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    </script>
     
     {% block extra_js %}{% endblock %}
     {% block scripts %}{% endblock %}
