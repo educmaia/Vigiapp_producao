@@ -1,25 +1,10 @@
-# Arquivos de ambiente e configuração
-.env
-.env.local
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-.python-version
-
-# Arquivos de banco de dados local
-*.sqlite
-*.sqlite3
-*.db
-*.db-journal
-
-# Arquivos temporários Python
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -36,13 +21,42 @@ wheels/
 .installed.cfg
 *.egg
 
-# Diretórios específicos da aplicação
+# Flask
 instance/
-uploads/
-temp/
-logs/
-temp_vigiapp/
-static/uploads/
+.webassets-cache
+
+# Ambiente virtual
+venv/
+ENV/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Banco de dados
+*.db
+*.sqlite3
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de upload
+static/uploads/*
+!static/uploads/.gitkeep
+
+# QR Codes gerados
+static/qrcodes/*
+!static/qrcodes/.gitkeep
 
 # Arquivos de mídia e conteúdo gerado
 *.png
@@ -68,19 +82,3 @@ static/uploads/
 !static/img/background.jpg
 !vigiapp.JPG
 !generated-icon.png
-
-# Arquivos de configuração do IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Arquivos de log
-*.log

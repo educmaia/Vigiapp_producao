@@ -3,6 +3,31 @@
 {% block title %}VigiAPP - {{ title }}{% endblock %}
 
 {% block content %}
+<!-- Modal para cadastro de nova empresa -->
+<div class="modal fade" id="novaEmpresaModal" tabindex="-1" aria-labelledby="novaEmpresaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novaEmpresaModalLabel">Cadastrar Nova Empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Empresa não encontrada para o CNPJ <strong id="cnpj_nao_encontrado"></strong>. 
+                    Deseja cadastrar uma nova empresa?
+                </div>
+                <p>Você será redirecionado para a página de cadastro de empresas com o CNPJ já preenchido.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="btnCadastrarEmpresa">
+                    <i class="fas fa-plus-circle me-1"></i> Cadastrar Empresa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-header">
         <h4 class="mb-0"><i class="fas fa-truck me-2"></i>{{ title }}</h4>
@@ -14,20 +39,29 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="cnpj" class="form-label">{{ form.cnpj.label }} <span class="text-danger">*</span></label>
-                    {{ form.cnpj(class="form-control cnpj-input empresa-lookup", id="cnpj", placeholder="00.000.000/0000-00", required=true) }}
+                    <div class="input-group">
+                        {{ form.cnpj(class="form-control cnpj-input", id="cnpj", placeholder="00.000.000/0000-00", required=true) }}
+                        <button type="button" class="btn btn-outline-primary" id="btnBuscarEmpresa" title="Buscar empresa">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                     <div class="invalid-feedback">
                         Por favor, informe um CNPJ válido.
                     </div>
                     {% for error in form.cnpj.errors %}
                     <div class="text-danger">{{ error }}</div>
                     {% endfor %}
-                    <div id="cnpjHelp" class="form-text">
-                        <a href="{{ url_for('empresas.novo') }}" target="_blank">
-                            <i class="fas fa-plus-circle me-1"></i>Cadastrar nova empresa
-                        </a>
-                    </div>
                 </div>
                 
+                <div class="col-md-6 mb-3">
+                    <label for="nome_empresa" class="form-label">Nome da Empresa</label>
+                    <input type="text" class="form-control" id="nome_empresa" readonly placeholder="Nome será preenchido após buscar CNPJ">
+                    <div class="form-text" id="empresa_status"></div>
+                </div>
+                
+            </div>
+            
+            <div class="row">
                 <div class="col-md-3 mb-3">
                     <label for="data_registro" class="form-label">{{ form.data_registro.label }} <span class="text-danger">*</span></label>
                     {{ form.data_registro(class="form-control date-input", id="data_registro", placeholder="DD/MM/AAAA", required=true) }}
@@ -149,4 +183,100 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cnpjInput = document.getElementById('cnpj');
+    const btnBuscarEmpresa = document.getElementById('btnBuscarEmpresa');
+    const nomeEmpresaInput = document.getElementById('nome_empresa');
+    const empresaStatusDiv = document.getElementById('empresa_status');
+    const novaEmpresaModal = new bootstrap.Modal(document.getElementById('novaEmpresaModal'));
+    
+    // Função para buscar empresa por CNPJ
+    function buscarEmpresa() {
+        const cnpj = cnpjInput.value.trim();
+        
+        if (!cnpj) {
+            alert('Por favor, digite um CNPJ antes de buscar.');
+            cnpjInput.focus();
+            return;
+        }
+        
+        // Mostrar loading
+        btnBuscarEmpresa.disabled = true;
+        btnBuscarEmpresa.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        empresaStatusDiv.innerHTML = '<i class="fas fa-search me-1"></i>Buscando empresa...';
+        empresaStatusDiv.className = 'form-text text-primary';
+        
+        // Fazer requisição AJAX
+        fetch(`{{ url_for('empresas.buscar_por_cnpj', cnpj='PLACEHOLDER') }}`.replace('PLACEHOLDER', encodeURIComponent(cnpj)))
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 404) {
+                    throw new Error('Empresa não encontrada');
+                } else {
+                    throw new Error('Erro na busca');
+                }
+            })
+            .then(data => {
+                // Empresa encontrada
+                nomeEmpresaInput.value = data.nome_empresa;
+                empresaStatusDiv.innerHTML = '<i class="fas fa-check me-1"></i>Empresa encontrada!';
+                empresaStatusDiv.className = 'form-text text-success';
+            })
+            .catch(error => {
+                // Empresa não encontrada
+                nomeEmpresaInput.value = '';
+                
+                if (error.message === 'Empresa não encontrada') {
+                    empresaStatusDiv.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Empresa não encontrada';
+                    empresaStatusDiv.className = 'form-text text-warning';
+                    
+                    // Mostrar modal para cadastrar nova empresa
+                    document.getElementById('cnpj_nao_encontrado').textContent = cnpj;
+                    novaEmpresaModal.show();
+                } else {
+                    empresaStatusDiv.innerHTML = '<i class="fas fa-times me-1"></i>Erro ao buscar empresa';
+                    empresaStatusDiv.className = 'form-text text-danger';
+                    console.error('Erro:', error);
+                }
+            })
+            .finally(() => {
+                // Restaurar botão
+                btnBuscarEmpresa.disabled = false;
+                btnBuscarEmpresa.innerHTML = '<i class="fas fa-search"></i>';
+            });
+    }
+    
+    // Event listeners
+    btnBuscarEmpresa.addEventListener('click', buscarEmpresa);
+    
+    // Buscar empresa quando pressionar Enter no campo CNPJ
+    cnpjInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            buscarEmpresa();
+        }
+    });
+    
+    // Limpar nome da empresa quando CNPJ for alterado
+    cnpjInput.addEventListener('input', function() {
+        nomeEmpresaInput.value = '';
+        empresaStatusDiv.innerHTML = '';
+        empresaStatusDiv.className = 'form-text';
+    });
+    
+    // Botão para cadastrar nova empresa
+    document.getElementById('btnCadastrarEmpresa').addEventListener('click', function() {
+        const cnpj = cnpjInput.value.trim();
+        const url = `{{ url_for('empresas.novo') }}?cnpj=${encodeURIComponent(cnpj)}`;
+        window.open(url, '_blank');
+        novaEmpresaModal.hide();
+    });
+});
+</script>
 {% endblock %}

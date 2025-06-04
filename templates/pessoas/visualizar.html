@@ -27,15 +27,9 @@
                             {% endif %}
                         </div>
                         <div class="col-md-6">
-                            {% if pessoa.qr_code_url %}
-                            <h5 class="mb-3">QR Code para Check-in Rápido</h5>
-                            <div class="text-center mb-3">
-                                <img src="{{ url_for('static', filename=pessoa.qr_code_url) }}" alt="QR Code" class="img-fluid" style="max-width: 200px;">
-                            </div>
-                            {% endif %}
                             <div class="d-flex justify-content-end mt-3">
-                                <a href="{{ url_for('qr.gerar_qrcode_pessoa', cpf=pessoa.cpf) }}" class="btn btn-primary">
-                                    <i class="bi bi-qr-code"></i> {% if pessoa.qr_code_url %}Ver QR Code{% else %}Gerar QR Code{% endif %}
+                                <a href="{{ url_for('pessoas.editar', cpf=pessoa.cpf) }}" class="btn btn-primary">
+                                    <i class="fas fa-edit"></i> Editar
                                 </a>
                             </div>
                         </div>
@@ -89,9 +83,6 @@
                             <i class="bi bi-arrow-left"></i> Voltar
                         </a>
                         <div>
-                            <a href="{{ url_for('pessoas.editar', cpf=pessoa.cpf) }}" class="btn btn-warning">
-                                <i class="bi bi-pencil"></i> Editar
-                            </a>
                             {% if current_user.role == 'admin' %}
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 <i class="bi bi-trash"></i> Excluir

@@ -1,0 +1,124 @@
+/* Remover apenas animações que causam tremor */
+
+/* Remover efeitos de shake e wobble */
+.shake,
+.wobble,
+.jello,
+[class*="shake"],
+[class*="wobble"],
+[class*="jello"],
+[class*="tremor"] {
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Remover efeitos de hover que causam tremor */
+.btn:hover,
+.card:hover,
+a:hover,
+.nav-link:hover,
+.dropdown-item:hover,
+.list-card:hover,
+.list-group-item:hover,
+.table tr:hover,
+.dashboard-card:hover {
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Remover efeitos de ripple que causam tremor */
+.ripple-effect {
+    display: none !important;
+}
+
+/* Remover animações pulsantes que causam tremor */
+.pulse-attention, 
+.pulse-button,
+.pulse {
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Remover efeitos de gradiente animado que causam tremor */
+.modal-header:after {
+    display: none !important;
+}
+
+/* Remover efeitos de transição que causam tremor */
+[class*="fade"]:not(.tooltip), 
+[class*="slide"], 
+[class*="appear"] {
+    transform: none !important;
+}
+
+/* Especificamente para a tela de ingressos - remover todas as transformações */
+.ingressos-container *,
+.ingressos-container *:hover,
+.ingressos-container *:focus,
+.ingressos-container *:active {
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+/* Remover efeitos de hover em botões da tabela de ingressos */
+.datatable .btn:hover,
+.datatable .btn-group .btn:hover,
+.datatable tbody tr:hover {
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Remover transformações de cards */
+.card-highlight {
+    transform: none !important;
+    animation: none !important;
+}
+
+/* Remover efeitos de entrada e animações de tabela */
+.table-animated,
+.table-row-animated,
+.fade-in-up,
+.form-field-animated {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Especificamente para botões de ação - prevenir tremor na troca de hover */
+.btn-group .btn,
+.btn-group .btn:hover,
+.btn-group .btn:focus,
+.btn-group .btn:active,
+.btn-sm,
+.btn-sm:hover,
+.btn-sm:focus,
+.btn-sm:active {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Fixar tamanho dos botões para evitar reorganização */
+.btn-group .btn-sm {
+    min-width: 36px;
+    height: 31px;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Remover qualquer efeito de transformação em elementos da tabela */
+.table td, 
+.table th,
+.table tbody tr,
+.table tbody tr:hover {
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Remover efeitos nos ícones dos botões */
+.btn i,
+.btn i:hover,
+.btn:hover i {
+    transform: none !important;
+    transition: none !important;
+} 

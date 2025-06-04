@@ -78,6 +78,7 @@
                     
                     <!-- Formulário de checkout com animação -->
                     <form method="POST" action="{{ url_for('qr.processar_checkout', ingresso_id=ingresso.id) }}" id="checkoutForm">
+                        {{ csrf_token() }}
                         <!-- Botões de ação com micro-interações -->
                         <div class="d-flex justify-content-between">
                             <a href="{{ url_for('ingressos.index') }}" class="btn btn-secondary">
@@ -96,94 +97,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Funções para manipulação de tempo
-        const horaEntrada = "{{ ingresso.entrada }}";
-        
-        // Atualizar a hora atual e o tempo de permanência
-        function atualizarHoras() {
-            const agora = new Date();
-            const horaAtualStr = agora.toLocaleTimeString('pt-BR', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            document.getElementById('horaAtual').textContent = horaAtualStr;
-            
-            // Calcular tempo de permanência
-            const [horaEntradaH, horaEntradaM] = horaEntrada.split(':').map(Number);
-            const horaEntradaMinutos = horaEntradaH * 60 + horaEntradaM;
-            
-            const horaAtualMinutos = agora.getHours() * 60 + agora.getMinutes();
-            
-            // Calcular diferença em minutos
-            let difMinutos = horaAtualMinutos - horaEntradaMinutos;
-            if (difMinutos < 0) {
-                // Caso a entrada tenha sido no dia anterior
-                difMinutos += 24 * 60;
-            }
-            
-            const horas = Math.floor(difMinutos / 60);
-            const minutos = difMinutos % 60;
-            
-            let tempoStr = "";
-            if (horas > 0) {
-                tempoStr += `${horas} hora${horas > 1 ? 's' : ''}`;
-                if (minutos > 0) {
-                    tempoStr += ` e ${minutos} minuto${minutos > 1 ? 's' : ''}`;
-                }
-            } else {
-                tempoStr = `${minutos} minuto${minutos > 1 ? 's' : ''}`;
-            }
-            
-            document.getElementById('tempoPermanencia').textContent = tempoStr;
-        }
-        
-        // Atualizar a cada minuto
-        atualizarHoras();
-        setInterval(atualizarHoras, 60000);
-        
-        // Adicionar efeito de pulsação ao botão de confirmação
-        const submitBtn = document.querySelector('button[type="submit"]');
-        submitBtn.classList.add('pulse-button');
-        
-        // Simular animação de scanner ao enviar
-        const form = document.getElementById('checkoutForm');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Mostrar animação de escaneamento
-            showScanAnimation();
-            
-            // Enviar o formulário após a animação
-            setTimeout(() => {
-                form.submit();
-            }, 2500);
-        });
-        
-        // Função para mostrar animação de escaneamento
-        function showScanAnimation() {
-            const scanOverlay = document.createElement('div');
-            scanOverlay.className = 'scan-overlay';
-            scanOverlay.innerHTML = `
-                <div class="scan-animation">
-                    <div class="scan-line"></div>
-                </div>
-                <div class="scan-text">Registrando check-out...</div>
-            `;
-            
-            document.body.appendChild(scanOverlay);
-            
-            setTimeout(() => {
-                scanOverlay.classList.add('scan-complete');
-                scanOverlay.querySelector('.scan-text').textContent = 'Check-out confirmado!';
-                
-                setTimeout(() => {
-                    scanOverlay.remove();
-                }, 1000);
-            }, 1500);
-        }
-    });
-</script>
+<!-- Nenhuma animação JS nesta página -->
 {% endblock %}

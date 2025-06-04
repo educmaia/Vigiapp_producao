@@ -13,7 +13,26 @@ pessoas_bp = Blueprint('pessoas', __name__, url_prefix='/pessoas')
 @pessoas_bp.route('/')
 @login_required
 def index():
-    pessoas = Pessoa.query.all()
+    busca = request.args.get('busca', '').strip()
+    
+    if busca:
+        # Remove caracteres especiais do termo de busca para comparação de CPF
+        busca_cpf = re.sub(r'[^0-9]', '', busca)
+        
+        # Buscar por CPF ou nome
+        pessoas = Pessoa.query.filter(
+            db.or_(
+                # Busca por CPF (removendo formatação)
+                Pessoa.cpf.like(f'%{busca}%'),
+                # Busca por CPF sem formatação
+                db.func.replace(db.func.replace(db.func.replace(Pessoa.cpf, '.', ''), '-', ''), '/', '').like(f'%{busca_cpf}%'),
+                # Busca por nome (case insensitive)
+                Pessoa.nome.ilike(f'%{busca}%')
+            )
+        ).order_by(Pessoa.nome).all()
+    else:
+        pessoas = Pessoa.query.order_by(Pessoa.nome).all()
+    
     return render_template('pessoas/index.html', pessoas=pessoas)
 
 @pessoas_bp.route('/novo', methods=['GET', 'POST'])

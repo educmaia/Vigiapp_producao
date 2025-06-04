@@ -1,0 +1,382 @@
+/* Estabilização Sutil do Layout */
+
+/* Forçar box-sizing em todos os elementos */
+* {
+    box-sizing: border-box !important;
+}
+
+/* Estilização da barra de rolagem */
+.table-responsive {
+    overflow-x: scroll !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #888 #f1f1f1 !important;
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 12px !important;
+    width: 12px !important;
+    display: block !important;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 6px !important;
+    border: 1px solid #ddd !important;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888 !important;
+    border-radius: 6px !important;
+    border: 2px solid #f1f1f1 !important;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;
+}
+
+/* Estabilizar tabelas */
+.table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    min-width: 800px !important; /* Força largura mínima para garantir scroll */
+}
+
+/* Definir larguras flexíveis para colunas */
+.table th:nth-child(1),
+.table td:nth-child(1) { width: 8%; } /* ID */
+.table th:nth-child(2),
+.table td:nth-child(2) { width: 25%; } /* Nome/Descrição */
+.table th:nth-child(3),
+.table td:nth-child(3) { width: 15%; } /* Data */
+.table th:nth-child(4),
+.table td:nth-child(4) { width: 12%; } /* Status */
+.table th:nth-child(5),
+.table td:nth-child(5) { width: 15%; } /* Ações */
+
+/* Responsividade para tabelas em dispositivos móveis */
+@media (max-width: 768px) {
+    /* Container da tabela com scroll horizontal */
+    .table-responsive {
+        margin: 0 -15px !important;
+        padding: 0 15px !important;
+        width: calc(100% + 30px) !important;
+        overflow-x: scroll !important;
+        -webkit-overflow-scrolling: touch !important;
+        position: relative !important;
+    }
+
+    /* Indicador de scroll */
+    .table-responsive::after {
+        content: '' !important;
+        position: absolute !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 30px !important;
+        background: linear-gradient(to right, transparent, rgba(0,0,0,0.1)) !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
+    }
+
+    /* Ajustar larguras das colunas em mobile */
+    .table th:nth-child(1),
+    .table td:nth-child(1) { width: 15%; } /* ID */
+    .table th:nth-child(2),
+    .table td:nth-child(2) { width: 35%; } /* Nome/Descrição */
+    .table th:nth-child(3),
+    .table td:nth-child(3) { width: 25%; } /* Data */
+    .table th:nth-child(4),
+    .table td:nth-child(4) { width: 15%; } /* Status */
+    .table th:nth-child(5),
+    .table td:nth-child(5) { width: 20%; } /* Ações */
+
+    /* Melhorar legibilidade em mobile */
+    .table td,
+    .table th {
+        font-size: 0.9rem !important;
+        padding: 0.5rem 0.25rem !important;
+    }
+
+    /* Ajustar botões de ação em mobile */
+    .btn-group .btn {
+        padding: 0.25rem !important;
+        min-width: 28px !important;
+    }
+
+    /* Ajustar ícones em mobile */
+    .btn i {
+        font-size: 0.9rem !important;
+    }
+
+    /* Melhorar visualização de texto longo */
+    .table td {
+        max-width: 0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    /* Ajustes para DataTables em mobile */
+    .dataTables_wrapper {
+        padding: 0 !important;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        margin-bottom: 0.5rem !important;
+    }
+
+    .dataTables_info,
+    .dataTables_paginate {
+        margin-top: 0.5rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Ajustar paginação em mobile */
+    .paginate_button {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Ajustar campos de busca em mobile */
+    .dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* Ajustar select de registros por página em mobile */
+    .dataTables_length select {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* Melhorar visualização de tooltips em mobile */
+    .tooltip {
+        display: none !important;
+    }
+
+    /* Ajustar badges em mobile */
+    .badge {
+        font-size: 0.8rem !important;
+        padding: 0.25em 0.5em !important;
+    }
+
+    /* Ajustar status em mobile */
+    .status-pendente,
+    .status-enviado,
+    .status-entregue {
+        font-size: 0.8rem !important;
+        padding: 0.25em 0.5em !important;
+    }
+}
+
+/* Estabilizar botões de ação */
+.btn-group .btn {
+    min-width: 32px !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+/* Estabilizar ícones em botões */
+.btn i {
+    width: 1em !important;
+    height: 1em !important;
+    line-height: 1 !important;
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+/* Estabilizar células da tabela */
+.table td,
+.table th {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Estabilizar tooltips */
+[data-bs-toggle="tooltip"] {
+    pointer-events: none !important;
+}
+
+/* Estabilizar dropdowns */
+.dropdown-menu {
+    min-width: 180px !important;
+}
+
+/* Estabilizar inputs */
+.form-control {
+    height: auto !important;
+}
+
+/* Estabilizar selects */
+.form-select {
+    height: auto !important;
+}
+
+/* Estabilizar badges */
+.badge {
+    min-width: 1.2em !important;
+    line-height: 1.2 !important;
+    padding: 0.25em 0.5em !important;
+}
+
+/* Estabilizar paginação */
+.page-link {
+    min-width: 32px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    padding: 0 !important;
+}
+
+/* Estabilizar navs */
+.nav-link {
+    padding: 0.5rem 1rem !important;
+}
+
+/* Estabilizar listas */
+.list-group-item {
+    padding: 0.5rem 1rem !important;
+}
+
+/* Estabilizar modais */
+.modal-dialog {
+    margin: 1.75rem auto !important;
+}
+
+/* Estabilizar alerts */
+.alert {
+    margin-bottom: 1rem !important;
+}
+
+/* Estabilizar cards */
+.card {
+    margin-bottom: 1rem !important;
+}
+
+/* Estabilizar botões */
+.btn {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar inputs de formulário */
+.form-control,
+.form-select {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar checkboxes e radios */
+.form-check-input {
+    margin-top: 0.25rem !important;
+}
+
+/* Estabilizar switches */
+.form-switch .form-check-input {
+    width: 2.5em !important;
+    height: 1.25em !important;
+}
+
+/* Estabilizar ranges */
+.form-range {
+    height: 1.5rem !important;
+}
+
+/* Estabilizar file inputs */
+.form-control[type="file"] {
+    padding: 0.375rem !important;
+}
+
+/* Estabilizar color inputs */
+.form-control[type="color"] {
+    width: 3rem !important;
+    height: 2.5rem !important;
+    padding: 0.375rem !important;
+}
+
+/* Estabilizar date inputs */
+.form-control[type="date"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar time inputs */
+.form-control[type="time"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar datetime inputs */
+.form-control[type="datetime-local"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar month inputs */
+.form-control[type="month"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar week inputs */
+.form-control[type="week"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar number inputs */
+.form-control[type="number"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar tel inputs */
+.form-control[type="tel"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar url inputs */
+.form-control[type="url"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar search inputs */
+.form-control[type="search"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar password inputs */
+.form-control[type="password"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar email inputs */
+.form-control[type="email"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar text inputs */
+.form-control[type="text"] {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar textarea */
+textarea.form-control {
+    padding: 0.375rem 0.75rem !important;
+    min-height: 100px !important;
+}
+
+/* Estabilizar select múltiplo */
+select[multiple].form-select {
+    padding: 0.375rem 0.75rem !important;
+    min-height: 100px !important;
+}
+
+/* Estabilizar select size */
+select[size].form-select {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar select optgroup */
+select optgroup {
+    padding: 0.375rem 0.75rem !important;
+}
+
+/* Estabilizar select option */
+select option {
+    padding: 0.375rem 0.75rem !important;
+} 

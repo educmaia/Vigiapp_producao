@@ -51,6 +51,7 @@
                             <div class="d-flex justify-content-end mt-3">
                                 {% if not ingresso.saida %}
                                 <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" class="me-2">
+                                    {{ csrf_token() }}
                                     <button type="submit" class="btn btn-success">
                                         <i class="bi bi-box-arrow-right"></i> Registrar Saída
                                     </button>
@@ -110,6 +111,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <form action="{{ url_for('ingressos.excluir', id=ingresso.id) }}" method="POST">
+                    {{ csrf_token() }}
                     <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
                 </form>
             </div>

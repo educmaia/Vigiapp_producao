@@ -8,6 +8,7 @@ from forms import IngressoForm
 from utils import get_brasil_datetime
 from utils import format_cpf
 import re
+from flask_wtf.csrf import validate_csrf
 
 ingressos_bp = Blueprint('ingressos', __name__, url_prefix='/ingressos')
 
@@ -122,10 +123,18 @@ def visualizar(id):
     pessoa = Pessoa.query.get(ingresso.cpf)
     return render_template('ingressos/visualizar.html', ingresso=ingresso, pessoa=pessoa, title=f'Ingresso #{id}')
 
-@ingressos_bp.route('/registrar-saida/<int:id>', methods=['POST'])
+@ingressos_bp.route('/registrar-saida/<int:id>', methods=['GET', 'POST'])
 @login_required
 def registrar_saida(id):
     ingresso = Ingresso.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        # Verifica o token CSRF apenas para requisições POST
+        try:
+            validate_csrf(request.form.get('csrf_token'))
+        except:
+            flash('Erro de validação do formulário. Por favor, tente novamente.', 'danger')
+            return redirect(url_for('ingressos.visualizar', id=id))
     
     if ingresso.saida:
         flash('Saída já registrada para este ingresso.', 'warning')

@@ -78,19 +78,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Código JavaScript específico para esta página
-    document.addEventListener('DOMContentLoaded', function() {
-        // Adicionar classe de animação pulsante ao QR code
-        setTimeout(() => {
-            const qrContainer = document.querySelector('.qr-container');
-            qrContainer.classList.add('pulse-attention');
-            
-            // Remover a animação após alguns pulsos
-            setTimeout(() => {
-                qrContainer.classList.remove('pulse-attention');
-            }, 3000);
-        }, 1000);
-    });
-</script>
+<!-- Nenhuma animação JS nesta página -->
 {% endblock %}

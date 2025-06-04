@@ -15,7 +15,32 @@ empresas_bp = Blueprint('empresas', __name__, url_prefix='/empresas')
 @empresas_bp.route('/')
 @login_required
 def index():
-    empresas = Empresa.query.all()
+    busca = request.args.get('busca', '').strip()
+    
+    if busca:
+        # Remove caracteres especiais do termo de busca para comparação de CNPJ
+        busca_cnpj = re.sub(r'[^0-9]', '', busca)
+        
+        # Buscar por CNPJ ou nome da empresa
+        empresas = Empresa.query.filter(
+            db.or_(
+                # Busca por CNPJ (com formatação)
+                Empresa.cnpj.like(f'%{busca}%'),
+                # Busca por CNPJ sem formatação
+                db.func.replace(db.func.replace(db.func.replace(Empresa.cnpj, '.', ''), '-', ''), '/', '').like(f'%{busca_cnpj}%'),
+                # Busca por nome da empresa (case insensitive)
+                Empresa.nome_empresa.ilike(f'%{busca}%')
+            )
+        ).order_by(Empresa.nome_empresa).all()
+    else:
+        empresas = Empresa.query.order_by(Empresa.nome_empresa).all()
+    
+    # Limpar a sessão após mostrar o modal
+    if session.get('mostrar_oferta_entrega'):
+        session.pop('mostrar_oferta_entrega', None)
+        session.pop('empresa_cnpj', None)
+        session.pop('empresa_nome', None)
+    
     return render_template('empresas/index.html', empresas=empresas)
 
 # Adicionar nova empresa
@@ -23,6 +48,12 @@ def index():
 @login_required
 def novo():
     form = EmpresaForm()
+    
+    # Pre-fill CNPJ if provided in URL parameters
+    if request.method == 'GET':
+        cnpj_param = request.args.get('cnpj')
+        if cnpj_param:
+            form.cnpj.data = cnpj_param
     
     if form.validate_on_submit():
         cnpj = re.sub(r'[^0-9]', '', form.cnpj.data)
@@ -65,8 +96,8 @@ def novo():
     return render_template('empresas/form.html', form=form, title='Nova Empresa')
 
 # Rota para editar empresa
-@empresas_bp.route('/editar/<string:cnpj>', methods=['GET', 'POST'])
-@empresas_bp.route('/editar-empresa/<string:cnpj>', methods=['GET', 'POST'])  # Rota alternativa para compatibilidade
+@empresas_bp.route('/editar/<path:cnpj>', methods=['GET', 'POST'])
+@empresas_bp.route('/editar-empresa/<path:cnpj>', methods=['GET', 'POST'])  # Rota alternativa para compatibilidade
 @login_required
 def editar(cnpj):
     # Only admins can edit records
@@ -137,8 +168,8 @@ def editar(cnpj):
     return render_template('empresas/form.html', form=form, title='Editar Empresa')
 
 # Página de confirmação de exclusão
-@empresas_bp.route('/confirmar-excluir/<string:cnpj>')
-@empresas_bp.route('/confirmar_excluir/<string:cnpj>')  # Rota alternativa para compatibilidade
+@empresas_bp.route('/confirmar-excluir/<path:cnpj>')
+@empresas_bp.route('/confirmar_excluir/<path:cnpj>')  # Rota alternativa para compatibilidade
 @login_required
 def confirmar_excluir(cnpj):
     # Only admins can delete records
@@ -161,8 +192,8 @@ def confirmar_excluir(cnpj):
     )
 
 # Executar a exclusão após confirmação
-@empresas_bp.route('/executar-exclusao/<string:cnpj>', methods=['POST'])
-@empresas_bp.route('/executar_exclusao/<string:cnpj>', methods=['POST'])  # Rota alternativa para compatibilidade
+@empresas_bp.route('/executar-exclusao/<path:cnpj>', methods=['POST'])
+@empresas_bp.route('/executar_exclusao/<path:cnpj>', methods=['POST'])  # Rota alternativa para compatibilidade
 @login_required
 def executar_exclusao(cnpj):
     # Only admins can delete records
@@ -192,7 +223,7 @@ def executar_exclusao(cnpj):
     return redirect(url_for('empresas.index'))
 
 # Buscar informações de uma empresa através do CNPJ
-@empresas_bp.route('/buscar-por-cnpj/<string:cnpj>')
+@empresas_bp.route('/buscar-por-cnpj/<path:cnpj>')
 @login_required
 def buscar_por_cnpj(cnpj):
     formatted_cnpj = format_cnpj(cnpj)
@@ -211,15 +242,9 @@ def buscar_por_cnpj(cnpj):
 
 # Limpar variáveis de sessão
 @empresas_bp.route('/limpar-session', methods=['POST'])
-@empresas_bp.route('/limpar_session', methods=['POST'])  # Rota alternativa para compatibilidade
 @login_required
 def limpar_session():
-    # Limpar as variáveis de sessão usadas para o modal
-    if 'mostrar_oferta_entrega' in session:
-        session.pop('mostrar_oferta_entrega', None)
-    if 'empresa_cnpj' in session:
-        session.pop('empresa_cnpj', None)
-    if 'empresa_nome' in session:
-        session.pop('empresa_nome', None)
-    
-    return jsonify({"status": "success"})
+    session.pop('mostrar_oferta_entrega', None)
+    session.pop('empresa_cnpj', None)
+    session.pop('empresa_nome', None)
+    return jsonify({'success': True})

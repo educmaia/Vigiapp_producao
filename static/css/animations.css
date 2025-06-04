@@ -1,215 +1,106 @@
 /* Animações e micro-interações para o VigiAPP */
 
-/* Animações de entrada para cards */
+/* Cards */
 .fade-in-up {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.5s ease forwards;
-}
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transform: none;
 }
 
 /* Destaque de cards */
 .card-highlight {
-    transform: translateY(-5px) scale(1.01);
+    transform: none;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
 }
 
-/* Efeito de onda para botões */
-.ripple-effect {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.4);
-    transform: scale(0);
-    animation: ripple 0.6s linear;
-    pointer-events: none;
-}
-
-@keyframes ripple {
-    to {
-        transform: scale(4);
-        opacity: 0;
-    }
-}
-
-/* Posicionamento relativo para botões com efeito de onda */
+/* Botões */
 .btn {
     position: relative;
     overflow: hidden;
 }
 
-/* Animação para linhas de tabela */
+/* Tabelas */
 .table-animated {
-    animation: tableAppear 0.5s ease-out forwards;
+    opacity: 1;
+    transform: none;
 }
 
 .table-row-animated {
-    opacity: 0;
-    animation: rowAppear 0.4s ease-out forwards;
+    opacity: 1;
+    transform: none;
 }
 
-@keyframes tableAppear {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes rowAppear {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Animação para campos de formulário */
+/* Campos de formulário */
 .form-field-animated {
-    opacity: 0;
-    transform: translateY(10px);
-    animation: formFieldAppear 0.4s ease-out forwards;
-}
-
-@keyframes formFieldAppear {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    opacity: 1;
+    transform: none;
 }
 
 /* Realce para campos em foco */
 .focused-field {
-    transform: translateX(5px);
+    transform: none;
     border-left: 3px solid #2f9e41;
     padding-left: 10px;
-    transition: all 0.3s ease;
 }
 
-/* Animação para mensagens flash */
+/* Mensagens flash */
 .alert-animated {
-    animation: alertSlideIn 0.4s ease-out forwards;
+    opacity: 1;
+    transform: none;
 }
 
 .alert-dismissing {
-    animation: alertSlideOut 0.5s ease-out forwards;
+    opacity: 0;
+    transform: none;
 }
 
-@keyframes alertSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes alertSlideOut {
-    to {
-        opacity: 0;
-        transform: translateY(-20px);
-        height: 0;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
-}
-
-/* Animações para botões de ação - removidas conforme solicitado */
+/* Botões de ação */
 .btn-primary, .btn-success, .btn-danger {
-    /* transições removidas */
+    transform: none;
 }
 
 .btn-primary:hover, .btn-success:hover, .btn-danger:hover {
-    /* efeitos hover removidos */
+    transform: none;
 }
 
 .btn-primary:active, .btn-success:active, .btn-danger:active {
-    /* efeitos active removidos */
+    transform: none;
 }
 
-/* Animação para links de navegação */
+/* Links de navegação */
 .nav-link {
-    transition: all 0.3s ease;
     position: relative;
 }
 
 .nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 50%;
-    background-color: #2f9e41;
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
+    display: none;
 }
 
 .nav-link:hover::after, .nav-link.active::after {
-    width: 70%;
+    display: none;
 }
 
-/* Animação para ícones - removida conforme solicitado */
+/* Ícones */
 .fas, .far, .fab {
-    /* transição removida */
+    transform: none;
 }
 
 a:hover .fas, a:hover .far, a:hover .fab, 
 button:hover .fas, button:hover .far, button:hover .fab {
-    /* transformação removida */
+    transform: none;
 }
 
-/* Pulsar em torno de elementos para chamar atenção */
+/* Elementos de atenção */
 .pulse-attention {
-    animation: pulse 2s infinite;
+    box-shadow: none;
 }
 
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(47, 158, 65, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(47, 158, 65, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(47, 158, 65, 0);
-    }
-}
-
-/* Botão pulsante para ações importantes */
+/* Botões pulsantes */
 .pulse-button {
     position: relative;
-    animation: buttonPulse 2s infinite;
+    transform: none;
 }
 
-@keyframes buttonPulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* Animação de carregamento */
+/* Spinner de carregamento */
 .loading-spinner {
     display: inline-block;
     width: 20px;
@@ -217,39 +108,24 @@ button:hover .fas, button:hover .far, button:hover .fab {
     border: 3px solid rgba(255,255,255,.3);
     border-radius: 50%;
     border-top-color: #fff;
-    animation: spin 1s ease-in-out infinite;
+    transform: none;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Animação para a entrada do menu dropdown */
+/* Menu dropdown */
 .dropdown-menu {
-    animation: dropdownFade 0.2s ease;
+    opacity: 1;
+    transform: none;
 }
 
-@keyframes dropdownFade {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Animação para tooltips */
+/* Tooltips */
 .tooltip {
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(5px);
+    opacity: 1;
+    transform: none;
 }
 
 .tooltip.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
 /* Efeito de foco em imagens */

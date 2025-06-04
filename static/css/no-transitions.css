@@ -1,0 +1,201 @@
+/* Remove todas as transições dos botões */
+.btn,
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn-group,
+.btn-group .btn,
+.btn-group .btn:hover,
+.btn-group .btn:focus,
+.btn-group .btn:active,
+.btn-group-sm .btn,
+.btn-group-sm .btn:hover,
+.btn-group-sm .btn:focus,
+.btn-group-sm .btn:active,
+.btn-group-lg .btn,
+.btn-group-lg .btn:hover,
+.btn-group-lg .btn:focus,
+.btn-group-lg .btn:active,
+.btn-outline-light,
+.btn-outline-light:hover,
+.btn-outline-light:focus,
+.btn-outline-light:active,
+.btn-outline-secondary,
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus,
+.btn-outline-secondary:active {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Remove transições do dashboard */
+.dashboard-card,
+.dashboard-card:hover {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Remove transições dos cards */
+.card,
+.card:hover {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Remove transições dos links */
+a,
+a:hover,
+a:focus,
+a:active,
+.nav-link,
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active,
+.dropdown-item,
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item:active {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Remove transições dos elementos interativos */
+button,
+button:hover,
+button:focus,
+button:active,
+input,
+input:hover,
+input:focus,
+input:active,
+select,
+select:hover,
+select:focus,
+select:active,
+.form-control,
+.form-control:hover,
+.form-control:focus,
+.form-control:active {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Remove transições do Bootstrap */
+*,
+*::before,
+*::after {
+    transition: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+}
+
+/* Containers específicos para pessoas e ingressos - remover todos os efeitos */
+.pessoas-container *,
+.pessoas-container *:hover,
+.pessoas-container *:focus,
+.pessoas-container *:active,
+.ingressos-container *,
+.ingressos-container *:hover,
+.ingressos-container *:focus,
+.ingressos-container *:active {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+}
+
+/* Especificamente para botões de ação nas tabelas */
+.pessoas-container .btn-group .btn,
+.pessoas-container .btn-group .btn:hover,
+.pessoas-container .btn-group .btn:focus,
+.pessoas-container .btn-group .btn:active,
+.ingressos-container .btn-group .btn,
+.ingressos-container .btn-group .btn:hover,
+.ingressos-container .btn-group .btn:focus,
+.ingressos-container .btn-group .btn:active {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+    scale: none !important;
+}
+
+/* Remover efeitos nas linhas da tabela */
+.pessoas-container .table tbody tr,
+.pessoas-container .table tbody tr:hover,
+.ingressos-container .table tbody tr,
+.ingressos-container .table tbody tr:hover {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    background-color: inherit !important;
+}
+
+/* Fixar tamanho dos botões para evitar mudanças de layout */
+.pessoas-container .btn-sm,
+.ingressos-container .btn-sm {
+    min-width: 36px !important;
+    height: 31px !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+/* Remove transições das mensagens de erro do login */
+.alert,
+.alert-danger,
+.alert-success,
+.alert-warning,
+.alert-info,
+.alert .btn-close {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -o-transform: none !important;
+} 

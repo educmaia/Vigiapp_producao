@@ -1,13 +1,13 @@
 /* Arquivo para desativar todas as animações e efeitos hover */
 
-/* Desativar todas as transições e animações */
+/* Desativar todas as animações e transições globais */
 * {
-  transition: none !important;
   animation: none !important;
+  transition: none !important;
   transform: none !important;
 }
 
-/* Remover efeitos hover específicos */
+/* Remover efeitos de hover */
 .btn:hover,
 .card:hover,
 a:hover,
@@ -18,10 +18,9 @@ a:hover,
 .table tr:hover {
   transform: none !important;
   box-shadow: none !important;
-  animation: none !important;
-  transition: none !important;
 }
 
+/* Remover efeitos de ícones */
 .btn:hover .fas, 
 .btn:hover .far, 
 .btn:hover .fab,
@@ -29,50 +28,247 @@ a:hover .fas,
 a:hover .far, 
 a:hover .fab {
   transform: none !important;
-  animation: none !important;
-  transition: none !important;
 }
 
+/* Remover efeitos de gradiente e sombras */
+.modal-header:after,
 .btn:after,
 .nav-link:after,
 .dropdown-item:after {
   display: none !important;
 }
 
-/* Remover sombras e transformações */
-.btn, .card, .alert, .modal-dialog, .dropdown-menu {
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Desativar todos os efeitos de ripple */
+/* Remover efeitos de ripple */
 .ripple-effect {
   display: none !important;
 }
 
 /* Remover animações pulsantes */
-.pulse-attention, .pulse-button {
+.pulse-attention, 
+.pulse-button,
+.pulse {
   animation: none !important;
   box-shadow: none !important;
 }
 
-/* Desabilitar efeitos de gradiente animado */
-.modal-header:after {
-  animation: none !important;
-  background: #2f9e41 !important;
-}
-
-/* Permitir tooltips normais ao passar o mouse sobre botões */
-.tooltip {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
-}
-
-/* Prevenção para qualquer transform ou animação */
-[class*="fade"]:not(.tooltip), [class*="slide"], [class*="appear"] {
+/* Remover efeitos de fade e slide */
+.fade,
+.slide,
+.appear,
+[class*="fade"],
+[class*="slide"],
+[class*="appear"] {
   opacity: 1 !important;
   transform: none !important;
   animation: none !important;
   transition: none !important;
+}
+
+/* Remover animações de modais */
+.modal.fade .modal-dialog,
+.modal.show .modal-dialog {
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Remover animações de tabelas */
+.table {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Remover efeitos de carregamento */
+.skeleton-loading {
+  animation: none !important;
+  background: #f0f0f0 !important;
+}
+
+/* Remover efeitos de notificação */
+.notification-item {
+  animation: none !important;
+  background-color: transparent !important;
+}
+
+/* Remover efeitos de dropdown */
+.dropdown-menu {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Remover efeitos de zoom */
+.zoom,
+[class*="zoom"] {
+  transform: none !important;
+}
+
+/* Remover efeitos de shake e wobble */
+.shake,
+.wobble,
+.jello,
+[class*="shake"],
+[class*="wobble"],
+[class*="jello"] {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Remover efeitos de rotação */
+.rotate,
+[class*="rotate"] {
+  transform: none !important;
+}
+
+/* Remover efeitos de flip */
+.flip,
+[class*="flip"] {
+  transform: none !important;
+}
+
+/* Remover efeitos de bounce */
+.bounce,
+[class*="bounce"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de flash */
+.flash,
+[class*="flash"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de tada */
+.tada,
+[class*="tada"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de heartBeat */
+.heartBeat,
+[class*="heartBeat"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de jackInTheBox */
+.jackInTheBox,
+[class*="jackInTheBox"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de hinge */
+.hinge,
+[class*="hinge"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de rollIn */
+.rollIn,
+[class*="rollIn"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de rollOut */
+.rollOut,
+[class*="rollOut"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de lightSpeedIn */
+.lightSpeedIn,
+[class*="lightSpeedIn"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de lightSpeedOut */
+.lightSpeedOut,
+[class*="lightSpeedOut"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de rotateIn */
+.rotateIn,
+[class*="rotateIn"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de rotateOut */
+.rotateOut,
+[class*="rotateOut"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de flipInX */
+.flipInX,
+[class*="flipInX"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de flipOutX */
+.flipOutX,
+[class*="flipOutX"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de flipInY */
+.flipInY,
+[class*="flipInY"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de flipOutY */
+.flipOutY,
+[class*="flipOutY"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de zoomIn */
+.zoomIn,
+[class*="zoomIn"] {
+  animation: none !important;
+}
+
+/* Remover efeitos de zoomOut */
+.zoomOut,
+[class*="zoomOut"] {
+  animation: none !important;
+}
+
+/* Remover qualquer efeito de hover nas linhas das tabelas */
+.table tr:hover,
+.table-striped>tbody>tr:hover,
+tr:hover {
+    background: inherit !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+    outline: none !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Remover animações das mensagens de erro do login */
+.alert,
+.alert-danger,
+.alert-success,
+.alert-warning,
+.alert-info {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Remover efeitos de fade nas mensagens flash */
+.alert.fade,
+.alert.show {
+    opacity: 1 !important;
+    transition: none !important;
+}
+
+/* Remover animações do botão de fechar alerta */
+.alert .btn-close {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
 }

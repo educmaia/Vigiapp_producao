@@ -1,5 +1,13 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
+from wtforms import (
+    StringField, PasswordField, SubmitField, TextAreaField, SelectField,
+    DateField, TimeField, EmailField
+)
+from wtforms.validators import (
+    DataRequired, Email, EqualTo, Length, ValidationError, Optional
+)
+import re
 
 # MultipleFileField não está disponível no Flask-WTF, então vamos criar nossa própria
 class MultipleFileField(FileField):
@@ -8,14 +16,6 @@ class MultipleFileField(FileField):
             self.data = valuelist
         else:
             self.data = []
-from wtforms import (
-    StringField, PasswordField, SubmitField, TextAreaField, SelectField,
-    DateField, TimeField
-)
-from wtforms.validators import (
-    DataRequired, Email, EqualTo, Length, ValidationError, Optional
-)
-import re
 
 def validate_cpf(form, field):
     # Remove non-numeric characters for validation
@@ -108,17 +108,16 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Registrar')
     
 class EditUserForm(FlaskForm):
-    username = StringField('Usuário', validators=[DataRequired(), Length(min=3, max=64)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    role = SelectField('Função', choices=[('vigilante', 'Vigilante'), ('admin', 'Administrador')])
+    username = StringField('Nome de Usuário', validators=[DataRequired(), Length(min=3, max=64)])
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    role = SelectField('Função', choices=[('controlador', 'Controlador'), ('admin', 'Administrador')])
     active = SelectField('Status', choices=[('1', 'Ativo'), ('0', 'Inativo')])
-    submit = SubmitField('Salvar Alterações')
+    submit = SubmitField('Salvar')
     
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField('Senha Atual', validators=[DataRequired()])
     password = PasswordField('Nova Senha', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField(
-        'Confirmar Nova Senha', validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirmar Nova Senha', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Alterar Senha')
 
 class PessoaForm(FlaskForm):

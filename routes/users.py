@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort, current_app
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -116,26 +116,33 @@ def change_password(user_id):
 @users_bp.route('/excluir/<int:user_id>', methods=['POST'])
 @login_required
 def delete(user_id):
-    """Exclui um usuário"""
+    current_app.logger.debug(f'Início da exclusão do usuário ID: {user_id}')
     # Verifica se o usuário atual é administrador
     if current_user.role != 'admin':
+        current_app.logger.warning(f'Usuário {current_user.username} tentou excluir usuário sem permissão')
         flash('Acesso negado. Somente administradores podem acessar esta página.', 'danger')
         return redirect(url_for('auth.dashboard'))
-    
+    current_app.logger.debug('Permissão de admin confirmada')
     # Busca o usuário pelo ID
     user = User.query.get_or_404(user_id)
-    
+    current_app.logger.debug(f'Usuário encontrado: {user.username}')
     # Não permite excluir o próprio usuário
     if user.id == current_user.id:
+        current_app.logger.warning(f'Usuário {current_user.username} tentou excluir seu próprio usuário')
         flash('Não é possível excluir seu próprio usuário.', 'danger')
         return redirect(url_for('users.manage'))
-    
-    # Armazena o nome do usuário para mensagem
-    username = user.username
-    
-    # Exclui o usuário
-    db.session.delete(user)
-    db.session.commit()
-    
-    flash(f'Usuário {username} excluído com sucesso.', 'success')
-    return redirect(url_for('users.manage'))
+    current_app.logger.debug('Usuário não é o próprio admin, pode excluir')
+    try:
+        username = user.username
+        current_app.logger.debug('Antes de db.session.delete(user)')
+        db.session.delete(user)
+        current_app.logger.debug('Depois de db.session.delete(user), antes de commit')
+        db.session.commit()
+        current_app.logger.info(f'Usuário {username} excluído com sucesso')
+        flash(f'Usuário {username} excluído com sucesso.', 'success')
+        return redirect(url_for('users.manage'))
+    except Exception as e:
+        current_app.logger.error(f'Erro ao excluir usuário: {str(e)}')
+        db.session.rollback()
+        flash('Erro ao excluir usuário. Por favor, tente novamente.', 'danger')
+        return redirect(url_for('users.manage'))

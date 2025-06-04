@@ -3,6 +3,7 @@
 {% block title %}VigiAPP - Controle de Ingressos{% endblock %}
 
 {% block content %}
+<div class="ingressos-container">
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Controle de Ingressos</h4>
@@ -46,21 +47,21 @@
                             <div class="btn-group" role="group">
                                 {% if not ingresso.saida %}
                                 <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" title="Registrar Saída">
+                                    <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Saída">
                                         <i class="fas fa-sign-out-alt"></i>
                                     </button>
                                 </form>
                                 
-                                <a href="{{ url_for('qr.gerar_qrcode_ingresso', id=ingresso.id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" title="QR Code para Check-out">
+                                <a href="{{ url_for('qr.gerar_qrcode_ingresso', id=ingresso.id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Gerar QR Code para Check-out">
                                     <i class="fas fa-qrcode"></i>
                                 </a>
                                 {% endif %}
                                 
-                                <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Editar">
+                                <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Ingresso">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 
-                                <a href="{{ url_for('ingressos.confirmar_exclusao', id=ingresso.id) }}" class="btn btn-sm btn-danger" title="Excluir">
+                                <a href="{{ url_for('ingressos.confirmar_exclusao', id=ingresso.id) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Ingresso">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </div>
@@ -80,4 +81,17 @@
         {% endif %}
     </div>
 </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Inicializar tooltips
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
 {% endblock %}
