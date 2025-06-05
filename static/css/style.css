@@ -87,4 +87,9 @@ body {
     .card {
         margin-bottom: 1rem;
     }
+}
+
+.hora-registro {
+    width: 80px;
+    text-align: center;
 } 

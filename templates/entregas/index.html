@@ -17,7 +17,7 @@
                 <thead>
                     <tr>
                         <th>Data Registro</th>
-                        <th>Hora Registro</th>
+                        <th class="text-center" style="width: 140px;">Hora Registro</th>
                         <th>Empresa</th>
                         <th>CNPJ</th>
                         <th>Nota Fiscal</th>
@@ -31,7 +31,7 @@
                     {% for entrega in entregas %}
                     <tr>
                         <td>{{ entrega.data_registro }}</td>
-                        <td>{{ entrega.hora_registro }}</td>
+                        <td class="text-center">{{ entrega.hora_registro }}</td>
                         <td>{{ entrega.empresa.nome_empresa }}</td>
                         <td>{{ entrega.cnpj }}</td>
                         <td>{{ entrega.nota_fiscal or "-" }}</td>
@@ -74,6 +74,7 @@
                             <div class="btn-group" role="group">
                                 {% if not entrega.data_envio or not entrega.hora_envio %}
                                 <form action="{{ url_for('entregas.registrar_envio', id=entrega.id) }}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" title="Registrar Envio">
                                         <i class="fas fa-paper-plane"></i>
                                     </button>

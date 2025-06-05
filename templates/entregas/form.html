@@ -139,6 +139,7 @@
                                 {% if current_user.role == 'admin' %}
                                 <form action="{{ url_for('entregas.excluir_imagem', id=imagem.id) }}" method="post" class="position-absolute" style="top: 5px; right: 5px;"
                                       onsubmit="return confirm('Tem certeza que deseja excluir esta imagem?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="btn btn-danger btn-sm" title="Excluir imagem">
                                         <i class="fas fa-times"></i>
                                     </button>

@@ -132,7 +132,8 @@ def registrar_saida(id):
         # Verifica o token CSRF apenas para requisições POST
         try:
             validate_csrf(request.form.get('csrf_token'))
-        except:
+        except Exception as e:
+            current_app.logger.error(f"Erro de validação CSRF: {str(e)}")
             flash('Erro de validação do formulário. Por favor, tente novamente.', 'danger')
             return redirect(url_for('ingressos.visualizar', id=id))
     

@@ -73,22 +73,16 @@
             <table class="table table-striped table-hover datatable">
                 <thead>
                     <tr>
-                        <th>CNPJ</th>
-                        <th>Nome da Empresa</th>
-                        <th>Telefone</th>
-                        <th>Funcionário</th>
-                        <th>Telefone Func.</th>
-                        <th class="no-sort text-center">Ações</th>
+                        <th style="width: 140px;">CNPJ</th>
+                        <th style="min-width: 300px;">Nome da Empresa</th>
+                        <th class="no-sort text-center" style="width: 150px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for empresa in empresas %}
                     <tr>
-                        <td>{{ empresa.cnpj }}</td>
-                        <td>{{ empresa.nome_empresa }}</td>
-                        <td>{{ empresa.telefone_empresa or "-" }}</td>
-                        <td>{{ empresa.nome_func or "-" }}</td>
-                        <td>{{ empresa.telefone_func or "-" }}</td>
+                        <td style="font-size: 0.95rem;">{{ empresa.cnpj }}</td>
+                        <td style="font-size: 1.1rem; font-weight: 500;">{{ empresa.nome_empresa }}</td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 {% if current_user.role == 'admin' %}

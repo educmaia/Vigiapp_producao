@@ -5,13 +5,44 @@
     --primary-red: #cd191e;
     --primary-black: #000000;
     --primary-white: #ffffff;
+    --roboto-font: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
+html,
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--roboto-font);
     background-color: var(--primary-white);
     color: var(--primary-black);
 }
+
+/* Aplicar Roboto a elementos de texto e componentes Bootstrap específicos */
+/* Evitar !important para não sobrescrever Font Awesome desnecessariamente */
+h1, h2, h3, h4, h5, h6,
+p,
+label,
+.card-title,
+.card-text,
+.modal-title,
+.modal-body,
+.alert,
+.table, th, td, /* Estilo base para tabelas, CNPJ herdará daqui */
+.form-control,
+.form-select,
+.form-label,
+.btn,
+.nav-link,
+.navbar-brand,
+.dropdown-item,
+.breadcrumb-item,
+span {
+    font-family: var(--roboto-font);
+}
+
+/*
+  Importante: Nenhuma regra para .fa, .fas, .bi, etc., deve ser adicionada aqui 
+  para definir font-family. As folhas de estilo do Font Awesome / Bootstrap Icons
+  devem controlar suas próprias fontes.
+*/
 
 .navbar-brand {
     font-weight: bold;
@@ -19,7 +50,7 @@ body {
 }
 
 .navbar {
-    background-color: var(--primary-green) !important;
+    background-color: var(--primary-green) !important; /* !important aqui é para sobrescrever o default do Bootstrap para a cor da navbar */
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -52,8 +83,65 @@ body {
     color: var(--primary-black);
 }
 
+/* Estilos específicos para páginas de visualização */
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.info-item strong {
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.time-display {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.time-display.text-warning {
+    font-style: italic;
+}
+
+.actions-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+@media (max-width: 991.98px) {
+    .actions-sidebar {
+        position: relative;
+        top: auto;
+        margin-top: 2rem;
+    }
+}
+
+/* Estilos específicos para tabela de empresas */
+/* Removida a estilização específica para CNPJ (font-family: monospace, cor cinza, etc.) */
+/* .datatable td[style*="font-family: monospace"] foi removido */
+
+.datatable td[style*="font-size: 1.1rem"] {
+    /* color: #2f9e41; */ /* Cor verde opcional, pode ser removida se não desejado em todas as tabelas */
+    font-weight: 500;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.table-responsive .table {
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .datatable td[style*="font-size: 1.1rem"] {
+        font-size: 1rem !important;
+    }
+}
+
 /* Estilos base para botões */
 .btn {
+    /* font-family já definido acima */
     display: inline-block;
     font-weight: 500;
     text-align: center;

@@ -18,8 +18,8 @@
                 <thead>
                     <tr>
                         <th>Data</th>
-                        <th>Entrada</th>
-                        <th>Saída</th>
+                        <th class="text-center" style="width: 80px;">Entrada</th>
+                        <th class="text-center" style="width: 80px;">Saída</th>
                         <th>CPF</th>
                         <th>Nome</th>
                         <th>Motivo</th>
@@ -31,8 +31,8 @@
                     {% for ingresso in ingressos %}
                     <tr>
                         <td>{{ ingresso.data }}</td>
-                        <td>{{ ingresso.entrada }}</td>
-                        <td>
+                        <td class="text-center">{{ ingresso.entrada }}</td>
+                        <td class="text-center">
                             {% if ingresso.saida %}
                                 {{ ingresso.saida }}
                             {% else %}
@@ -46,7 +46,8 @@
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 {% if not ingresso.saida %}
-                                <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" class="d-inline">
+                                <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" style="display: inline;">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Saída">
                                         <i class="fas fa-sign-out-alt"></i>
                                     </button>

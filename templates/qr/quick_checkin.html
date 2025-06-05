@@ -41,6 +41,7 @@
 
                     <!-- Formulário com animações -->
                     <form method="POST" action="{{ url_for('qr.processar_checkin') }}" id="checkinForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <!-- Campos ocultos para dados já conhecidos -->
                         <input type="hidden" id="cpf" name="cpf" value="{{ pessoa.cpf }}">
                         

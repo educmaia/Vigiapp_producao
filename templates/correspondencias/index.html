@@ -17,7 +17,7 @@
                 <thead>
                     <tr>
                         <th>Data Recebimento</th>
-                        <th>Hora Recebimento</th>
+                        <th class="text-center" style="width: 140px;">Hora Recebimento</th>
                         <th>Remetente</th>
                         <th>Destinatário</th>
                         <th>Tipo</th>
@@ -30,7 +30,7 @@
                     {% for correspondencia in correspondencias %}
                     <tr>
                         <td>{{ correspondencia.data_recebimento.strftime('%d/%m/%Y') }}</td>
-                        <td>{{ correspondencia.hora_recebimento.strftime('%H:%M') }}</td>
+                        <td class="text-center">{{ correspondencia.hora_recebimento.strftime('%H:%M') }}</td>
                         <td>{{ correspondencia.remetente }}</td>
                         <td>{{ correspondencia.destinatario }}</td>
                         <td>{{ correspondencia.tipo|capitalize }}</td>
@@ -46,6 +46,7 @@
                             <div class="btn-group" role="group">
                                 {% if not correspondencia.data_destinacao or not correspondencia.hora_destinacao %}
                                 <form action="{{ url_for('correspondencias.registrar_destinacao', id=correspondencia.id_correspondencia) }}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" title="Registrar Entrega">
                                         <i class="fas fa-check"></i>
                                     </button>

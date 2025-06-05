@@ -8,7 +8,7 @@ from sqlalchemy.orm import DeclarativeBase
 from flask_login import LoginManager
 from werkzeug.middleware.proxy_fix import ProxyFix
 from email_smtp import EmailSender
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 from config import config
 from security_headers import security_headers_manager
 
@@ -50,6 +50,11 @@ def create_app():
     
     # Inicializa headers de segurança
     security_headers_manager.init_app(app)
+    
+    # Disponibiliza a função csrf_token nos templates
+    @app.context_processor
+    def inject_csrf_token():
+        return dict(csrf_token=generate_csrf)
     
     # Registra blueprints
     from routes.auth import auth_bp
