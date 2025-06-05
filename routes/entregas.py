@@ -1,18 +1,18 @@
 from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app,
-    send_from_directory
+    send_from_directory, session
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
-from models import Entrega, Empresa, EntregaImagem
+from app import db
+from models import Entrega, Empresa, EntregaImagem, ImagemEntrega
 from forms import EntregaForm
-from utils import get_brasil_datetime
-from utils import format_cnpj
+from utils import get_brasil_datetime, format_cnpj
 import re
 import os
 import io
 from werkzeug.utils import secure_filename
 from PIL import Image
+from flask_wtf.csrf import validate_csrf
 
 entregas_bp = Blueprint('entregas', __name__, url_prefix='/entregas', static_folder='static')
 
@@ -188,6 +188,7 @@ def novo():
                         })
                 
                 # Enviar email usando a instância global do email_sender
+                from app import email_sender
                 success, response = email_sender.enviar_email_entrega(
                     entrega=nova_entrega, 
                     empresa=empresa, 

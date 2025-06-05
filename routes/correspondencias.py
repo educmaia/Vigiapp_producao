@@ -2,10 +2,11 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
+from app import db
 from models import Correspondencia
 from forms import CorrespondenciaForm
 from utils import get_brasil_datetime
+from flask_wtf.csrf import validate_csrf
 
 correspondencias_bp = Blueprint('correspondencias', __name__, url_prefix='/correspondencias')
 
@@ -46,6 +47,7 @@ def novo():
         # Send email notification
         try:
             # Usar instância global de email_sender
+            from app import email_sender
             success, response = email_sender.enviar_email_correspondencia(
                 form.remetente.data,
                 form.destinatario.data,

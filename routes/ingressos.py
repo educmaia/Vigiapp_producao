@@ -2,7 +2,7 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
+from app import db
 from models import Ingresso, Pessoa
 from forms import IngressoForm
 from utils import get_brasil_datetime
@@ -61,6 +61,7 @@ def novo():
         # Send email notification
         try:
             # Usar instância global de email_sender
+            from app import email_sender
             success, response = email_sender.enviar_email_ingresso(
                 ingresso=novo_ingresso,
                 pessoa=pessoa

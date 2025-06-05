@@ -29,14 +29,18 @@ def nl2br(value):
 # Initialize extensions
 db = SQLAlchemy(model_class=Base)
 login_manager = LoginManager()
-email_sender = EmailSender()  # Instância global do EmailSender
+email_sender = None  # Será inicializado no create_app
 csrf = CSRFProtect()  # Inicializa a proteção CSRF
 
 def create_app():
+    global email_sender
     app = Flask(__name__)
     
     # Carrega configurações
     app.config.from_object(config)
+    
+    # Inicializa o EmailSender com o app
+    email_sender = EmailSender(app)
     
     # Inicializa extensões
     db.init_app(app)
