@@ -1,4 +1,5 @@
 import os
+import threading
 from flask import current_app
 from flask_mail import Mail, Message
 from utils import get_brasil_datetime
@@ -53,11 +54,52 @@ class EmailSender:
         # Inicializa o Flask-Mail
         self.mail = Mail(app)
         print("Flask-Mail inicializado e configurado")
-    
+
+    def _send_email_thread(self, subject, html_content, recipients, attachments, app):
+        with app.app_context():
+            try:
+                # Cria a mensagem
+                msg = Message(
+                    subject=subject,
+                    recipients=recipients,
+                    html=html_content,
+                    sender=(self.sender_name, self.sender_email)
+                )
+
+                # Adiciona anexos se houver
+                if attachments:
+                    for attachment_info in attachments:
+                        try:
+                            with open(attachment_info['filepath'], 'rb') as f:
+                                msg.attach(
+                                    filename=attachment_info['filename'],
+                                    content_type=attachment_info.get('type', 'application/octet-stream'),
+                                    data=f.read()
+                                )
+                        except Exception as e:
+                            current_app.logger.error(f"Erro ao anexar arquivo {attachment_info['filepath']}: {e}")
+                            print(f"❌ Erro ao anexar arquivo: {e}")
+
+                # Envia o email
+                if self.mail:
+                    self.mail.send(msg)
+                    current_app.logger.info(f"Email enviado via Flask-Mail para {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
+                    print("✅ Email enviado com sucesso via Flask-Mail")
+                else:
+                    error_message = "Flask-Mail não inicializado. Use init_app() ou forneça o app no construtor."
+                    current_app.logger.error(error_message)
+                    print(f"❌ {error_message}")
+
+            except Exception as e:
+                error_message = f"Erro ao enviar email na thread: {str(e)}"
+                current_app.logger.error(error_message)
+                print(f"❌ {error_message}")
+
     def send_email(self, subject, html_content, to_emails=None, attachments=None):
         """
         Envia um email com anexos opcionais para múltiplos destinatários usando SMTP do Gmail.
         Em modo de desenvolvimento, simula o envio de email mas não realiza o envio real.
+        O envio real é feito em uma thread separada.
         
         Args:
             subject (str): Assunto do email
@@ -70,19 +112,14 @@ class EmailSender:
         Returns:
             tuple: (bool, response) indicando sucesso/falha e resposta/erro
         """
-        # Se o email não estiver configurado, retorna falso mas permite que a aplicação continue
         if not self.email_enabled:
             if current_app:
-                current_app.logger.warning("Sistema de email está desabilitado")
+                current_app.logger.warning("Sistema de email está desabilitado. Tentativa de envio de email ignorada.")
             return False, "Sistema de email desabilitado"
-        
-        # Define destinatários padrão se nenhum for fornecido
+
         if to_emails is None:
-            to_emails = [
-                {"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}
-            ]
-        
-        # Normaliza os destinatários para o formato de dicionário
+            to_emails = [{"email": "clt.cpv@ifsp.edu.br", "name": "Coordenadoria de Licitações e Contratos"}]
+
         recipients = []
         for recipient in to_emails:
             if isinstance(recipient, dict):
@@ -91,75 +128,36 @@ class EmailSender:
                 recipients.append((name, email) if name else email)
             else:
                 recipients.append(recipient)
-        
-        # Debug - imprime informações sobre os destinatários e o remetente
-        print("✅ Enviando e-mail:")
-        print(f"✅ De: {self.sender_email}")
-        print(f"✅ Para: {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
-        
-        # Em modo de desenvolvimento, simula o envio de email
+
         if self.dev_mode:
-            print("📧 MODO DE SIMULAÇÃO DE EMAIL ATIVADO")
+            # Simulação de envio em modo de desenvolvimento
+            print("📧 MODO DE SIMULAÇÃO DE EMAIL ATIVADO (Chamada send_email)")
             print(f"📧 Assunto: {subject}")
-            print(f"📧 Conteúdo HTML: {html_content[:100]}...")
-            
-            # Lista os anexos (se houver)
+            print(f"📧 Para: {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
             if attachments:
                 print(f"📧 Anexos: {', '.join([a['filename'] for a in attachments])}")
-            
-            print("📧 EMAIL SIMULADO COM SUCESSO")
-            
-            # Registra o log (se aplicável)
+            print("📧 EMAIL SIMULADO COM SUCESSO (Chamada send_email)")
             if current_app:
-                emails = [r[1] if isinstance(r, tuple) else r for r in recipients]
-                current_app.logger.info(f"Email simulado para {', '.join(emails)}: {subject}")
-            
-            # Retorna sucesso simulado
+                emails_str = ', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])
+                current_app.logger.info(f"Email simulado para {emails_str}: {subject}")
             return True, {"simulated": True, "message": "Email simulado com sucesso"}
-        
-        # Modo de produção - tentativa real de envio
+
+        # Envio real em uma nova thread
         try:
-            # Cria a mensagem
-            msg = Message(
-                subject=subject,
-                recipients=recipients,
-                html=html_content,
-                sender=(self.sender_name, self.sender_email)
+            app = current_app._get_current_object()
+            thread = threading.Thread(
+                target=self._send_email_thread,
+                args=(subject, html_content, recipients, attachments, app)
             )
+            thread.start()
             
-            # Adiciona anexos se houver
-            if attachments:
-                for attachment_info in attachments:
-                    try:
-                        with open(attachment_info['filepath'], 'rb') as f:
-                            msg.attach(
-                                filename=attachment_info['filename'],
-                                content_type=attachment_info.get('type', 'application/octet-stream'),
-                                data=f.read()
-                            )
-                    except Exception as e:
-                        if current_app:
-                            current_app.logger.error(f"Erro ao anexar arquivo {attachment_info['filepath']}: {e}")
-                        print(f"❌ Erro ao anexar arquivo: {e}")
-            
-            # Envia o email
-            if self.mail:
-                # Se estiver usando Flask-Mail (preferível)
-                self.mail.send(msg)
-                print("✅ Email enviado com sucesso via Flask-Mail")
-                if current_app:
-                    current_app.logger.info(f"Email enviado via Flask-Mail para {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
-                return True, "Email enviado com sucesso"
-            else:
-                # Se não tiver Flask-Mail inicializado, retorna erro
-                error_message = "Flask-Mail não inicializado. Use init_app() ou forneça o app no construtor."
-                print(f"❌ {error_message}")
-                if current_app:
-                    current_app.logger.error(error_message)
-                return False, error_message
-                
+            print(f"✅ Thread de envio de email iniciada para: {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}")
+            if current_app:
+                 current_app.logger.info(f"Thread de envio de email iniciada para {', '.join([r[1] if isinstance(r, tuple) else r for r in recipients])}: {subject}")
+            return True, "Email sending initiated"
+
         except Exception as e:
-            error_message = f"Erro ao enviar email: {str(e)}"
+            error_message = f"Erro ao iniciar thread de envio de email: {str(e)}"
             print(f"❌ {error_message}")
             if current_app:
                 current_app.logger.error(error_message)

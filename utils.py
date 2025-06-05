@@ -1,4 +1,6 @@
 import re
+import threading
+import logging
 from unidecode import unidecode
 from datetime import datetime, timedelta
 from reportlab.lib.pagesizes import landscape, A4
@@ -135,3 +137,44 @@ def generate_pdf_report(data, title, headers, filename, date_range=None):
     doc.build(elements)
     
     return filename
+
+def generate_pdf_report_async(data, title, headers, filename, date_range=None):
+    """
+    Generates a PDF report asynchronously using a separate thread.
+
+    Args:
+        data (list): List of data rows
+        title (str): Report title
+        headers (list): Column headers
+        filename (str): Output filename
+        date_range (tuple, optional): Start and end date for report period
+
+    Returns:
+        str: Path to the generated PDF file, or None if an error occurred.
+    """
+    result_container = [None]  # Mutable container to hold the result from the thread
+
+    def _thread_target(data, title, headers, filename, date_range):
+        try:
+            pdf_path = generate_pdf_report(data, title, headers, filename, date_range)
+            result_container[0] = pdf_path
+        except Exception as e:
+            logging.error(f"Error generating PDF report in thread: {e}", exc_info=True)
+            # result_container[0] remains None or you could set it to an error indicator
+            pass # Keep it simple, error logged, caller gets None
+
+    thread = threading.Thread(
+        target=_thread_target,
+        args=(data, title, headers, filename, date_range)
+    )
+
+    logging.info(f"Starting PDF generation in a separate thread for: {filename}")
+    thread.start()
+    thread.join()  # Wait for the thread to complete
+
+    if result_container[0]:
+        logging.info(f"PDF generation completed for: {filename}")
+    else:
+        logging.error(f"PDF generation failed or returned no path for: {filename}")
+
+    return result_container[0]

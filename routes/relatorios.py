@@ -4,7 +4,7 @@ from flask import (
 from flask_login import login_required
 from models import Pessoa, Ingresso, Empresa, Entrega, Correspondencia, Ocorrencia
 from forms import RelatorioForm
-from utils import generate_pdf_report, get_brasil_datetime
+from utils import generate_pdf_report_async, get_brasil_datetime
 import os
 import tempfile
 
@@ -177,7 +177,7 @@ def gerar_relatorio(tipo_relatorio, data_inicio, data_fim):
         title = "Relatório de Ocorrências"
     
     # Generate the PDF report
-    generate_pdf_report(
+    pdf_path = generate_pdf_report_async(
         data=data,
         title=title,
         headers=headers,
@@ -186,8 +186,22 @@ def gerar_relatorio(tipo_relatorio, data_inicio, data_fim):
     )
     
     # Send the file for download
+    if not pdf_path:
+        # Handle error: PDF generation failed
+        # You might want to flash a message to the user or return an error page
+        # For now, let's assume we return to the form with an error (not implemented here)
+        # Or, more simply, if pdf_path is None, send_file will likely raise an error.
+        # A more robust solution would be to check pdf_path and render an error template.
+        # However, the current structure expects send_file to work with temp_path.
+        # If generate_pdf_report_async returns None on failure, we should handle it.
+        # For this change, we'll assume it returns the path or raises an error that
+        # would be caught by Flask's error handling.
+        # If it can return None, we must ensure temp_path is still valid or handle None.
+        # The async function was designed to return None on error.
+        return "Error generating PDF report.", 500 # Or redirect, flash message, etc.
+
     return send_file(
-        temp_path,
+        pdf_path, # Use the path returned by the async function
         as_attachment=True,
         download_name=filename,
         mimetype='application/pdf'
