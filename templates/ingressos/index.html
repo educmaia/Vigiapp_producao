@@ -44,26 +44,20 @@
                         <td>{{ ingresso.motivo }}</td>
                         <td>{{ ingresso.pessoa_setor }}</td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 {% if not ingresso.saida %}
                                 <form action="{{ url_for('ingressos.registrar_saida', id=ingresso.id) }}" method="post" style="display: inline;">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Saída">
-                                        <i class="fas fa-sign-out-alt"></i>
+                                    <button type="submit" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Registrar Saída">
+                                        <i class="fas fa-sign-out-alt me-1"></i>Saída
                                     </button>
                                 </form>
-                                
-                                <a href="{{ url_for('qr.gerar_qrcode_ingresso', id=ingresso.id) }}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Gerar QR Code para Check-out">
-                                    <i class="fas fa-qrcode"></i>
-                                </a>
                                 {% endif %}
-                                
-                                <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Ingresso">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ url_for('ingressos.editar', id=ingresso.id) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
-                                
-                                <a href="{{ url_for('ingressos.confirmar_exclusao', id=ingresso.id) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Excluir Ingresso">
-                                    <i class="fas fa-trash"></i>
+                                <a href="{{ url_for('ingressos.confirmar_exclusao', id=ingresso.id) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="fas fa-trash me-1"></i>Excluir
                                 </a>
                             </div>
                         </td>
@@ -77,7 +71,7 @@
             <i class="fas fa-info-circle me-2"></i>Nenhum ingresso registrado no sistema.
         </div>
         <a href="{{ url_for('ingressos.novo') }}" class="btn btn-primary">
-            <i class="fas fa-plus-circle me-1"></i> Registrar Novo Ingresso
+            <i class="fas fa-plus-circle me-1"></i>Registrar Novo Ingresso
         </a>
         {% endif %}
     </div>
@@ -85,14 +79,4 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
-<script>
-// Inicializar tooltips
-document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-});
-</script>
-{% endblock %}
+

@@ -75,7 +75,7 @@
                     <tr>
                         <th style="width: 140px;">CNPJ</th>
                         <th style="min-width: 300px;">Nome da Empresa</th>
-                        <th class="no-sort text-center" style="width: 150px;">Ações</th>
+                        <th class="no-sort text-center" style="width: 220px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,13 +84,13 @@
                         <td style="font-size: 0.95rem;">{{ empresa.cnpj }}</td>
                         <td style="font-size: 1.1rem; font-weight: 500;">{{ empresa.nome_empresa }}</td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 {% if current_user.role == 'admin' %}
                                 <a href="{{ url_for('empresas.editar', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
-                                    <i class="fas fa-edit"></i> Editar
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
                                 <a href="{{ url_for('empresas.confirmar_excluir', cnpj=empresa.cnpj) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
-                                    <i class="fas fa-trash"></i> Excluir
+                                    <i class="fas fa-trash me-1"></i>Excluir
                                 </a>
                                 {% else %}
                                 <span class="text-muted">Acesso restrito</span>
@@ -186,4 +186,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 {% endif %}
 </script>
-{% endblock %}
+{% endblock %} 

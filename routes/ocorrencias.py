@@ -2,10 +2,11 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
-from models import Ocorrencia
-from forms import OcorrenciaForm
-from utils import get_brasil_datetime
+from vigiapp.app import db, email_sender
+from vigiapp.models import Ocorrencia
+from vigiapp.forms import OcorrenciaForm
+from vigiapp.utils import get_brasil_datetime
+from datetime import datetime, time
 
 ocorrencias_bp = Blueprint('ocorrencias', __name__, url_prefix='/ocorrencias')
 

@@ -196,9 +196,9 @@
 }
 
 /* Estabilizar tooltips */
-[data-bs-toggle="tooltip"] {
+/* [data-bs-toggle="tooltip"] {
     pointer-events: none !important;
-}
+} */
 
 /* Estabilizar dropdowns */
 .dropdown-menu {

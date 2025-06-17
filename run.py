@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 import os
-from app import create_app, db
+import sys
+
+# Adiciona o diretório raiz do projeto ao path para que o pacote 'vigiapp' seja encontrado
+# Essencial para executar o script diretamente
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# O load_dotenv é chamado dentro de create_app, não é mais necessário aqui.
+# from vigiapp.load_env import load_dotenv
+# load_dotenv()
+
+from vigiapp.app import create_app, db
+from vigiapp.models import User
+from werkzeug.security import generate_password_hash
 
 def init_database(app):
     """Initialize database and create default admin user"""
@@ -9,16 +23,14 @@ def init_database(app):
         db.create_all()
         
         # Create default admin user if it doesn't exist
-        from werkzeug.security import generate_password_hash
-        from models import User
-        
         admin = User.query.filter_by(username='admin').first()
         if not admin:
             admin = User(
                 username='admin',
                 email='admin@vigiapp.com',
-                password_hash=generate_password_hash('admin123'),
-                role='admin'
+                password='admin123',
+                role='admin',
+                active=True
             )
             db.session.add(admin)
             db.session.commit()
@@ -27,19 +39,13 @@ def init_database(app):
 if __name__ == '__main__':
     app = create_app()
     
-    # Registrar o filtro nl2br
-    import markupsafe
-    def nl2br(value):
-        if value:
-            return markupsafe.Markup(
-                markupsafe.escape(value).replace('\n', markupsafe.Markup('<br>\n'))
-            )
-        return ''
-    
-    app.jinja_env.filters['nl2br'] = nl2br
+    # O filtro nl2br já é registrado dentro da factory create_app.
+    # Não é mais necessário registrá-lo aqui.
     
     # Initialize database
-    init_database(app)
+    with app.app_context():
+        db.create_all()
+        init_database(app) # init_database já tem um app_context, mas vamos garantir
     
     # Run the application
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)

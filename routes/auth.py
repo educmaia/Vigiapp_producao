@@ -3,13 +3,14 @@ from flask import (
 )
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
-from app import db
-from models import User
-from forms import LoginForm, RegisterForm
-from werkzeug.urls import url_parse
+from vigiapp.app import db
+from vigiapp.models import User
+from vigiapp.forms import LoginForm, RegisterForm
+from urllib.parse import urlparse
 from datetime import datetime
-from rate_limiter import rate_limiter
-from security_monitor import security_monitor
+from vigiapp.rate_limiter import rate_limiter
+from vigiapp.security_monitor import security_monitor
+import logging
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -67,7 +68,7 @@ def login():
             db.session.commit()
             
             next_page = request.args.get('next')
-            if not next_page or url_parse(next_page).netloc != '':
+            if not next_page or urlparse(next_page).netloc != '':
                 next_page = url_for('auth.dashboard')
             flash('Login realizado com sucesso!', 'success')
             return redirect(next_page)
@@ -101,31 +102,37 @@ def register():
     
     form = RegisterForm()
     if form.validate_on_submit():
-        # Check if username already exists
-        existing_user = User.query.filter_by(username=form.username.data).first()
-        if existing_user:
-            flash('Nome de usuário já existe. Escolha outro.', 'danger')
+        try:
+            # Check if username already exists
+            existing_user = User.query.filter_by(username=form.username.data).first()
+            if existing_user:
+                flash('Nome de usuário já existe. Escolha outro.', 'danger')
+                return render_template('register.html', form=form)
+            
+            # Check if email already exists
+            existing_email = User.query.filter_by(email=form.email.data).first()
+            if existing_email:
+                flash('Email já cadastrado. Use outro email.', 'danger')
+                return render_template('register.html', form=form)
+            
+            # Create new user
+            new_user = User(
+                username=form.username.data,
+                email=form.email.data,
+                password=form.password.data,
+                role=form.role.data,
+                active=form.active.data
+            )
+            
+            db.session.add(new_user)
+            db.session.commit()
+            
+            flash(f'Usuário {form.username.data} criado com sucesso!', 'success')
+            return redirect(url_for('auth.dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Erro inesperado ao cadastrar usuário: {str(e)}', 'danger')
             return render_template('register.html', form=form)
-        
-        # Check if email already exists
-        existing_email = User.query.filter_by(email=form.email.data).first()
-        if existing_email:
-            flash('Email já cadastrado. Use outro email.', 'danger')
-            return render_template('register.html', form=form)
-        
-        # Create new user
-        new_user = User(
-            username=form.username.data,
-            email=form.email.data,
-            password_hash=generate_password_hash(form.password.data),
-            role=form.role.data
-        )
-        
-        db.session.add(new_user)
-        db.session.commit()
-        
-        flash(f'Usuário {form.username.data} criado com sucesso!', 'success')
-        return redirect(url_for('auth.dashboard'))
     
     return render_template('register.html', form=form)
 

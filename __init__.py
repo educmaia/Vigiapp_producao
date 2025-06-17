@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from sqlalchemy.orm import DeclarativeBase
 
 # Importa o EmailSender
-from email_smtp import EmailSender
+from .email_smtp import EmailSender
 
 class Base(DeclarativeBase):
     pass

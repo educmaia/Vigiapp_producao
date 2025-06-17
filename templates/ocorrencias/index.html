@@ -45,13 +45,12 @@
                         </td>
                         <td>{{ ocorrencia.ocorrencia|truncate(50) }}</td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <a href="{{ url_for('ocorrencias.editar', id=ocorrencia.id_ocorrencia) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Editar">
-                                    <i class="fas fa-edit"></i>
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                <a href="{{ url_for('ocorrencias.editar', id=ocorrencia.id_ocorrencia) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
-                                
-                                <a href="{{ url_for('ocorrencias.confirmar_exclusao', id=ocorrencia.id_ocorrencia) }}" class="btn btn-sm btn-danger" title="Excluir">
-                                    <i class="fas fa-trash"></i>
+                                <a href="{{ url_for('ocorrencias.confirmar_exclusao', id=ocorrencia.id_ocorrencia) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="fas fa-trash me-1"></i>Excluir
                                 </a>
                             </div>
                         </td>

@@ -1,12 +1,15 @@
 from flask import (
-    Blueprint, render_template, send_file, request
+    Blueprint, render_template, send_file, request, make_response
 )
 from flask_login import login_required
-from models import Pessoa, Ingresso, Empresa, Entrega, Correspondencia, Ocorrencia
-from forms import RelatorioForm
-from utils import generate_pdf_report, get_brasil_datetime
+from vigiapp.models import Pessoa, Ingresso, Empresa, Entrega, Correspondencia, Ocorrencia
+from vigiapp.forms import RelatorioForm
+from vigiapp.utils import generate_pdf_report, get_brasil_datetime
 import os
 import tempfile
+import io
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 
 relatorios_bp = Blueprint('relatorios', __name__, url_prefix='/relatorios')
 

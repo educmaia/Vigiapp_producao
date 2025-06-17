@@ -2,13 +2,13 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, current_app
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
-from models import Ingresso, Pessoa
-from forms import IngressoForm
-from utils import get_brasil_datetime
-from utils import format_cpf
+from vigiapp.app import db, email_sender
+from vigiapp.models import Ingresso, Pessoa
+from vigiapp.forms import IngressoForm
+from vigiapp.utils import get_brasil_datetime, format_cpf
 import re
 from flask_wtf.csrf import validate_csrf
+from datetime import datetime
 
 ingressos_bp = Blueprint('ingressos', __name__, url_prefix='/ingressos')
 

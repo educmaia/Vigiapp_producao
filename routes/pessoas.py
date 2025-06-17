@@ -2,11 +2,13 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app, session
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
-from models import Pessoa
-from forms import PessoaForm
-from utils import format_cpf, format_telefone
+from vigiapp.app import db, email_sender
+from vigiapp.models import Pessoa
+from vigiapp.forms import PessoaForm
+from vigiapp.utils import format_cpf, format_telefone
 import re
+from datetime import datetime
+import os
 
 pessoas_bp = Blueprint('pessoas', __name__, url_prefix='/pessoas')
 

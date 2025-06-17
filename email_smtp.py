@@ -1,7 +1,7 @@
 import os
 from flask import current_app
 from flask_mail import Mail, Message
-from utils import get_brasil_datetime
+from .utils import get_brasil_datetime
 
 class EmailSender:
     def __init__(self, app=None, username=None, password=None):

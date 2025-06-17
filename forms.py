@@ -105,14 +105,15 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField(
         'Confirmar Senha', validators=[DataRequired(), EqualTo('password')])
-    role = SelectField('Função', choices=[('vigilante', 'Vigilante'), ('admin', 'Administrador')])
+    role = SelectField('Função', choices=[('controlador', 'Controlador'), ('admin', 'Administrador')])
+    active = BooleanField('Ativo', default=True)
     submit = SubmitField('Registrar')
     
 class EditUserForm(FlaskForm):
     username = StringField('Nome de Usuário', validators=[DataRequired(), Length(min=3, max=64)])
     email = EmailField('Email', validators=[DataRequired(), Email()])
     role = SelectField('Função', choices=[('controlador', 'Controlador'), ('admin', 'Administrador')])
-    active = SelectField('Status', choices=[('1', 'Ativo'), ('0', 'Inativo')])
+    active = BooleanField('Ativo')
     submit = SubmitField('Salvar')
     
 class ChangePasswordForm(FlaskForm):

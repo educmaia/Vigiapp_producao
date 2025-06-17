@@ -2,10 +2,11 @@ from flask import (
     Blueprint, render_template, redirect, url_for, flash, request, jsonify, current_app, session
 )
 from flask_login import login_required, current_user
-from app import db
-from models import Empresa, Entrega
-from forms import EmpresaForm
-from utils import format_cnpj, format_telefone
+from vigiapp.app import db
+from vigiapp.models import Empresa, Entrega
+from vigiapp.forms import EmpresaForm
+from vigiapp.utils import format_cnpj, format_telefone
+from sqlalchemy.exc import IntegrityError
 import re
 
 # Criar um novo blueprint para empresas com configuração limpa

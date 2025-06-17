@@ -1,14 +1,18 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
+from vigiapp.load_env import load_dotenv
 
-# Adicionando para que basedir funcione como na edição anterior
+# O diretório base do projeto é o pai do diretório 'vigiapp'
+project_basedir = Path(__file__).parent.parent
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Carrega variáveis do arquivo .env se existir
-env_path = Path('.') / '.env'
+# Carrega variáveis do arquivo .env da raiz do projeto
+env_path = project_basedir / '.env'
 if env_path.exists():
     load_dotenv(env_path)
+    print(f"Arquivo .env carregado de {env_path}")
+else:
+    print(f"AVISO: Arquivo .env não encontrado em {env_path}")
 
 class Config:
     # Configurações de Segurança Originais (exemplo, ajuste conforme o seu original)

@@ -1,8 +1,20 @@
+import os
+import sys
+
+# Adiciona o diretório raiz do projeto ao sys.path
+# Isso garante que o script possa ser executado de qualquer lugar e ainda encontrar o pacote vigiapp
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 """
 Script para realizar migrações no banco de dados
 """
-from app import app, db
+from vigiapp.app import create_app, db
 from sqlalchemy import inspect, text
+
+# É necessário criar a app para estabelecer o contexto da aplicação
+app = create_app()
 
 def add_columns_to_user_table():
     """Adiciona novas colunas à tabela user."""
@@ -32,6 +44,22 @@ def add_columns_to_user_table():
             print("Coluna 'last_login' já existe.")
         
     print("Migração concluída com sucesso!")
+
+def add_updated_at_to_user_table():
+    """Adiciona a coluna updated_at à tabela user, se não existir."""
+    print("Iniciando migração para adicionar 'updated_at' à tabela user...")
+    with app.app_context():
+        inspector = inspect(db.engine)
+        user_columns = [col['name'] for col in inspector.get_columns('user')]
+        
+        if 'updated_at' not in user_columns:
+            print("Adicionando coluna 'updated_at' à tabela user...")
+            # Adiciona a coluna com um valor padrão para registros existentes
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN updated_at TIMESTAMP WITHOUT TIME ZONE'))
+            db.session.commit()
+            print("Coluna 'updated_at' adicionada com sucesso!")
+        else:
+            print("Coluna 'updated_at' já existe.")
 
 def update_enterprise_relationships():
     """Atualiza as relações entre Empresa e Entrega para suporte a CASCADE."""
@@ -87,4 +115,5 @@ def update_enterprise_relationships():
 
 if __name__ == "__main__":
     add_columns_to_user_table()
+    add_updated_at_to_user_table()
     update_enterprise_relationships()

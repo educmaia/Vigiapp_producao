@@ -3,9 +3,9 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-from app import db
-from models import User
-from forms import EditUserForm, ChangePasswordForm
+from vigiapp.app import db
+from vigiapp.models import User
+from vigiapp.forms import EditUserForm, ChangePasswordForm
 
 # Blueprint para gerenciamento de usuários
 users_bp = Blueprint('users', __name__)
@@ -61,7 +61,7 @@ def edit(user_id):
         user.username = form.username.data
         user.email = form.email.data
         user.role = form.role.data
-        user.active = form.active.data == '1'  # Converte valor do select para boolean
+        user.active = form.active.data  # Agora é um BooleanField, o valor é booleano diretamente
         
         # Salva as alterações no banco de dados
         db.session.commit()
@@ -74,7 +74,7 @@ def edit(user_id):
         form.username.data = user.username
         form.email.data = user.email
         form.role.data = user.role
-        form.active.data = '1' if user.active else '0'
+        form.active.data = user.active  # Agora é um BooleanField, o valor é booleano diretamente
     
     return render_template('users/edit.html', form=form, user=user)
 

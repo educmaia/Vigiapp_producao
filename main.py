@@ -1,21 +1,16 @@
-# Carregar variáveis de ambiente antes de importar o app
-from load_env import load_dotenv
-load_dotenv()
+import os
+import sys
 
-from app import create_app
-import markupsafe
+# Adiciona o diretório raiz do projeto ao path para que o pacote 'vigiapp' seja encontrado
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
 
+from vigiapp.app import create_app
+
+# A factory 'create_app' já carrega o .env, inicializa o db e registra os filtros
 app = create_app()
 
-# Registrar o filtro nl2br no contexto global
-def nl2br(value):
-    if value:
-        return markupsafe.Markup(
-            markupsafe.escape(value).replace('\n', markupsafe.Markup('<br>\n'))
-        )
-    return ''
-
-app.jinja_env.filters['nl2br'] = nl2br
-
 if __name__ == '__main__':
+    # O modo debug recarrega o servidor a cada alteração de código.
+    # Ideal para desenvolvimento.
     app.run(host='0.0.0.0', port=5000, debug=True)

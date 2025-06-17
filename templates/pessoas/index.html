@@ -89,15 +89,15 @@
                         <td>{{ pessoa.telefone or "-" }}</td>
                         <td>{{ pessoa.empresa or "-" }}</td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Visualizar detalhes da pessoa">
-                                    <i class="fas fa-eye"></i>
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                <a href="{{ url_for('pessoas.visualizar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Visualizar">
+                                    <i class="fas fa-eye me-1"></i>Visualizar
                                 </a>
-                                <a href="{{ url_for('pessoas.editar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar informações da pessoa">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ url_for('pessoas.editar', cpf=pessoa.cpf) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
-                                <a href="{{ url_for('pessoas.confirmar_exclusao', cpf=pessoa.cpf) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir pessoa do sistema">
-                                    <i class="fas fa-trash"></i>
+                                <a href="{{ url_for('pessoas.confirmar_exclusao', cpf=pessoa.cpf) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="fas fa-trash me-1"></i>Excluir
                                 </a>
                             </div>
                         </td>
@@ -123,13 +123,6 @@
 {{ super() }}
 <script>
 $(document).ready(function() {
-    // Inicializar todos os tooltips
-    $('[data-bs-toggle="tooltip"]').tooltip({
-        trigger: 'hover',
-        placement: 'top',
-        html: true
-    });
-    
     const buscaInput = document.getElementById('busca');
     const searchForm = buscaInput.closest('form');
     

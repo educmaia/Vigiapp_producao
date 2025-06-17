@@ -53,9 +53,9 @@
                             {% endif %}
                         </div>
                         
-                        <div class="mb-3">
-                            {{ form.active.label(class="form-label") }}
-                            {{ form.active(class="form-select") }}
+                        <div class="form-check form-switch mb-3">
+                            {{ form.active(class="form-check-input") }}
+                            {{ form.active.label(class="form-check-label") }}
                             {% if form.active.errors %}
                                 <div class="invalid-feedback d-block">
                                     {% for error in form.active.errors %}

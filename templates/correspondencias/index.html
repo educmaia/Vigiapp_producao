@@ -43,22 +43,20 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <div class="btn-group" role="group">
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 {% if not correspondencia.data_destinacao or not correspondencia.hora_destinacao %}
-                                <form action="{{ url_for('correspondencias.registrar_destinacao', id=correspondencia.id_correspondencia) }}" method="post">
+                                <form action="{{ url_for('correspondencias.registrar_destinacao', id=correspondencia.id_correspondencia) }}" method="post" class="d-inline">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                    <button type="submit" class="btn btn-sm btn-success me-1" data-bs-toggle="tooltip" title="Registrar Entrega">
-                                        <i class="fas fa-check"></i>
+                                    <button type="submit" class="btn btn-sm btn-success" data-bs-toggle="tooltip" title="Registrar Entrega">
+                                        <i class="fas fa-check me-1"></i>Entregue
                                     </button>
                                 </form>
                                 {% endif %}
-                                
-                                <a href="{{ url_for('correspondencias.editar', id=correspondencia.id_correspondencia) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Editar">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{ url_for('correspondencias.editar', id=correspondencia.id_correspondencia) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="fas fa-edit me-1"></i>Editar
                                 </a>
-                                
-                                <a href="{{ url_for('correspondencias.confirmar_exclusao', id=correspondencia.id_correspondencia) }}" class="btn btn-sm btn-danger" title="Excluir">
-                                    <i class="fas fa-trash"></i>
+                                <a href="{{ url_for('correspondencias.confirmar_exclusao', id=correspondencia.id_correspondencia) }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Excluir">
+                                    <i class="fas fa-trash me-1"></i>Excluir
                                 </a>
                             </div>
                         </td>

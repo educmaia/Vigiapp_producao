@@ -15,53 +15,36 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fix-buttons.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/stable-layout.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     
     <style>
-        /* Estilos de emergência para garantir visibilidade dos botões */
-        .btn {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            position: relative !important;
-            z-index: 1 !important;
+        /* Estrutura de layout flexível e robusta */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevenir rolagem no body */
         }
-        
-        .btn-group .btn {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            position: relative !important;
-            z-index: 1 !important;
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-        
-        .nav-link {
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            position: relative !important;
-            z-index: 1 !important;
+        .app-main-content {
+            flex-grow: 1;
+            overflow-y: auto; /* Permitir rolagem vertical apenas na área de conteúdo */
+            padding: 1rem;
         }
-        
-        .dropdown-item {
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-            position: relative !important;
-            z-index: 1 !important;
+        .navbar {
+            flex-shrink: 0; /* Navbar não encolhe */
         }
     </style>
     
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+<div class="app-wrapper">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
@@ -149,30 +132,34 @@
         </div>
     </nav>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+    <!-- Conteúdo Principal com Rolagem Independente -->
+    <main class="app-main-content">
+        <!-- Flash Messages -->
+        <div class="container-fluid">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
 
-    <!-- Main Content -->
-    <div class="container mt-4 mb-5">
-        {% if request.path != url_for('auth.dashboard') and request.path != url_for('auth.login') and current_user.is_authenticated %}
-        <a href="{{ url_for('auth.dashboard') }}" class="btn btn-back-home mb-3">
-            <i class="fas fa-home me-1"></i> Voltar ao Início
-        </a>
-        {% endif %}
-        
-        {% block content %}{% endblock %}
-    </div>
+        <!-- Main Content Block -->
+        <div class="container-fluid">
+            {% if request.path != url_for('auth.dashboard') and request.path != url_for('auth.login') and current_user.is_authenticated %}
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-back-home mb-3">
+                <i class="fas fa-home me-1"></i> Voltar ao Início
+            </a>
+            {% endif %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
 
     <!-- JavaScript -->
     <!-- jQuery -->
@@ -189,48 +176,14 @@
     <script src="{{ url_for('static', filename='js/delete-operations.js') }}"></script>
     <script src="{{ url_for('static', filename='js/mobile-optimizations.js') }}"></script>
     
-    <!-- Script de emergência para garantir visibilidade dos botões -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Forçar visibilidade de todos os botões
-            const buttons = document.querySelectorAll('.btn, .nav-link, .dropdown-item');
-            buttons.forEach(button => {
-                button.style.display = 'inline-block';
-                button.style.visibility = 'visible';
-                button.style.opacity = '1';
-                button.style.pointerEvents = 'auto';
-                button.style.position = 'relative';
-                button.style.zIndex = '1';
-            });
-            
-            // Observar mudanças no DOM para garantir que novos botões também sejam visíveis
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.addedNodes.length) {
-                        mutation.addedNodes.forEach(function(node) {
-                            if (node.nodeType === 1) { // Element node
-                                const newButtons = node.querySelectorAll('.btn, .nav-link, .dropdown-item');
-                                newButtons.forEach(button => {
-                                    button.style.display = 'inline-block';
-                                    button.style.visibility = 'visible';
-                                    button.style.opacity = '1';
-                                    button.style.pointerEvents = 'auto';
-                                    button.style.position = 'relative';
-                                    button.style.zIndex = '1';
-                                });
-                            }
-                        });
-                    }
-                });
-            });
-            
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
+        // Inicializar tooltips globais de forma segura
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (el) {
+            new bootstrap.Tooltip(el);
         });
     </script>
-    
+
     {% block extra_js %}{% endblock %}
     {% block scripts %}{% endblock %}
 </body>

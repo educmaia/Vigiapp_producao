@@ -3,11 +3,10 @@ from flask import (
     send_from_directory
 )
 from flask_login import login_required, current_user
-from app import db, email_sender
-from models import Entrega, Empresa, EntregaImagem
-from forms import EntregaForm
-from utils import get_brasil_datetime
-from utils import format_cnpj
+from vigiapp.app import db, email_sender
+from vigiapp.models import Entrega, Empresa, EntregaImagem
+from vigiapp.forms import EntregaForm
+from vigiapp.utils import get_brasil_datetime, format_cnpj
 import re
 import os
 import io

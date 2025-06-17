@@ -1,6 +1,7 @@
 from datetime import datetime
-from app import db
+from vigiapp.app import db
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,10 +10,19 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), default='controlador', nullable=False)  # 'admin' or 'controlador'
     created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     last_login = db.Column(db.DateTime)  # Último login
+    active = db.Column(db.Boolean, default=True, nullable=False)
+    
+    def __init__(self, username, email, password, role='controlador', active=True, **kwargs):
+        self.username = username
+        self.email = email
+        self.password_hash = generate_password_hash(password)
+        self.role = role
+        self.active = active
+        super().__init__(**kwargs)
     
     def check_password(self, password):
-        from werkzeug.security import check_password_hash
         return check_password_hash(self.password_hash, password)
 
 class Pessoa(db.Model):
@@ -21,7 +31,6 @@ class Pessoa(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     telefone = db.Column(db.String(20))
     empresa = db.Column(db.String(100))
-    qr_code_url = db.Column(db.String(255))  # URL para o código QR desta pessoa
     ingressos = db.relationship('Ingresso', backref='pessoa', lazy=True)
 
 class Ingresso(db.Model):
@@ -34,7 +43,6 @@ class Ingresso(db.Model):
     motivo = db.Column(db.String(200), nullable=False)
     pessoa_setor = db.Column(db.String(100), nullable=False)
     observacoes = db.Column(db.Text)
-    qr_code_url = db.Column(db.String(255))  # URL para o código QR deste ingresso
 
 class Empresa(db.Model):
     __tablename__ = 'empresas'

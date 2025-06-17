@@ -15,8 +15,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Usuário</th>
-                                    <th>Email</th>
+                                    <th style="width: 20%;">Usuário</th>
                                     <th>Função</th>
                                     <th>Status</th>
                                     <th>Data de Cadastro</th>
@@ -29,7 +28,6 @@
                                 <tr>
                                     <td>{{ user.id }}</td>
                                     <td>{{ user.username }}</td>
-                                    <td>{{ user.email }}</td>
                                     <td>
                                         <span class="badge {% if user.role == 'admin' %}bg-danger{% else %}bg-primary{% endif %}">
                                             {{ user.role|capitalize }}
@@ -44,16 +42,15 @@
                                     <td>{{ user.last_login.strftime('%d/%m/%Y %H:%M') if user.last_login else 'Nunca' }}</td>
                                     <td>
                                         {% if current_user.id != user.id %}
-                                            <!-- Não mostrar botões de ação para o próprio usuário -->
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ url_for('users.edit', user_id=user.id) }}" class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-edit"></i> Editar
+                                            <div class="d-flex flex-column gap-1">
+                                                <a href="{{ url_for('users.edit', user_id=user.id) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Editar">
+                                                    <i class="fas fa-edit me-1"></i>Editar
                                                 </a>
-                                                <a href="{{ url_for('users.change_password', user_id=user.id) }}" class="btn btn-sm btn-warning">
-                                                    <i class="fas fa-key"></i> Senha
+                                                <a href="{{ url_for('users.change_password', user_id=user.id) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" title="Alterar Senha">
+                                                    <i class="fas fa-key me-1"></i>Senha
                                                 </a>
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}">
-                                                    <i class="fas fa-trash"></i> Excluir
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Excluir">
+                                                    <i class="fas fa-trash me-1"></i>Excluir
                                                 </button>
                                             </div>
                                             

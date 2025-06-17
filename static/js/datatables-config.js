@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
     };
 
-    // Inicializa DataTables em todas as tabelas com a classe 'table-datatable'
-    $('.table-datatable').each(function() {
+    // Inicializa DataTables em todas as tabelas com a classe 'datatable'
+    $('.datatable').each(function() {
         // Verifica se já não foi inicializado (usando isDataTable)
         if (!$.fn.dataTable.isDataTable(this)) {
             // Obtém configurações específicas da tabela, se existirem

@@ -1,10 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
     // Format CPF inputs
     var cpfInputs = document.querySelectorAll('.cpf-input');
     cpfInputs.forEach(function(input) {
